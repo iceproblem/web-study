@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        *{margin:0;padding:0}
+        div{
+            width: 100px;
+            height: 100px;
+            border: 1px solid #000;
+            margin:100px;
+        }
+        .box{
+            background-color: green;
+            margin:0;
+        }
+    </style>
+    <script src="./js/jquery-1.11.3.js"></script>
+</head>
+<body>
+    <div></div>
+    <div></div>
+    <div style="padding:20px">
+        <div class="box"></div>
+    </div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <script>
+    //    $(function () {
+    //        //老师的代码
+    //       let box_top = $(".box").offset().top;
+    //       $(window).scroll(()=>{
+    //           if($(window).scrollTop() >= box_top){
+    //               $(".box").css({position:"fixed",top:0})
+    //           }else{
+    //               $(".box").css({position:"static"})
+    //           }
+    //       })
+    //    })
+
+        $(function(){
+            let box_top = $(".box").offset().top;
+            $(window).scroll(function(){
+                if($(window).scrollTop() >= box_top){
+                    $(".box").css({position:"fixed",top:0})
+                }else{
+                    $(".box").css({position:"static"})
+                }
+            })
+        })
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

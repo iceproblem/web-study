@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        *{ padding:0; margin:0; list-style:none;}
+        ul li{
+            height: 40px;
+            line-height: 40px;
+            background-color: #EEE;
+            border: 1px solid #000;
+        }
+        li span{
+            float: right;
+            cursor: pointer;
+            font-size: 30px;
+        }
+    </style>
+    <script src="./js/jquery-1.11.3.js"></script>
+</head>
+<body>
+    <button>添加一个新的li</button>
+    <br>
+    <br>
+    <ul>
+        <li><span>&times;</span></li>
+        <li><span>&times;</span></li>
+        <li><span>&times;</span></li>
+        <li><span>&times;</span></li>
+    </ul>
+    <script>
+       /* $(function () {
+            $("button").click(function () {
+                // 新创建出来的li中的span，并没有绑定事件
+                let li = $("<li><span>888 &times;</span></li>");
+                $("ul").prepend(li)
+            });
+            // 给已存在的span上绑定的事件
+            $("span").click(function () {
+                $(this).parent().remove(); // remove删除自己
+            });
+        })*/
+
+       /*$(function () {
+           $("button").click(function () {
+               // 新创建出来的li中的span，并没有绑定事件
+               let li = $("<li><span>888 &times;</span></li>");
+               $("ul").prepend(li)
+
+               // 给新创建出来的span绑定事件
+               $("span").click(function () {
+                   $(this).parent().remove(); // remove删除自己
+               });
+
+           });
+           // 给已存在的span上绑定的事件
+           $("span").click(function () {
+               $(this).parent().remove(); // remove删除自己
+           });
+       })*/
+
+       /*$(function () {
+           // 这样的问题，可以使用事件委托来解决
+           // 在jq中，实现事件委托，需要使用on  on是用来绑定事件的
+           $("button").on("click",function () {
+                // 新创建出来的li中的span，并没有绑定事件
+               let li = $("<li><span>888 &times;</span></li>");
+               $("ul").prepend(li)
+           });
+           /!*$("button").click(function () {
+           });*!/
+           // 给已存在的span上绑定的事件
+           $("span").click(function () {
+               $(this).parent().remove(); // remove删除自己
+           });
+       })*/
+
+    //    $(function () {
+    //         //老师的代码
+
+    //        // on有两个作用：1）绑定事件  2）事件委托
+    //        // 委托：表示事件绑定委托给别人  之前是给span上面绑定事件，现在我们就可以委托给ul
+    //        $("button").on("click",function () {
+    //            // 新创建出来的li中的span，并没有绑定事件
+    //            let li = $("<li><span>888 &times;</span></li>");
+    //            $("ul").prepend(li)
+    //        });
+    //        // 给ul上面绑定事件
+    //        $("ul").on("click","span",function () {
+    //             // 事件委托中 $(this)表示被委托的元素
+    //             $(this).parent().remove();
+    //        })
+    //    })
+    
+        //我的代码
+        $(function(){
+            $("button").on("click",function(){
+                let li = $("<li><span>输入的内容~ &times;</span></li>");
+                $("ul").prepend(li);
+            })
+
+            $("ul").on("click","span",function(){
+                $(this).parent().remove();
+            })
+
+        })
+
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

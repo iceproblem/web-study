@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>风景美如画</title>
+    <style>
+        *{margin: 0;padding: 0;}
+        body{margin: 50px;}
+        #fj{list-style: none;}
+        #fj li{float: left;margin-left: 10px; }
+        #fj li a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            font-size: 0;
+        }
+        #fj li img {
+            width: 100px;
+        }
+        #fj li.active {
+            border: 2px solid tomato;
+            box-sizing: border-box;
+        }
+        #big_img{margin-left: 10px; width: 540px;}
+        #des{margin: 10px;color: orangered;font-size: 20px;}
+    </style>
+</head>
+<body>
+<!--大图描述-->
+<p id="des">蒲公英</p>
+<!--大图展示-->
+<img id="big_img" src="images/1.jpg" alt="">
+<!--小图列表-->
+<ul id="fj">
+    <li class="active">
+        <a href="images/1.jpg" title="蒲公英">
+            <img src="images/1.jpg" alt="蒲公英">
+        </a>
+    </li>
+    <li>
+        <a href="images/2.jpg" title="热气球">
+            <img src="images/2.jpg" alt="热气球">
+        </a>
+    </li>
+    <li>
+        <a href="images/3.jpg" title="别致小屋">
+            <img src="images/3.jpg" alt="别致小屋">
+        </a>
+    </li>
+    <li>
+        <a href="images/4.jpg" title="高山湖水">
+            <img src="images/4.jpg" alt="高山湖水">
+        </a>
+    </li>
+    <li>
+        <a href="images/5.jpg" title="高速公路">
+            <img src="images/5.jpg" alt="高速公路">
+        </a>
+    </li>
+</ul>
+<script>
+    window.onload = function (){
+        let des = document.querySelector("#des");
+        let li_as = document.querySelectorAll("#fj>li>a");
+        let lis = document.querySelectorAll("#fj>li");
+        let big_img = document.querySelector("#big_img");
+
+        for(let i = 0; i < li_as.length; i++){
+            let li_a = li_as[i];
+            li_a.onmouseover = function(){
+                for(let j = 0; j < lis.length; j++){lis[j].className = ""}
+                this.parentElement.className = "active";
+
+                big_img.src = this.href;
+
+                des.innerHTML = this.title;
+            }
+        }
+    }
+</script>
+</body>
+</html>
