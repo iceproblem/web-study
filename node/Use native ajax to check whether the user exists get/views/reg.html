@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户注册</title>
+</head>
+<body>
+<h1>用户注册</h1>
+<form action="/doreg" method="post">
+    <ul>
+        <li>用户名：<input type="text" name="username" id="user"><span id="msg"></span></li>
+        <li>密码：<input type="text" name="pwd"></li>
+        <li>确认密码：<input type="text" name="repwd"></li>
+        <li><input type="submit" value="注册"></li>
+    </ul>
+</form>
+<script>
+let user = document.querySelector("#user");
+let msg = document.querySelector("#msg");
+user.onblur = function(){
+    //第一步 创建ajax对象
+    let xhr = new XMLHttpRequest();
+    //第二步 和服务器创建连接
+    xhr.open("get","/check?username="+user.value)
+    //第三步 发出请求 null表示请求体是空  get请求的请求体都是空  post请求的请求体不空
+    xhr.send(null);
+    //第四步
+    xhr.onreadystatechange = function (){
+        if(xhr.readyState == 4 && xhr.status == 200){
+            msg.innerHTML = xhr.responseText;
+        }
+    }
+}
+</script>
+</body>
+</html>
