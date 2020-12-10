@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+</head>
+<body>
+    <div id="app1">
+        <p>app1</p>
+        <com></com>
+    </div>
+    <hr>
+    <div id="app2">
+        <p>app2</p>
+        <com></com>
+    </div>
+    <hr>
+    <template id="test">
+        <div>
+            <div>我是一个子组件</div>
+            <p>{{ msg }}</p>
+            <p>{{ u }}</p>
+        </div>
+    </template>
+
+    <script src="../js/vue-development.js"></script>
+    <script>
+
+        // 1 定义一个组件
+        let com = {
+            template:"#test",
+            data(){
+                return{
+                    msg:"hello 组件",
+                    u:"注册了全局组件",
+                }
+            }
+        }
+        // 2 注册组件 全局
+        Vue.component("com",com);
+
+        let vm = new Vue({
+            el:"#app1",
+        });
+        let vm2 = new Vue({
+            el:"#app2",
+        });
+
+    </script>
+</body>
+</html>

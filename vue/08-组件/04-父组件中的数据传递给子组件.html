@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+    <div id="app">
+        <p>app</p>
+        <father></father>
+    </div>
+    <template id="father">
+        <div>
+            <p>father</p>
+            <p>fatherData:{{ fatherData }}</p>
+            <son :abc="fatherData" ></son>
+        </div>
+    </template>
+    <template id="son">
+        <div>
+            <p>son</p>
+            <p>abc:{{ abc }}</p>
+        </div>
+    </template>
+
+    <script src="../js/vue-development.js"></script>
+    <script>
+        let son = {
+            template:"#son",
+            props:{
+                abc:String,
+            },
+            data(){
+                return{
+                    sonData:"son组件中的数据",
+                }
+            },
+
+        }
+        let father = {
+            template:"#father",
+            data(){
+                return{
+                    fatherData:"father组件中的数据",
+                }
+            },
+            components: {
+                son,
+            }
+        }
+        let vm = new Vue({
+            el:"#app",
+            components:{
+                father,
+            }
+
+        })
+    </script>
+</body>
+</html>

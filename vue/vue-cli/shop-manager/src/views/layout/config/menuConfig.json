@@ -1,0 +1,106 @@
+[
+  {
+    "id": "1",
+    "title": "首页",
+    "_key": "/home",
+    "icon": "icon iconfont icon-shouye",
+    "prentID": "0"
+  },
+  {
+    "id": "2",
+    "title": "商品",
+    "icon": "icon iconfont icon-shangpin",
+    "_key": "/pm",
+    "prentID": "0",
+    "children": [
+      {
+        "id": "2-1",
+        "title": "商品列表",
+        "icon": "icon iconfont icon-shangpinliebiao",
+        "_key": "/pm/product",
+        "prentID": "2"
+      },
+      {
+        "id": "2-2",
+        "title": "添加商品",
+        "icon": "icon iconfont icon-tianjiashangpin",
+        "_key": "/pm/addProduct",
+        "prentID": "2"
+      },
+      {
+        "id": "2-3",
+        "title": "商品分类",
+        "icon": "icon iconfont icon-shangpinfenlei",
+        "_key": "/pm/productCategory",
+        "prentID": "2"
+      },
+      {
+        "id": "2-4",
+        "title": "商品类型",
+        "icon": "icon iconfont icon-xiangmuleixing",
+        "_key": "/pm/productAttr",
+        "prentID": "2"
+      },
+      {
+        "id": "2-5",
+        "title": "品牌管理",
+        "icon": "icon iconfont icon-pinpai",
+        "_key": "/pm/brand",
+        "prentID": "2"
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "title": "订单",
+    "icon": "icon iconfont icon-dingdan-",
+    "_key": "/om",
+    "prentID": "0",
+    "children": [
+      {
+        "id": "3-1",
+        "title": "订单列表",
+        "icon": "icon iconfont icon-dingdanliebiao",
+        "_key": "/om/order",
+        "prentID": "3"
+      },
+      {
+        "id": "3-2",
+        "title": "订单设置",
+        "icon": "icon iconfont icon-shezhi",
+        "_key": "/om/setting",
+        "prentID": "3"
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "title": "权限",
+    "icon": "icon iconfont icon-ic_opt_feature",
+    "_key": "/um",
+    "prentID": "0",
+    "children": [
+      {
+        "id": "4-1",
+        "title": "用户列表",
+        "icon": "icon iconfont icon-yonghuliebiao",
+        "_key": "/um/admin",
+        "prentID": "4"
+      },
+      {
+        "id": "4-2",
+        "title": "角色列表",
+        "icon": "icon iconfont icon-shezhi",
+        "_key": "/um/role",
+        "prentID": "4"
+      },
+      {
+        "id": "4-3",
+        "title": "菜单列表",
+        "icon": "icon iconfont icon-caidanliebiao",
+        "_key": "/um/menu",
+        "prentID": "4"
+      }
+    ]
+  }
+]
