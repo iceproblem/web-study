@@ -121,7 +121,7 @@
 </template>
 
 <script>
-import { getCategory } from '../../../api/categoryApi';
+import { delCategory, getCategory, updateCategory } from '../../../api/categoryApi';
     export default {
         name: "index",
         data(){
@@ -137,7 +137,21 @@ import { getCategory } from '../../../api/categoryApi';
         created() {
             this.getList(); //在发送ajax请求之前，先把loading变成true
         },
+        watch:{
+            $route(route){
+                this.resetParentId();
+                this.getList();
+            }
+        },
         methods:{
+            resetParentId(){
+                this.pageNum = 1;
+                if(this.$route.query.parentId !== undefined){
+                    this.parentId = this.$route.query.parentId;
+                }else{
+                    this.parentId = 0;
+                }
+            },
             getList(){
                 this.listLoading = true;
                 getCategory(this.parentId,this.pageNum,this.pageSize).then(response=>{
@@ -149,11 +163,16 @@ import { getCategory } from '../../../api/categoryApi';
                 }
             })
             },
+            //改变每页显示的条数
             handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+                this.pageNum = 1;
+                this.pageSize = val;
+                this.getList();
             },
+            //当前页码发生改变时
             handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
+                this.pageNum = val;
+                this.getList();
             },
             // 控制移动端是否显示
             handleNavStatusChange(){
@@ -168,19 +187,37 @@ import { getCategory } from '../../../api/categoryApi';
             },
             // 控制分类是否启用
             handleShowStatusChange(){
-
+                updateCategory({id:row.id,show_status:row.show_status}).then(response=>{
+                    if(response.status === 1 ){
+                        this.$message.success(response.msg)
+                    }else{
+                        this.$message.error(response.msg)
+                    }
+                })
             },
             // 查看二级分类
-            handleShowNextLevel(){
-
+            handleShowNextLevel(index,row){
+                this.$router.push({path:"/pm/productCategory",query:{parentId:row.id}})
             },
             // 编辑
             handleUpdate(){
 
             },
             // 删除
-            handleDelete(){
-
+            handleDelete(index,row){
+                this.$confirm("确定要删除该分类以及它的二级分类，是否继续？","xxx，温馨提示",{
+                    confirmButtonText:"确定",
+                    cancelButtonText:"取消"
+                }).then(()=>{
+                    delCategory(row.id).then(response=>{
+                        if(response.status === 1){
+                            this.$message.success("删除成功");
+                        }else{
+                            this.$message.error("删除失败")
+                        }
+                        this.getList();
+                    })
+                })
             }
         },
         filters:{
