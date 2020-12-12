@@ -1,14 +1,14 @@
 <template>
     <el-upload
-            class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :on-preview="handlePreview"
+            class="upload-single"
+            :action="uploadAction"
             :on-remove="handleRemove"
-            :before-remove="beforeRemove"
-            multiple="false"
-            :limit="3"
-            :on-exceed="handleExceed"
-            :file-list="fileList">
+            :on-success="handleSuccess"
+            :file-list="fileList"
+            list-type="picture"
+            :multiple="false"
+            :limit="1"
+    >
         <el-button size="small" type="primary">点击上传</el-button>
         <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
     </el-upload>
@@ -17,23 +17,32 @@
 <script>
     export default {
         name: "singleUpload",
+        props:{
+            uploadAction:{  // 上传图片的地址
+                type:String,
+                required:true
+            },
+            successCallBack:{  // 上传图片成功的回调函数
+                type:Function,
+                required:true
+            }
+        },
         data() {
             return {
-                fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
+                fileList: []
             };
         },
         methods: {
-            handleRemove(file, fileList) {
-                console.log(file, fileList);
+            handleSuccess(response){ // 当图片上传成功后，调用此访问
+                // console.log(response,file, fileList);
+                if(response.status===1){
+                    this.successCallBack(response.data);
+                }
             },
-            handlePreview(file) {
-                console.log(file);
-            },
-            handleExceed(files, fileList) {
-                this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
-            },
-            beforeRemove(file, fileList) {
-                return this.$confirm(`确定移除 ${ file.name }？`);
+            handleRemove(file, fileList) {// 当移除组件时调用
+                if(file.status === "success"){
+                    this.successCallBack(null);
+                }
             }
         }
     }

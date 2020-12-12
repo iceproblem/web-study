@@ -33,20 +33,6 @@
         "icon": "icon iconfont icon-shangpinfenlei",
         "_key": "/pm/productCategory",
         "prentID": "2"
-      },
-      {
-        "id": "2-4",
-        "title": "商品类型",
-        "icon": "icon iconfont icon-xiangmuleixing",
-        "_key": "/pm/productAttr",
-        "prentID": "2"
-      },
-      {
-        "id": "2-5",
-        "title": "品牌管理",
-        "icon": "icon iconfont icon-pinpai",
-        "_key": "/pm/brand",
-        "prentID": "2"
       }
     ]
   },
