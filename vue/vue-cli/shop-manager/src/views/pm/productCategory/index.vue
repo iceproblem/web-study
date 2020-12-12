@@ -157,7 +157,14 @@ import { getCategory } from '../../../api/categoryApi';
             },
             // 控制移动端是否显示
             handleNavStatusChange(){
-
+                updateCategory({id:row.id,nav_status: row.nav_status}).then(response=>{
+                    // console.log(response)
+                    if(response.status === 1){
+                        this.$message.success(response.msg)
+                    }else{
+                        this.$message.error(response.msg)
+                    }
+                })
             },
             // 控制分类是否启用
             handleShowStatusChange(){
