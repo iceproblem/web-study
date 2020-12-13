@@ -26,6 +26,7 @@ let routes = [
             {path: "addProduct",name:"addProduct",component:()=>import("@/views/pm/product/add")},
             {path: "productCategory",name:"productCategory",component:()=>import("@/views/pm/productCategory/index")},
             {path: "productCateAdd",name:"productCateAdd",component:()=>import("@/views/pm/productCategory/add")},
+            {path: "productCateUpdate",name:"productCateUpdate",component:()=>import("@/views/pm/productCategory/update")},
         ]
     },
     {

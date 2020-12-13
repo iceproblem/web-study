@@ -1,12 +1,16 @@
 <template>
     <div>
-        更新商品
+        <ProductCateAddOrEdit :isUpdate="true"></ProductCateAddOrEdit>
     </div>
 </template>
 
 <script>
+    import ProductCateAddOrEdit from "../productCategory/components/ProductCateAddOrEdit";
     export default {
-        name: "updata"
+        name: "update",
+        components:{
+            ProductCateAddOrEdit
+        }
     }
 </script>
 

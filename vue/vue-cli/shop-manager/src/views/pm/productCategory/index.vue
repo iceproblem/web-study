@@ -200,8 +200,8 @@ import { delCategory, getCategory, updateCategory } from '../../../api/categoryA
                 this.$router.push({path:"/pm/productCategory",query:{parentId:row.id}})
             },
             // 编辑
-            handleUpdate(){
-
+            handleUpdate(index,row){
+                this.$router.push({path:"/pm/productCateUpdate",query:{id:row.id}})
             },
             // 删除
             handleDelete(index,row){

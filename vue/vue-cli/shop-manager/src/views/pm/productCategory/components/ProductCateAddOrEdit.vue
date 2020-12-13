@@ -67,7 +67,7 @@
 
 <script>
     import SingleUpload from "../../../../components/upload/SingleUpload";
-    import { getCategory,addCategory } from "../../../../api/categoryApi"
+    import { getCategory,addCategory,getCategoryId } from "../../../../api/categoryApi"
 
     let defaultProductCate = {
         parent_id:0, // 上一级分类的ID  0代表一级分类
@@ -83,6 +83,14 @@
 
     export default {
         name: "ProductCateAddOrEdit",
+        props:{
+            isUpdate:{
+                //根据isUpdate来确定是编辑还是添加，true变表示编辑，false表示添加
+                type:Boolean,
+                default:false
+            }
+
+        },
         data(){
             return{
                 productCate:Object.assign({},defaultProductCate),
@@ -98,6 +106,17 @@
             }
         },
         created() {
+            if(this.isUpdate){
+                //编辑
+                getCategoryId(this.$route.query.id).then(response=>{
+                    if(response.status === 1){
+                        this.productCate = response.data[0]
+                    }
+                })
+            }else{
+                //添加
+                this.productCate = Object.assign({},defaultProductCate)
+            }
             this.getProductCategoryList();
         },
         methods:{

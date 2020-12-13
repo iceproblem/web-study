@@ -1,15 +1,15 @@
 <template>
     <div>
-        <ProductCataAddOrEdit></ProductCataAddOrEdit>
+        <ProductCateAddOrEdit></ProductCateAddOrEdit>
     </div>
 </template>
 
 <script>
-    import ProductCataAddOrEdit from '@/views/pm/productCategory/components/ProductCataAddOrEdit'
+    import ProductCateAddOrEdit from '@/views/pm/productCategory/components/ProductCateAddOrEdit'
     export default {
         name: "add",
         components:{
-            ProductCataAddOrEdit
+            ProductCateAddOrEdit
         }
     }
 </script>
