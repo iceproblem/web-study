@@ -68,7 +68,7 @@
 
 <script>
     import SingleUpload from "../../../../components/upload/SingleUpload";
-    import { getCategory,addCategory,getCategoryId } from "../../../../api/categoryApi"
+    import {getCategory, addCategory, getCategoryId, updateCategory} from "../../../../api/categoryApi"
 
     let defaultProductCate = {
         parent_id:0, // 上一级分类的ID  0代表一级分类
@@ -85,12 +85,10 @@
     export default {
         name: "ProductCateAddOrEdit",
         props:{
-            isUpdate:{
-                //根据isUpdate来确定是编辑还是添加，true变表示编辑，false表示添加
+            isUpdate:{  // 要根据isUpdate来确定是编辑还是添加  如果isUpdate是true代表是编辑  如果isUpdate是false代表是添加
                 type:Boolean,
                 default:false
             }
-
         },
         data(){
             return{
@@ -108,14 +106,16 @@
         },
         created() {
             if(this.isUpdate){
-                //编辑
+                // 编辑
+                // console.log(this.$route.query.id)
                 getCategoryId(this.$route.query.id).then(response=>{
+                    // console.log(response)
                     if(response.status === 1){
                         this.productCate = response.data[0]
                     }
                 })
             }else{
-                //添加
+                // 添加
                 this.productCate = Object.assign({},defaultProductCate)
             }
             this.getProductCategoryList();
@@ -146,27 +146,56 @@
             onSubmit(forName){
                 this.$refs[forName].validate(valid=>{
                     if(valid){
-                        // 检验通过  发起ajax请求
-                        addCategory(this.productCate).then(response=>{
-                            // console.log(response)
-                            if(response.status === 1){
-                                // 清空表单
-                                this.onReset(forName);
-                                // 提示用户
-                                this.$message({
-                                    type:"success",
-                                    message:response.msg,
-                                    duration:1000
-                                })
-                            }else{
-                                // 提示用户
-                                this.$message({
-                                    type:"error",
-                                    message:response.msg,
-                                    duration:1000
-                                })
-                            }
-                        })
+                        if(this.isUpdate){
+                            // 编辑
+                            updateCategory(this.productCate).then(response=>{
+                                // console.log(response)
+                                if(response.status === 1){
+                                    // 清空表单
+                                    this.onReset(forName);
+                                    // 提示用户
+                                    this.$message({
+                                        type:"success",
+                                        message:response.msg,
+                                        duration:1000
+                                    })
+                                    // 返回上一级
+                                    this.$router.back();
+                                }else{
+                                    // 提示用户
+                                    this.$message({
+                                        type:"error",
+                                        message:response.msg,
+                                        duration:1000
+                                    })
+                                }
+                            })
+                        }else{
+                            // 添加
+                            // 检验通过  发起ajax请求
+                            addCategory(this.productCate).then(response=>{
+                                // console.log(response)
+                                if(response.status === 1){
+                                    // 清空表单
+                                    this.onReset(forName);
+                                    // 提示用户
+                                    this.$message({
+                                        type:"success",
+                                        message:response.msg,
+                                        duration:1000
+                                    })
+                                    // 返回上一级
+                                    this.$router.back();
+                                }else{
+                                    // 提示用户
+                                    this.$message({
+                                        type:"error",
+                                        message:response.msg,
+                                        duration:1000
+                                    })
+                                }
+                            })
+                        }
                     }else{
                         // 检验不通过
                         this.$message({
