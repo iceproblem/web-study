@@ -48,6 +48,7 @@
                     <SingleUpload
                         uploadAction="/manager/api/auth/category/upload_category"
                         :successCallBack="getCategoryIcon"
+                        :icon="productCate.icon"
                     ></SingleUpload>
                 </el-form-item>
                 <el-form-item label="关键字：">

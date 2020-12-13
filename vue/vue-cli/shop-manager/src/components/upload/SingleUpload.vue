@@ -25,6 +25,18 @@
             successCallBack:{  // 上传图片成功的回调函数
                 type:Function,
                 required:true
+            },
+            icon:{
+                type:String
+            },
+        },
+        watch:{
+            icon(value){
+                // console.log()
+                this.fileList.push({
+                    name:value.substr(value.lastIndexOf("/")+1),
+                    url:"http://localhost:5000"+value
+                })
             }
         },
         data() {
