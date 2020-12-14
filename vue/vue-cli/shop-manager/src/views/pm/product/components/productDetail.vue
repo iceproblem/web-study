@@ -13,11 +13,13 @@
         ></productInfoDetail>
         <productSaleDetail
             v-show="showStatus[1]"
+            v-model="productObj"
             @nextStep="nextStep"
             @prevStep="prevStep"
         ></productSaleDetail>
         <productAttrDetail
             v-show="showStatus[2]"
+            v-model="productObj"
             @prevStep="prevStep"
             @finishCommit="finishCommit"
         ></productAttrDetail>
@@ -43,12 +45,12 @@
         sort:"", // 排序
 
         // 商品属性
-        giftScore: null,    //赠送积分
-        giftGrow: null,     //赠送成长值
+        giftScore: '',    //赠送积分
+        giftGrow: '',     //赠送成长值
         publishStatus: 1, // 是否上架
         newsStatus: 1,  //是否新品
         recommendStatus: 1,     // 是否推荐
-        serviceList: '', // 服务列表
+        serviceIds: '', // 服务列表
         netContent: '',     // 净含量
         storageCondition: '',   // 保存条件
         quality: '',    // 保质期
@@ -77,13 +79,13 @@
         ],
 
         // 商品详情
-        productAttr: {
-            productImgArr: []
-        },
-        content: '', // 详情页的内容
-        pic:"", // 商品主图片
-        albumPics:"", // 商品的图片集
-        detailHtml:"",  // 详情页
+        // productAttr: {
+        //     productImgArr: []
+        // },
+        // content: '', // 详情页的内容
+        // pic:"", // 商品主图片
+        // albumPics:"", // 商品的图片集
+        // detailHtml:"",  // 详情页
 
     }
 

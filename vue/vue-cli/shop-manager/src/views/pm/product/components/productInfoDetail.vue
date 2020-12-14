@@ -64,6 +64,21 @@
                 productCateOptions:[], // 分类的数据
             }
         },
+        watch:{
+            productCateValue(newValue){
+                // console.log(newValue);
+                // 点击了，会获取分类的ID 如果点击了一级分类，获取一个ID 如果点击了二级分类，获取两个ID
+                if(newValue.length === 1){
+                    //点击了一级分类
+                    this.value.productCategoryId = newValue[0];
+                    this.value.produceCategoryName = this.getCateNameById(this.value.productCategoryId);
+                }else if(newValue.length === 2){
+                    // 点击了二级分类
+                    this.value.productCategoryId = newValue[1];
+                     this.value.productCategoryName = this.getCateNameById(this.value.productCategoryId)
+                }
+            }
+        },
         created(){
             getCategoryWithChildren().then(response=>{
                 // console.log(response);
@@ -87,10 +102,36 @@
                             children:children
                         });
                     }
+                    // console.log(this.productCateOptions)
                 }
             })
         },
         methods:{
+            // 根据ID获取分类的名字
+            getCateNameById(id){
+                // this.productCateOptions 表示所有的分类数据
+                let name = null;
+                let pco = this.productCateOptions
+                for(let i = 0; i < pco.length; i++){
+                    let children = pco[i].children;
+                    if(children){
+                        // 有二级分类
+                        for(let j = 0; j < pco[i].children.length; j++){
+                            if(pco[i].children[j].value === id){
+                                name = pco[i].children[j].label;
+                                return name;
+                            }
+                        }
+                    }else{
+                        //没有二级分类
+                        if(pco[i].value === id){
+                            name = pco[i].label;
+                            return name;
+                        }
+                    }
+                }
+                return name;
+            },
             handleNext(){
                 this.$emit("nextStep")
             },
