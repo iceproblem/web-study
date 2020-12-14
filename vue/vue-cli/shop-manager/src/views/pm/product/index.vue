@@ -5,7 +5,7 @@
             <div>
                 <i class="el-icon-search" style="font-size: 18px; margin-right: 4px;"></i>
                 <span>筛选搜索</span>
-                <el-button class="btn-clear" size="mini" type="danger" style="float: right;">清空</el-button>
+                <el-button class="btn-clear" size="mini" style="float: right;">清空</el-button>
                 <el-button class="btn-find" size="mini" type="primary" style="float: right; margin-right: 10px;">查询</el-button>
             </div>
             <div style="margin-top: 50px">
@@ -19,14 +19,11 @@
                         <el-input v-model="listQuery.productSn" style="width: 180px;"></el-input>
                     </el-form-item>
                     <el-form-item label="商品所属分类：">
-                        <el-select v-model="listQuery.productCateValue" placeholder="请选择"  style="width: 150px;">
-                            <el-option
-                                    v-for="item in selectProductCateList"
-                                    :key="item.id"
-                                    :label="item.name"
-                                    :value="item.id">
-                            </el-option>
-                        </el-select>
+                        <el-cascader
+                                v-model="productCateValue"
+                                :options="productCateOptions"
+                                :props="{ expandTrigger: 'hover' }"
+                                @change="handleProductCateChange"></el-cascader>
                     </el-form-item>
                     <el-form-item label="上架状态：">
                         <el-select v-model="listQuery.publishStatus" placeholder="请选择商品是否上架"  style="width: 150px;">
@@ -39,7 +36,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="商品名称：">
-                        <el-input v-model="listQuery.productName"  placeholder="请输入商品名称" style="width: 350px;"></el-input>
+                        <el-input v-model="listQuery.name"  placeholder="请输入商品名称" style="width: 350px;"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
@@ -47,16 +44,17 @@
         <!--表头和表格区域-->
         <div>
             <!--头部区域-->
-            <el-card shadow="never">
+            <el-card shadow="never" style="margin-top: 30px">
                 <i class="el-icon-s-order" style="font-size: 18px; margin-right: 4px;"></i>
                 <span>商品列表</span>
-                <el-button class="btn-add" type="primary" size="mini" style="float: right;">添加</el-button>
+                <el-button class="btn-add" size="mini" style="float: right;">添加</el-button>
             </el-card>
             <!--内容区域-->
             <div class="table-container">
                 <el-table
                     ref="multipleTable"
                     :data="listData"
+                    v-loading="listLoading"
                     tooltip-effect="dark"
                     style="width: 100%"
                     height="300"
@@ -140,11 +138,11 @@
                 <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
-                        :current-page="5"
+                        :current-page="listQuery.pageNum"
                         :page-sizes="[5,10,15]"
-                        :page-size="100"
+                        :page-size="listQuery.pageSize"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="400">
+                        :total="total">
                 </el-pagination>
             </div>
         </div>
@@ -152,16 +150,23 @@
 </template>
 
 <script>
+    import { getProductList } from "../../../api/productApi"
+    import { getCategoryWithChildren } from "../../../api/categoryApi"
+    let defautlQuery = {
+        productSn:null, // 商品货号
+        productCategoryId:null, // 商品所属分类
+        publishStatus:null, // 上架状态
+        name:null, // 商品名称
+        pageNum:1, // 默认显示第几页面
+        pageSize:5, // 每页显示多少个
+    }
     export default {
         name: "index",
         data(){
             return{
-                listQuery:{
-                    productSn:"",  // 商品的货号
-                    productCateValue:null, // 商品的分类
-                    publishStatus:1, // 上架的状态
-                    productName:"", // 商品名称
-                },
+                listQuery:Object.assign({},defautlQuery),
+                productCateValue:[],  // 选中分类的数据
+                productCateOptions:[], // 分类列表
                 selectProductCateList:[  // 商品的分类
                     {id:0, name:"无上级分类"},
                     {id:1, name:"安心蔬菜"},
@@ -171,139 +176,88 @@
                     {value:1,label:"上架"},
                     {value:0,label:"下架"},
                 ],
-                listData:[  // 表格中的数据
-                    {
-                        id:1, // 编号
-                        pic:"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3073133910,2363541116&fm=26&gp=0.jpg", // 商品图片
-                        name:"饼干10袋，200g",  // 商品名称
-                        price:9.9,   // 市场价
-                        productSn:"MM0001",  // 货号
-                        publishStatus:1,  // 是否上架
-                        newsStatus:1,    // 是否是新品
-                        recommentStatus:1, // 是否推荐
-                        sale:1000, // 销量
-                        count:10000, // 存量
-                    },
-                    {
-                        id:1, // 编号
-                        pic:"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3073133910,2363541116&fm=26&gp=0.jpg", // 商品图片
-                        name:"饼干10袋，200g",  // 商品名称
-                        price:9.9,   // 市场价
-                        productSn:"MM0001",  // 货号
-                        publishStatus:1,  // 是否上架
-                        newsStatus:1,    // 是否是新品
-                        recommentStatus:1, // 是否推荐
-                        sale:1000, // 销量
-                        count:10000, // 存量
-                    },
-                    {
-                        id:1, // 编号
-                        pic:"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3073133910,2363541116&fm=26&gp=0.jpg", // 商品图片
-                        name:"饼干10袋，200g",  // 商品名称
-                        price:9.9,   // 市场价
-                        productSn:"MM0001",  // 货号
-                        publishStatus:1,  // 是否上架
-                        newsStatus:1,    // 是否是新品
-                        recommentStatus:1, // 是否推荐
-                        sale:1000, // 销量
-                        count:10000, // 存量
-                    },
-                    {
-                        id:1, // 编号
-                        pic:"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3073133910,2363541116&fm=26&gp=0.jpg", // 商品图片
-                        name:"饼干10袋，200g",  // 商品名称
-                        price:9.9,   // 市场价
-                        productSn:"MM0001",  // 货号
-                        publishStatus:1,  // 是否上架
-                        newsStatus:1,    // 是否是新品
-                        recommentStatus:1, // 是否推荐
-                        sale:1000, // 销量
-                        count:10000, // 存量
-                    },
-                    {
-                        id:1, // 编号
-                        pic:"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3073133910,2363541116&fm=26&gp=0.jpg", // 商品图片
-                        name:"饼干10袋，200g",  // 商品名称
-                        price:9.9,   // 市场价
-                        productSn:"MM0001",  // 货号
-                        publishStatus:1,  // 是否上架
-                        newsStatus:1,    // 是否是新品
-                        recommentStatus:1, // 是否推荐
-                        sale:1000, // 销量
-                        count:10000, // 存量
-                    },
-                    {
-                        id:1, // 编号
-                        pic:"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3073133910,2363541116&fm=26&gp=0.jpg", // 商品图片
-                        name:"饼干10袋，200g",  // 商品名称
-                        price:9.9,   // 市场价
-                        productSn:"MM0001",  // 货号
-                        publishStatus:1,  // 是否上架
-                        newsStatus:1,    // 是否是新品
-                        recommentStatus:1, // 是否推荐
-                        sale:1000, // 销量
-                        count:10000, // 存量
-                    },
-                    {
-                        id:1, // 编号
-                        pic:"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3073133910,2363541116&fm=26&gp=0.jpg", // 商品图片
-                        name:"饼干10袋，200g",  // 商品名称
-                        price:9.9,   // 市场价
-                        productSn:"MM0001",  // 货号
-                        publishStatus:1,  // 是否上架
-                        newsStatus:1,    // 是否是新品
-                        recommentStatus:1, // 是否推荐
-                        sale:1000, // 销量
-                        count:10000, // 存量
-                    },
-                    {
-                        id:1, // 编号
-                        pic:"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3073133910,2363541116&fm=26&gp=0.jpg", // 商品图片
-                        name:"饼干10袋，200g",  // 商品名称
-                        price:9.9,   // 市场价
-                        productSn:"MM0001",  // 货号
-                        publishStatus:1,  // 是否上架
-                        newsStatus:1,    // 是否是新品
-                        recommentStatus:1, // 是否推荐
-                        sale:1000, // 销量
-                        count:10000, // 存量
-                    },
-                    {
-                        id:1, // 编号
-                        pic:"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3073133910,2363541116&fm=26&gp=0.jpg", // 商品图片
-                        name:"饼干10袋，200g",  // 商品名称
-                        price:9.9,   // 市场价
-                        productSn:"MM0001",  // 货号
-                        publishStatus:1,  // 是否上架
-                        newsStatus:1,    // 是否是新品
-                        recommentStatus:1, // 是否推荐
-                        sale:1000, // 销量
-                        count:10000, // 存量
-                    },
-                    {
-                        id:1, // 编号
-                        pic:"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3073133910,2363541116&fm=26&gp=0.jpg", // 商品图片
-                        name:"饼干10袋，200g",  // 商品名称
-                        price:9.9,   // 市场价
-                        productSn:"MM0001",  // 货号
-                        publishStatus:1,  // 是否上架
-                        newsStatus:1,    // 是否是新品
-                        recommentStatus:1, // 是否推荐
-                        sale:1000, // 销量
-                        count:10000, // 存量
-                    }
-                ]
+                listLoading:false, // ajax请求数据的Loading
+                listData:[], // 表格中的数据
+                total:0, // 总数据条数
+
+            }
+        },
+        created() {
+              // 获取商品的分类数据
+              this.getCategoryList();
+              // 获取商品的列表数据
+              this.getList();
+        },
+        watch:{
+            productCateValue(newValue){
+                // 点击了谁，就可以获取分类的ID，如果点击了一级分类，获取一个ID，如果点击了二级分类，获取2个ID
+                if(newValue.length === 1){
+                    // 点击了一级分类
+                    this.listQuery.productCategoryId = newValue[0];
+
+                }else if(newValue.length === 2){
+                    // 点击了二级分类
+                    this.listQuery.productCategoryId = newValue[1];
+                }else{
+                    this.listQuery.productCategoryId = null;
+                }
             }
         },
         methods:{
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+            getCategoryList(){  // 获取商品的分类数据
+                getCategoryWithChildren().then(response=>{
+                    // console.log(response)
+                    if(response.status === 1){
+                        let listArr = response.data;
+                        this.productCateOptions = [];
+                        // this.productCateOptions = listArr;
+                        // 把后端响应的数据结构转化成我们需要的数据结构
+                        for(let i=0; i<listArr.length; i++){
+                            let children = [];
+                            if(listArr[i].children != null && listArr[i].children.length>0){
+                                // 有二级分类
+                                for(let j=0; j<listArr[i].children.length; j++){
+                                    children.push({value:listArr[i].children[j].id,label:listArr[i].children[j].name})
+                                }
+                            }
+                            children = children.length > 0 ? children :null
+                            // 没有二级分类
+                            this.productCateOptions.push({
+                                label:listArr[i].name,
+                                value:listArr[i].id,
+                                children:children
+                            })
+                        }
+                        // console.log(this.productCateOptions)
+                    }
+                })
             },
-            handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
+            // ajax获取商品列表
+            getList(){
+                this.listLoading = true;
+                getProductList(this.listQuery).then(response=>{
+                    console.log(response)
+                    if(response.status === 1){
+                        this.listLoading = false;
+                        this.listData = response.data.product_list;
+                        this.total= response.data.product_count;
+                    }
+                })
+            },
+            handleSizeChange(val) { // 每页多少条
+                this.listQuery.pageNum = 1;
+                this.listQuery.pageSize = val;
+                this.getList(); // 重新加载数据
+            },
+            handleCurrentChange(val) {  // 点击切换页面
+                this.listQuery.pageNum = val;
+                this.getList(); // 重新加载数据
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
+            },
+            handleProductCateChange(value){
+                console.log(value)
             }
         }
     }

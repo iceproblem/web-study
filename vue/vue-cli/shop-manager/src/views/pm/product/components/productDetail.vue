@@ -1,4 +1,4 @@
-<template lang="">
+<template>
     <el-card class="form-container" shadow="never">
         <!--步骤条-->
         <el-steps :active="active" finish-status="success" align-center>
@@ -6,6 +6,7 @@
             <el-step title="填写商品促销"></el-step>
             <el-step title="填写商品属性"></el-step>
         </el-steps>
+       <!-- 在组件上面，写了一个v-model也相当于写了一个:value和@input-->
         <productInfoDetail
             v-show="showStatus[0]"
             v-model="productObj"
@@ -24,35 +25,35 @@
             @finishCommit="finishCommit"
         ></productAttrDetail>
     </el-card>
+
 </template>
+
 <script>
-    import productInfoDetail from '@/views/pm/product/components/productInfoDetail';
-    import productSaleDetail from '@/views/pm/product/components/productSaleDetail';
-    import productAttrDetail from '@/views/pm/product/components/productAttrDetail';
+    import { addProduct } from "../../../../api/productApi"
+    import productInfoDetail from "./productInfoDetail";
+    import productSaleDetail from "./productSaleDetail";
+    import productAttrDetail from "./productAttrDetail";
 
-    //定义数据模型
+    // 定义数据模型  表示一个商品
     const defaultProductObj = {
-        // 商品信息
         productCategoryId:null, // 商品分类ID
-        produceCategoryName:"", // 商品分类的名称
-        name:"", // 商品名称
-        subTitle:"", // 商品的副标题
-        productIntor:"", //商品介绍
-        productSn:"", // 商品的货号
-        originalPrice:"", // 市场价
-        price:"", //商品售价
-        store:"", // 商品库存
-        sort:"", // 排序
-
-        // 商品属性
-        giftScore: '',    //赠送积分
-        giftGrow: '',     //赠送成长值
+        productCategoryName:"", // 商品分类名字
+        name: '',  // 商品名称
+        subTitle: '',  // 副标题
+        productIntro: '', // 商品介绍
+        productSn: '', // 商品货号
+        originalPrice: null, // 市场价
+        price: null, // 商品售价
+        store: null,  // 商品库存
+        sort: null, // 排序
+        giftScore: null,  // 赠送积分
+        giftGrow: null,  // 赠送成长值
         publishStatus: 1, // 是否上架
-        newsStatus: 1,  //是否新品
-        recommendStatus: 1,     // 是否推荐
+        newsStatus: 1,  // 是否新品
+        recommendStatus: 1,  // 是否推荐
         serviceIds: '', // 服务列表
-        netContent: '',     // 净含量
-        storageCondition: '',   // 保存条件
+        netContent: '',  // 净含量
+        storageCondition: '', // 储存条件
         quality: '',    // 保质期
         reductionType: 0, // 优惠选项
         reductionPrice: 0, // 促销价格
@@ -74,65 +75,78 @@
                 memberPrice: null
             }
         ],
-        productHomeKillList: [   // 限时抢购
+        productHomeKillList: [ // 首页秒杀
             {count: 0, discount: 0}
         ],
-
-        // 商品详情
-        // productAttr: {
-        //     productImgArr: []
-        // },
-        // content: '', // 详情页的内容
-        // pic:"", // 商品主图片
-        // albumPics:"", // 商品的图片集
-        // detailHtml:"",  // 详情页
-
+        productAttr: {
+            productImgArr: []
+        },
+        pic:"", // 商品主图片
+        albumPics:"", // 商品的图片集
+        content: '', // 详情页的内容
+        detailHtml:"", // 详情页
     }
 
     export default {
-        name:"productDetail",
-        components:{
-            productInfoDetail,
-            productSaleDetail,
-            productAttrDetail
-        },
-        data(){
-            return{
-                active:0,
+        name: "productDetail",
+        data() {
+            return {
+                active: 0,
                 showStatus:[true,false,false],
-                productObj:Object.assign({},defaultProductObj)  // 商品的参数
-
-            }
+                productObj:Object.assign({},defaultProductObj) // 商品的参数
+            };
         },
         methods:{
+            // 隐藏下面的三个组件
             hideAll(){
-                for(let i = 0; i<this.showStatus.length;i++){
+                for(let i=0; i<this.showStatus.length; i++){
                     this.showStatus[i] = false;
                 }
             },
             // 下一步
-                nextStep(){
-                    if(this.active < this.showStatus.length-1){
-                        this.active++
-                        this.hideAll();
-                        this.showStatus[this.active] = true;
-                    }
-                },
-                // 上一步
-                prevStep(){
-                    if(this.active >0) {
-                        this.active--
-                        this.hideAll();
-                        this.showStatus[this.active] = true;
-                    }
-                },
-                // 完成
-                finishCommit(){
-                    this.$message.success("提交商品成功")
+            nextStep(){
+                if(this.active < this.showStatus.length-1){
+                    this.active++
+                    this.hideAll();
+                    this.showStatus[this.active] = true;
                 }
+            },
+            // 上一步
+            prevStep(){
+                if(this.active >0) {
+                    this.active--
+                    this.hideAll();
+                    this.showStatus[this.active] = true;
+                }
+            },
+            // 完成
+            finishCommit(){
+                this.$confirm("是否创建一个新的商品","xxx温馨提示",{
+                    confirmButtonText:"确定",
+                    cancelButtonText:"取消"
+                }).then(()=>{
+                    // 点击确定，完成商品的添加
+                    addProduct(this.productObj).then(response=>{
+                        if(response.status == 1){
+                            this.$message.success(response.msg)
+                            location.reload(); // 重新加载页面  相当于刷新
+                        }else{
+                            this.$message.error(response.msg)
+                        }
+                    })
+                }).catch(()=>{
+                    this.$message.info("已取消")
+                })
+            }
+        },
+        components:{
+            productInfoDetail,
+            productSaleDetail,
+            productAttrDetail
         }
     }
 </script>
-<style lang="">
-    
+
+<style scoped>
+
 </style>
