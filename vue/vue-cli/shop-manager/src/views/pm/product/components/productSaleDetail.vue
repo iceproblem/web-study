@@ -146,7 +146,7 @@
                     publishStatus: 1, // 是否上架
                     newsStatus: 1,
                     recommendStatus: 1,
-                    serviceList: [1, 2], // 服务列表
+                    serviceList: '', // 服务列表
                     netContent: '',
                     storageCondition: '',
                     quality: '',

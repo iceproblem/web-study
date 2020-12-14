@@ -15,3 +15,6 @@ export const updateCategory = (category)=> ajax('/manager/api/auth/category/upda
 // 5)根据id获取一条分类
 export const getCategoryId = (id)=> ajax('/manager/api/auth/category/get_category_by_id', {id}, 'post');
 
+// 6)获取带有二级分类的列表
+export const getCategoryWithChildren = ()=> ajax('/manager/api/auth/category/get_category_with_Children');
+

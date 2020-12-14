@@ -1,5 +1,9 @@
 <template>
     <div>
+        <el-card class="box-card" shadow="naver">
+            <i class="el-icon-s-order" style="font-size:18px; margin-right:5px;"></i>
+            <span>添加商品</span>
+        </el-card>
         <productDetail></productDetail>
     </div>
 </template>

@@ -2,7 +2,7 @@
     <div style="margin-top: 50px">
         <el-form
                 ref="productForm"
-                :model="productInfo"
+                :model="value"
                 label-width="150px"
                 :rules="productInfoRules"
                 style="width: 600px"
@@ -15,25 +15,25 @@
                     @change="handleProductCateChange"></el-cascader>
             </el-form-item>
             <el-form-item label="商品名称：" prop="name">
-                <el-input v-model="productInfo.name"></el-input>
+                <el-input v-model="value.name"></el-input>
             </el-form-item>
             <el-form-item label="副标题：" prop="subTitle">
-                <el-input v-model="productInfo.subTitle"></el-input>
+                <el-input v-model="value.subTitle"></el-input>
             </el-form-item>
             <el-form-item label="商品货号：">
-                <el-input v-model="productInfo.productSn"></el-input>
+                <el-input v-model="value.productSn"></el-input>
             </el-form-item>
             <el-form-item label="市场价：">
-                <el-input v-model="productInfo.originalPrice"></el-input>
+                <el-input v-model="value.originalPrice"></el-input>
             </el-form-item>
             <el-form-item label="商品售价：">
-                <el-input v-model="productInfo.price"></el-input>
+                <el-input v-model="value.price"></el-input>
             </el-form-item>
             <el-form-item label="商品库存：">
-                <el-input v-model="productInfo.store"></el-input>
+                <el-input v-model="value.store"></el-input>
             </el-form-item>
             <el-form-item label="排序：">
-                <el-input v-model="productInfo.sort"></el-input>
+                <el-input v-model="value.sort"></el-input>
             </el-form-item>
         </el-form>
 
@@ -42,19 +42,14 @@
 </template>
 
 <script>
+    import { getCategoryWithChildren } from "../../../../api/categoryApi";
     export default {
         name: "productInfoDetail",
+        props:{
+            value:Object
+        },
         data(){
             return{
-                productInfo:{
-                    name:"", // 商品名称
-                    subTitle:"", // 商品的副标题
-                    productSn:"", // 商品的货号
-                    originalPrice:"", // 市场价
-                    price:"", //商品售价
-                    store:"", // 商品库存
-                    sort:"", // 排序
-                },
                 productInfoRules:{
                     name:[
                         {required:true,message:"请输入商品的名称",trigger:"blur"},
@@ -65,24 +60,35 @@
                         {min:3,max:50,message:"长度在3到50个字符",trigger:"blur"},
                     ]
                 },
-                productCateValue:[],
-                productCateOptions:[
-                    {
-                        value:"1",
-                        label:"安心蔬菜",
-                        children:[
-                            {
-                                value:"1-1",
-                                label:"新品上线"
-                            },
-                            {
-                                value:"1-2",
-                                label:"平价"
-                            }
-                        ]
-                    }
-                ]
+                productCateValue:[],    // 代表选中的分类数据
+                productCateOptions:[], // 分类的数据
             }
+        },
+        created(){
+            getCategoryWithChildren().then(response=>{
+                // console.log(response);
+                if(response.status === 1){
+                    let listArr = response.data;
+                    this.productCateOptions = [];
+                    // this.productCateOptions = listArr;
+                    for(let i = 0; i < listArr.length; i++){
+                        let children = [];
+                        if(listArr[i].children != null && listArr[i].children.length > 0){
+                            //有二级分类
+                            for(let j = 0; j < listArr[i].children.length; j++){
+                                children.push({value:listArr[i].children[j].id,label:listArr[i].children[j].name})
+                            }
+                        }
+                        children = children.length > 0 ? children : null;
+                        // 没有二级分类
+                        this.productCateOptions.push({
+                            label:listArr[i].name,
+                            value:listArr[i].id,
+                            children:children
+                        });
+                    }
+                }
+            })
         },
         methods:{
             handleNext(){
