@@ -5,8 +5,8 @@
             <div>
                 <i class="el-icon-search" style="font-size: 18px; margin-right: 4px;"></i>
                 <span>筛选搜索</span>
-                <el-button class="btn-clear" size="mini" style="float: right;">清空</el-button>
-                <el-button class="btn-find" size="mini" type="primary" style="float: right; margin-right: 10px;">查询</el-button>
+                <el-button class="btn-clear" size="mini" style="float: right;" @click="handleResetSearch">清空</el-button>
+                <el-button class="btn-find" size="mini" type="primary" style="float: right; margin-right: 10px;" @click="handleSearchList">查询</el-button>
             </div>
             <div style="margin-top: 50px">
                 <el-form
@@ -26,7 +26,7 @@
                                 @change="handleProductCateChange"></el-cascader>
                     </el-form-item>
                     <el-form-item label="上架状态：">
-                        <el-select v-model="listQuery.publishStatus" placeholder="请选择商品是否上架"  style="width: 150px;">
+                        <el-select v-model="listQuery.publishStatus" placeholder="请选择商品是否上架"  style="width: 180px;">
                             <el-option
                                     v-for="item in publishStatusOptions"
                                     :key="item.value"
@@ -47,7 +47,7 @@
             <el-card shadow="never" style="margin-top: 30px">
                 <i class="el-icon-s-order" style="font-size: 18px; margin-right: 4px;"></i>
                 <span>商品列表</span>
-                <el-button class="btn-add" size="mini" style="float: right;">添加</el-button>
+                <el-button class="btn-add" size="mini" style="float: right;" @click="$router.push('/pm/addProduct')">添加</el-button>
             </el-card>
             <!--内容区域-->
             <div class="table-container">
@@ -68,7 +68,7 @@
                             width="100"
                             align="center"
                     >
-                        <template slot-scope="scope">{{ scope.row.id }}</template>
+                        <template slot-scope="scope">{{ (scope.$index  + 1) + ((listQuery.pageNum-1)*(listQuery.pageSize)) }}</template>
                     </el-table-column>
                     <el-table-column
                             label="商品图片"
@@ -102,9 +102,9 @@
                             align="center"
                     >
                         <template slot-scope="scope">
-                            <p>上架：<el-switch :active-value="scope.row.publishStatus" :inactive-value="0"></el-switch></p>
-                            <p>新品：<el-switch :active-value="scope.row.newsStatus" :inactive-value="1"></el-switch></p>
-                            <p>推荐：<el-switch :active-value="scope.row.recommendStatus" :inactive-value="0"></el-switch></p>
+                            <p>上架：<el-switch :active-value="1" v-model="scope.row.publishStatus" :inactive-value="0" @change="handlePublicStatusChange(scope.$index,scope.row)"></el-switch></p>
+                            <p>新品：<el-switch :active-value="1" v-model="scope.row.newsStatus" :inactive-value="0" @change="handleNewsStatusChange(scope.$index,scope.row)"></el-switch></p>
+                            <p>推荐：<el-switch :active-value="1" v-model="scope.row.recommendStatus" :inactive-value="0" @change="handleRecommendStatusChange(scope.$index,scope.row)"></el-switch></p>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -112,14 +112,14 @@
                             width="100"
                             align="center"
                     >
-                        <template slot-scope="scope">{{ scope.row.sale }}</template>
+                        <template slot-scope="scope">{{ scope.row.sale ? scope.row.sale : "暂无统计" }}</template>
                     </el-table-column>
                     <el-table-column
                             label="存量"
                             width="100"
                             align="center"
                     >
-                        <template slot-scope="scope">{{ scope.row.count }}</template>
+                        <template slot-scope="scope">{{ scope.row.store ? scope.row.store : "暂无统计" }}</template>
                     </el-table-column>
                     <el-table-column
                             label="操作"
@@ -128,7 +128,7 @@
                     >
                         <template slot-scope="scope">
                             <el-button size="mini">编辑</el-button>
-                            <el-button size="mini" type="danger">删除</el-button>
+                            <el-button size="mini" type="danger" @click="handleDelete(scope.$index,scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -150,7 +150,7 @@
 </template>
 
 <script>
-    import { getProductList } from "../../../api/productApi"
+    import { delOneProduct, getProductList,updateProductWithList } from "../../../api/productApi"
     import { getCategoryWithChildren } from "../../../api/categoryApi"
     let defautlQuery = {
         productSn:null, // 商品货号
@@ -236,7 +236,7 @@
             getList(){
                 this.listLoading = true;
                 getProductList(this.listQuery).then(response=>{
-                    console.log(response)
+                    // console.log(response)
                     if(response.status === 1){
                         this.listLoading = false;
                         this.listData = response.data.product_list;
@@ -244,21 +244,76 @@
                     }
                 })
             },
-            handleSizeChange(val) { // 每页多少条
+            // 每页多少条
+            handleSizeChange(val) {
                 this.listQuery.pageNum = 1;
                 this.listQuery.pageSize = val;
                 this.getList(); // 重新加载数据
             },
-            handleCurrentChange(val) {  // 点击切换页面
+            // 点击切换页面 分页
+            handleCurrentChange(val) {  
                 this.listQuery.pageNum = val;
                 this.getList(); // 重新加载数据
             },
+            // 批量选择
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
+            // 选择分类时执行
             handleProductCateChange(value){
                 console.log(value)
-            }
+            },
+            // 实现商品局部更新更新
+            localUpdataProduct(paramsObj){
+                updateProductWithList(paramsObj).then(response=>{
+                    if(response.status === 1){
+                        this.$message.success(response.msg)
+                    }else{
+                        this.$message.error(response.msg)
+                    }
+                })
+            },
+            //商品是否上架
+            handlePublicStatusChange(index,row){
+                this.localUpdataProduct({id:row.id,publishStatus:row.publishStatus})
+            },
+            // 商品是否为新品
+            handleNewsStatusChange(index,row){
+                this.localUpdataProduct({id:row.id,newsStatus:row.newsStatus})
+            },
+            // 商品是否推荐
+            handleRecommendStatusChange(index,row){
+                this.localUpdataProduct({id:row.id,recommendStatus:row.recommendStatus})
+            },
+            //删除商品
+            handleDelete(index,row){
+                this.$confirm("确定要删除此商品吗？","XXX温馨提醒",{
+                    confirmButtonText:"确定",
+                    cancelButtonText:"取消",
+                }).then(()=>{
+                    delOneProduct(row.id).then(response=>{
+                        if(response.status === 1){
+                            this.$message.success(response.msg)
+                            this.getList();
+                        }else{
+                            this.$message.error(response.msg)
+                        }
+                    })
+                }).catch(()=>{
+
+                })
+            },
+            // 查询
+            handleSearchList(){
+                this.listQuery.pageNum = 1;
+                this.getList();
+            },
+            // 清空查询面板
+            handleResetSearch(){
+                this.listQuery = Object.assign({},defautlQuery);
+                this.productCateValue = [];
+            },
+
         }
     }
 </script>
