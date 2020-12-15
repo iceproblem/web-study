@@ -127,11 +127,23 @@
                             align="center"
                     >
                         <template slot-scope="scope">
-                            <el-button size="mini">编辑</el-button>
+                            <el-button size="mini" @click="handleUpdate(scope.$index,scope.row)">编辑</el-button>
                             <el-button size="mini" type="danger" @click="handleDelete(scope.$index,scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
+            </div>
+            <!-- 批量操作 -->
+            <div class="many-operate-container">
+                <el-select v-model="operatesType" placeholder="批量操作列表" size="small">
+                    <el-option
+                        v-for="(item) in operates"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
+                <el-button style="margin-left:10px" size="mini" type="danger" @click="handleManyOperate">确定</el-button>
             </div>
             <!-- 分类列表的分页区域 -->
             <div class="pagination-container">
@@ -150,7 +162,7 @@
 </template>
 
 <script>
-    import { delOneProduct, getProductList,updateProductWithList } from "../../../api/productApi"
+    import { delOneProduct, getProductList,updateProductWithList,updateProductWithListMany,deleteProductWithListMany } from "../../../api/productApi"
     import { getCategoryWithChildren } from "../../../api/categoryApi"
     let defautlQuery = {
         productSn:null, // 商品货号
@@ -179,7 +191,38 @@
                 listLoading:false, // ajax请求数据的Loading
                 listData:[], // 表格中的数据
                 total:0, // 总数据条数
-
+                multipleSelection:[], // 批量选择的商品
+                operates:[
+                    {
+                        label:"批量上架",
+                        value:"publishOn",
+                    },
+                    {
+                        label:"批量下架",
+                        value:"publishOff",
+                    },
+                    {
+                        label:"批量推荐",
+                        value:"recommendOn",
+                    },
+                    {
+                        label:"批量取消推荐",
+                        value:"recommendOff",
+                    },
+                    {
+                        label:"批量上新",
+                        value:"newsON",
+                    },
+                    {
+                        label:"批量下新",
+                        value:"newsOff",
+                    },
+                    {
+                        label:"批量删除",
+                        value:"manyDel",
+                    },
+                ],
+                operatesType:null, // 批量操作的选择
             }
         },
         created() {
@@ -261,7 +304,7 @@
             },
             // 选择分类时执行
             handleProductCateChange(value){
-                console.log(value)
+                // console.log(value)
             },
             // 实现商品局部更新更新
             localUpdataProduct(paramsObj){
@@ -313,7 +356,112 @@
                 this.listQuery = Object.assign({},defautlQuery);
                 this.productCateValue = [];
             },
-
+            // 批量操作
+            handleManyOperate(){
+                if(this.operatesType === null){
+                    this.$message.warning("请选择批量擦做的选项")
+                    return; // 结束
+                }
+                if(this.operatesType === null || this.multipleSelection.length<1){
+                    this.$message.warning("请选择要操作的商品")
+                    return; // 结束
+                }
+                this.$confirm("是否进行批量操作？","XXX温馨提示",{
+                    confirmButtonText:"确定",
+                    cancelButtonText:"取消",
+                }).then(()=>{
+                    let ids = [];
+                    for(let i = 0; i<this.multipleSelection.length; i++){
+                        ids.push(this.multipleSelection[i].id)
+                    }
+                    //要进行批量操作
+                    switch(this.operatesType){
+                        // 批量上架
+                        case this.operates[0].value:
+                            this.updatePublishStatus(1,ids);
+                            break;
+                        // 批量下架
+                        case this.operates[1].value:
+                            this.updatePublishStatus(0,ids);
+                            break;
+                        //批量推荐
+                        case this.operates[2].value:
+                            this.updateRecommendStatus(1,ids);
+                            break;
+                        // 批量取消推荐
+                        case this.operates[3].value:
+                            this.updateRecommendStatus(0,ids);
+                            break;
+                        // 批量上新
+                        case this.operates[4].value:
+                            this.updateNewsStatus(1,ids);
+                            break;
+                        // 批量下新
+                        case this.operates[5].value:
+                            this.updateNewsStatus(0,ids);
+                            break;
+                        // 批量删除
+                        case this.operates[6].value:
+                            this.updateDeleteStatus(ids);
+                            break;
+                    }
+                })
+                
+            },
+            //批量上架或下架
+            updatePublishStatus(status,ids){
+                let params = {};
+                params.ids = ids;
+                params.publishStatus = status;
+                updateProductWithListMany(params).then(response=>{
+                    if(response.status === 1){
+                        this.$message.success("修改成功");
+                    }
+                    this.getList();
+                })
+            },
+            // 批量推荐或取消推荐
+            updateRecommendStatus(status,ids){
+                let params = {};
+                params.ids = ids;
+                params.recommendStatus = status;
+                updateProductWithListMany(params).then(response=>{
+                    if(response.status === 1){
+                        this.$message.success("修改成功")
+                    }
+                    this.getList(); // 重新加载数据
+                })
+            },
+            // 批量上新或下新
+            updateNewsStatus(status,ids){
+                let params = {};
+                params.ids = ids;
+                params.newsStatus = status;
+                updateProductWithListMany(params).then(response=>{
+                    if(response.status === 1){
+                        this.$message.success("修改成功")
+                    }
+                    this.getList(); // 重新加载数据
+                })
+            },
+            // 批量删除
+            updateDeleteStatus(ids){
+                let params = {};
+                params.ids = ids;
+                params.newsStatus = status;
+                deleteProductWithListMany(params).then(response=>{
+                    if(response.status === 1){
+                        this.$message.success("修改成功")
+                    }
+                    this.getList(); // 重新加载数据
+                })
+            },
+            // 编辑商品信息按钮
+            handleUpdate(index,row){
+                this.$router.push({
+                    path:"/pm/updateProduct"
+                })
+            }
         }
     }
 </script>

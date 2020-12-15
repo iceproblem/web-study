@@ -1,12 +1,16 @@
 <template>
     <div>
-        更新商品
+        <ProductDetail :isUpdate="true"></ProductDetail>
     </div>
 </template>
 
 <script>
+    import ProductDetail from "./components/productDetail"
     export default {
-        name: "updata"
+        name: "updata",
+        components:{
+            ProductDetail
+        }
     }
 </script>
 

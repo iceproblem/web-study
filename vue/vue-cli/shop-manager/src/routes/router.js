@@ -24,6 +24,7 @@ let routes = [
         children: [
             {path: "product",name:"product",component:()=>import("@/views/pm/product/index")},
             {path: "addProduct",name:"addProduct",component:()=>import("@/views/pm/product/add")},
+            {path: "updateProduct",name:"updateProduct",component:()=>import("@/views/pm/product/update")},
             {path: "productCategory",name:"productCategory",component:()=>import("@/views/pm/productCategory/index")},
             {path: "productCateAdd",name:"productCateAdd",component:()=>import("@/views/pm/productCategory/add")},
             {path: "productCateUpdate",name:"productCateUpdate",component:()=>import("@/views/pm/productCategory/update")},

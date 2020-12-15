@@ -12,3 +12,8 @@ export const delOneProduct = (id)=> ajax('/manager/api/auth/product/del_one_prod
 // 4)局部列表更新
 export const updateProductWithList = (product)=> ajax('/manager/api/auth/product/update_product_local', product, 'post');
 
+// 5)批量更新列表
+export const updateProductWithListMany = (product)=> ajax('/manager/api/auth/product/update_list_many', product, 'post');
+
+// 6)批量删除列表
+export const deleteProductWithListMany = (product)=> ajax('/manager/api/auth/product/delete_list_many', product, 'post');
