@@ -37,6 +37,8 @@ let routes = [
         children: [
             {path: "order",name:"order",component:()=>import("@/views/om/index")},
             {path: "setting",name:"setting",component:()=>import("@/views/om/setting")},
+            {path: "deliver",name:"deliver",component:()=>import("@/views/om/deliverList")},
+            {path: 'detail', name: 'detail', component: () => import('@/views/om/detail')},
         ]
     },
     {
