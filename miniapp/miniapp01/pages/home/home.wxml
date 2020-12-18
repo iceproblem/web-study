@@ -1,0 +1,48 @@
+<!--pages/home/home.wxml-->
+<!-- <text>pages/home/home.wxml</text> -->
+
+<!-- 逻辑判断 -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 1) 数据绑定 -->
+<text class="msg">{{ msg }}</text>
+<view>网址：{{ site }}，年龄：{{ age }}</view>
+<!-- 小胡子中方表达式 -->
+<view>{{ age>18 ? "成年人" : "未成年" }}</view>
+<view>{{age*20}}</view>
+<!-- 绑定class -->
+<view class="bind-class {{ showColor ? 'on' : ''}}">{{ msg }}</view>
+
+<view style="margin:20px 0px; width:100%; height:0px; border:1px solid #90a4ae;"></view>
+
+<!-- 2) 列表渲染 -->
+<view wx:for="{{ movies }}" wx:key="index">{{ item }}</view>
+
+<view style="margin:20px 0px; width:100%; height:0px; border:1px solid #90a4ae;"></view>
+
+<!-- 3) 事件绑定 -->
+<button size="mini" bind:tap="plus">加1</button>
+<text>当前计数器：{{ number }}</text>
+<button size="mini" bind:tap="reduction">减1</button>
+
+<view style="margin:20px 0px; width:100%; height:0px; border:1px solid #90a4ae;"></view>
+
+
