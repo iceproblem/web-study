@@ -5,8 +5,8 @@
             <div>
                 <i class="el-icon-search" style="font-size: 18px; margin-right: 4px;"></i>
                 <span>筛选搜索</span>
-                <el-button class="btn-clear" size="mini" style="float: right;">清空</el-button>
-                <el-button class="btn-find" size="mini" type="primary" style="float: right; margin-right: 10px;">查询订单</el-button>
+                <el-button class="btn-clear" size="mini" style="float: right;" @click="handleResetSearch">清空</el-button>
+                <el-button class="btn-find" size="mini" type="primary" style="float: right; margin-right: 10px;" @click="handleSearchList">查询订单</el-button>
             </div>
             <div style="margin-top: 50px">
                 <el-form
@@ -71,8 +71,9 @@
                 <el-table
                         ref="multipleTable"
                         :data="list"
+                        v-loading="listLoading"
                         style="width: 100%"
-                        height="300"
+                        @selection-change="handleSelectionChange"
                         >
                     <el-table-column
                             type="selection"
@@ -83,7 +84,7 @@
                             width="60"
                             align="center"
                     >
-                        <template slot-scope="scope">1</template>
+                        <template slot-scope="scope">{{ (scope.$idnex)+((listQuery.pageNum-1)*(listQuery.pageSize))}}</template>
                     </el-table-column>
                     <el-table-column
                             label="订单编号"
@@ -109,13 +110,13 @@
                         label="订单金额" 
                         align="center"
                     >
-                    <template slot-scope="scope">{{ scope.row.tatolAmount }}</template>
+                    <template slot-scope="scope">{{ scope.row.totalAmount }}</template>
                     </el-table-column>
                     <el-table-column
                         label="支付方式" 
                         align="center"
                     >
-                    <template slot-scope="scope">{{ scope.row.payTyp }}</template>
+                    <template slot-scope="scope">{{ scope.row.payType }}</template>
                     </el-table-column>
                     <el-table-column
                         label="订单来源" 
@@ -132,10 +133,11 @@
                     <el-table-column
                         label="操作" 
                         align="center"
+                        width="220"
                     >
                     <template slot-scope="scope">
-                        <el-button size="mini">查看订单</el-button>
-                        <el-button size="mini" type="danger">关闭订单</el-button>
+                        <el-button size="mini" @click="handleLookOrder(scope.$index,scope.row)">查看订单</el-button>
+                        <el-button size="mini" type="danger" @click="handleCloseOrder(scope.$index,scope.row)">关闭订单</el-button>
                     </template>
                     </el-table-column>
 
@@ -143,7 +145,7 @@
             </div>
             <!-- 批量-->
             <div class="many-operate-container">
-                <el-select v-model="hello" size="small">
+                <el-select placeholder="批量操作列表" v-model="operatesType" size="small">
                     <el-option
                         v-for="item in operatesOptions"
                         :key="item.value"
@@ -151,18 +153,18 @@
                         :value="item.value">
                     </el-option>
                 </el-select>
-                <el-button size="mini" type="denger" style="margin-left:10px">确定</el-button>
+                <el-button size="mini" type="denger" style="margin-left:10px" @click="handleManyOperate">确定</el-button>
             </div>
             <!-- 分类列表的分页区域 -->
             <div class="pagination-container">
                 <el-pagination
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
-                    :current-page="5"
+                    :current-page="listQuery.pageNum"
                     :page-sizes="[5, 10, 15]"
-                    :page-size="100"
+                    :page-size="listQuery.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="400">
+                    :total="total">
                 </el-pagination>
             </div>
         </div>
@@ -170,18 +172,22 @@
 </template>
 
 <script>
+    import {getOrderList} from "../../api/orderApi"
+    let defaultListQuery = {
+        pageNum:1,  // 当前是第几页
+        pageSize:5, // 每页5条数据
+        orderSn:null, // 订单编号
+        status:null, // 订单的状态
+        orderType:null, // 订单的分类
+        sourceType:null, // 订单的来源
+        orderTime:null, // 下单时间
+        receiverName:null, // 收货人
+    }
     export default {
         name: "index",
         data(){
             return{
-                listQuery:{
-                    orderSn:1, // 订单编号
-                    status:1, // 订单的状态
-                    orderType:1, // 订单的分类
-                    soruce:1, // 订单的来源
-                    orderTime:"", // 下单时间
-                    receiverName:"", // 收货人
-                },
+                listQuery:Object.assign({},defaultListQuery),
                 statusOptions:[ // 订单状态： 0->待付款 1->待发货 2->已发货 3->已完成  4-已关闭  5-无效订单
                     {label:"待付款",value:0},
                     {label:"待发货",value:1},
@@ -198,67 +204,50 @@
                     {label:"PC端订单",value:0},
                     {label:"APP订单",value:1},
                 ],
-                list:[  // 列表中的数据
-                    {
-                        orderSn:67890, // 订单编号
-                        memberUsername:"xxx", // 用户账户
-                        orderTime:"2020-09-09", // 下单的时间
-                        totalAmount:"￥2345", // 订单金额
-                        payType:"支付宝", // 支付方式
-                        sourceType:"PC订单", // 订单来源
-                        status:"待付款", // 订单状态
-                    },
-                    {
-                        orderSn:67890, // 订单编号
-                        memberUsername:"xxx", // 用户账户
-                        orderTime:"2020-09-09", // 下单的时间
-                        totalAmount:"￥2345", // 订单金额
-                        payType:"支付宝", // 支付方式
-                        sourceType:"PC订单", // 订单来源
-                        status:"待付款", // 订单状态
-                    },
-                    {
-                        orderSn:67890, // 订单编号
-                        memberUsername:"xxx", // 用户账户
-                        orderTime:"2020-09-09", // 下单的时间
-                        totalAmount:"￥2345", // 订单金额
-                        payType:"支付宝", // 支付方式
-                        sourceType:"PC订单", // 订单来源
-                        status:"待付款", // 订单状态
-                    },
-                    {
-                        orderSn:67890, // 订单编号
-                        memberUsername:"xxx", // 用户账户
-                        orderTime:"2020-09-09", // 下单的时间
-                        totalAmount:"￥2345", // 订单金额
-                        payType:"支付宝", // 支付方式
-                        sourceType:"PC订单", // 订单来源
-                        status:"待付款", // 订单状态
-                    },
-                    {
-                        orderSn:67890, // 订单编号
-                        memberUsername:"xxx", // 用户账户
-                        orderTime:"2020-09-09", // 下单的时间
-                        totalAmount:"￥2345", // 订单金额
-                        payType:"支付宝", // 支付方式
-                        sourceType:"PC订单", // 订单来源
-                        status:"待付款", // 订单状态
-                    }
-                ],
+                // 表格中数据加载时的动画效果，false表示没有
+                listLoading:false,
+                list:[],  // 列表中的数据
+                // 批量选择项
                 operatesOptions:[
                     {label:"批量发货",value:1},
                     {label:"关闭订单",value:2},
                     {label:"删除订单",value:3},
                 ],
-                hello:""
+                operatesType:"", //批量选择中的数据
+                total:null, // 总记记录数
             }
         },
+        created(){
+            this.getList(); // 获取订单数据
+        },
         methods:{
+            // 改变每页的条数
             handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+                // console.log(`每页 ${val} 条`);
             },
+            // 切换页码
             handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
+                // console.log(`当前页: ${val}`);
+            },
+            // 清空搜索列表
+            handleResetSearch(){
+
+            },
+            // 搜索
+            handleSearchList(){
+
+            },
+            // 批量选择
+            handleSelectionChange(val){},
+            // 查看订单
+            handleLookOrder(index,row){},
+            // 关闭订单
+            handleCloseOrder(index,row){},
+            // 批量操作按钮
+            handleManyOperate(){},
+            // 获取订单数据
+            async getList(){
+                let result = await getOrderList(this.listQuery);
             },
         }
     }

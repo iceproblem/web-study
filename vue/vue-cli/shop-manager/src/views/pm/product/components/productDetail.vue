@@ -10,17 +10,20 @@
         <productInfoDetail
             v-show="showStatus[0]"
             v-model="productObj"
+            :isUpdate="isUpdate"
             @nextStep="nextStep"
         ></productInfoDetail>
         <productSaleDetail
             v-show="showStatus[1]"
             v-model="productObj"
+            :isUpdate="isUpdate"
             @nextStep="nextStep"
             @prevStep="prevStep"
         ></productSaleDetail>
         <productAttrDetail
             v-show="showStatus[2]"
             v-model="productObj"
+            :isUpdate="isUpdate"
             @prevStep="prevStep"
             @finishCommit="finishCommit"
         ></productAttrDetail>
@@ -29,7 +32,7 @@
 </template>
 
 <script>
-    import { addProduct } from "../../../../api/productApi"
+    import { addProduct,editProductById,getProductById } from "../../../../api/productApi"
     import productInfoDetail from "./productInfoDetail";
     import productSaleDetail from "./productSaleDetail";
     import productAttrDetail from "./productAttrDetail";
@@ -89,12 +92,58 @@
 
     export default {
         name: "productDetail",
+        props:{
+            isUpdate:{
+                type:Boolean,
+                default:false,  // 默认是添加
+            }
+        },
         data() {
             return {
                 active: 0,
                 showStatus:[true,false,false],
                 productObj:Object.assign({},defaultProductObj) // 商品的参数
             };
+        },
+        created() {
+            // 实现数据回显
+            if(this.isUpdate){
+                // 编辑模式
+                getProductById({id:this.$route.query.id}).then(response=>{
+                    // console.log(response)
+                    if(response.status === 1){
+                        // 对会员优惠 和 限时抢购 特殊处理
+                        let tempProductObj = response.data;
+                        if(tempProductObj.memberPriceList.length === 0){
+                            tempProductObj.memberPriceList = [
+                                {
+                                    memberLevelId: 1,
+                                    memberLevelName: '黄金会员',
+                                    memberPrice: null
+                                },
+                                {
+                                    memberLevelId: 2,
+                                    memberLevelName: '白金会员',
+                                    memberPrice: null
+                                },{
+                                    memberLevelId: 3,
+                                    memberLevelName: '钻石会员',
+                                    memberPrice: null
+                                }
+                            ]
+                        }
+                        if(tempProductObj.productHomeKillList.length === 0){
+                            tempProductObj.productHomeKillList = [
+                                {count: 0, discount: 0}
+                            ]
+                        }
+                        // 实现数据的回显
+                        this.productObj = tempProductObj;
+                    }
+                }).catch(error=>{
+                    this.$message.error("获取此商品信息失败，检查你的网络~")
+                })
+            }
         },
         methods:{
             // 隐藏下面的三个组件
@@ -120,20 +169,35 @@
                 }
             },
             // 完成
-            finishCommit(){
-                this.$confirm("是否创建一个新的商品","xxx温馨提示",{
+            finishCommit(isUpdate){
+                this.$confirm("确认是否提交？","xxx温馨提示",{
                     confirmButtonText:"确定",
                     cancelButtonText:"取消"
                 }).then(()=>{
-                    // 点击确定，完成商品的添加
-                    addProduct(this.productObj).then(response=>{
-                        if(response.status == 1){
-                            this.$message.success(response.msg)
-                            location.reload(); // 重新加载页面  相当于刷新
-                        }else{
-                            this.$message.error(response.msg)
-                        }
-                    })
+                    if(isUpdate){
+                        // 编辑
+                        editProductById(this.productObj).then(response=>{
+                            if(response.status == 1){
+                                this.$message.success(response.msg)
+                                this.$router.push("./product")
+                            }else{
+                                this.$message.error(response.msg)
+                            }
+                        }).catch(err=>{
+                            this.$message.error(err.msg)
+                        })
+                    }else{
+                        // 添加
+                        // 点击确定，完成商品的添加
+                        addProduct(this.productObj).then(response=>{
+                            if(response.status == 1){
+                                this.$message.success(response.msg)
+                                location.reload(); // 重新加载页面  相当于刷新
+                            }else{
+                                this.$message.error(response.msg)
+                            }
+                        })
+                    }
                 }).catch(()=>{
                     this.$message.info("已取消")
                 })

@@ -39,6 +39,10 @@
         name: "productAttrDetail",
         props:{
             value:Object, // value是一个商品的所有参数
+            isUpdate:{
+                type:Boolean,
+                default:false, // false表示默认是添加，不是编辑
+            }
         },
         data(){
             return {
@@ -91,27 +95,27 @@
                             }
                         }
                     }
-                    console.log("this.value.pic:",this.value.pic)
-                    console.log("this.value.albumPics:",this.value.albumPics)
+                    // console.log("this.value.pic:",this.value.pic)
+                    // console.log("this.value.albumPics:",this.value.albumPics)
                 }
             }
         },
         methods:{
             handCommit(){
-                this.$emit("finishCommit")
+                this.$emit("finishCommit",this.isUpdate)
             },
             handPrev(){
                 this.$emit("prevStep")
             },
             onEditorBlur(quill) {
-                console.log('editor blur!', quill);
-                console.log(this.content);
+                // console.log('editor blur!', quill);
+                // console.log(this.content);
             },
             onEditorFocus(quill) {
-                console.log('editor focus!', quill)
+                // console.log('editor focus!', quill)
             },
             onEditorReady(quill) {
-                console.log('editor ready!', quill)
+                // console.log('editor ready!', quill)
             },
         },
         components: {

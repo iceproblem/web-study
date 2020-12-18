@@ -459,7 +459,8 @@
             // 编辑商品信息按钮
             handleUpdate(index,row){
                 this.$router.push({
-                    path:"/pm/updateProduct"
+                    path:"/pm/updateProduct",
+                    query:{id:row.id},
                 })
             }
         }

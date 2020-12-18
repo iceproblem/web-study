@@ -39,8 +39,7 @@
         data() {
             return {
                 dialogImageUrl: '',
-                dialogVisible: false,
-                fileList: []
+                dialogVisible: false
             };
         },
         created(){
@@ -49,6 +48,18 @@
                 for(let i=0; i<productValue.length; i++){
                     this.fileList.push({url: productValue[i]});
                 }
+            }
+        },
+        computed:{
+            fileList(){
+                let productValue = this.value;
+                let fileList = [];
+                if(productValue){
+                    for(let i=0; i<productValue.length; i++){
+                        fileList.push({url:productValue[i]})
+                    }
+                }
+                return fileList;
             }
         },
         methods: {

@@ -48,6 +48,10 @@
         name: "productInfoDetail",
         props:{
             value:Object, // value是一个商品的所有参数
+            isUpdate:{
+                type:Boolean,
+                default:false,  // 默认是添加
+            },
         },
         data(){
             return{
@@ -65,7 +69,45 @@
                 productCateOptions:[], // 分类的数据
             }
         },
+        computed:{
+            productId(){  // productId表示商品的ID
+                return this.value.id
+            },
+        },
         watch:{
+            async productId(newValue){
+                if(!this.isUpdate) return;
+                if(newValue === undefined || newValue === null || newValue === 0) return;
+
+                // 走到此处，说明处于编辑模式，并且有ID
+                let result = await getCategoryWithChildren();
+                let listArr = result.data;
+                for(let i=0; i<listArr.length; i++){
+                    let chirden = [];
+                    if(listArr[i].children != null && listArr[i].children.length >0){
+                        // 有二级分类
+                        for(let j=0; j<listArr[i].children.length; j++){
+                            chirden.push({value:listArr[i].children[j].id,label:listArr[i].children[j].name})
+                        }
+                    }
+                    chirden = chirden.length > 0 ? chirden : null;
+                    this.productCateOptions.push({
+                        label:listArr[i].name,
+                        value:listArr[i].id,
+                        chirden:chirden
+                    })
+                }
+                // productCateValue赋值
+                if(this.value.productCategoryId !== null){
+                    // 有二级分类情况
+                    if(this.value.cateParentId && this.value.cateParentId !== 0){
+                        this.productCateValue.push(this.value.cateParentId)
+                    }
+                    // 只有一级分类情况
+                    this.productCateValue.push(this.value.productCategoryId)
+                }
+            },
+            // 获取分类信息
             productCateValue(newValue){
                 // 点击了谁，就可以获取分类的ID，如果点击了一级分类，获取一个ID，如果点击了二级分类，获取2个ID
                 if(newValue.length === 1){
@@ -138,7 +180,7 @@
                 this.$emit("nextStep")
             },
             handleProductCateChange(value){
-                console.log(value)
+                // console.log(value)
             }
         }
     }

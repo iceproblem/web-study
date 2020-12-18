@@ -17,3 +17,9 @@ export const updateProductWithListMany = (product)=> ajax('/manager/api/auth/pro
 
 // 6)批量删除列表
 export const deleteProductWithListMany = (product)=> ajax('/manager/api/auth/product/delete_list_many', product, 'post');
+
+// 7)根据ID获取商品的所有参数
+export const getProductById = (id)=> ajax('/manager/api/auth/product/get_product_by_id', id, 'post');
+
+// 8)编辑商品
+export const editProductById = (product)=> ajax('/manager/api/auth/product/edit_product_by_id', product, 'post');
