@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #app {
+            font-family: Avenir, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-align: center;
+            color: #2c3e50;
+        }
+        ul>li{
+            list-style: none;
+            line-height: 30px;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="app">
+        <h3>搜索列表</h3>
+        <div>
+            <h3>排序</h3>
+            <button @click="setOrder(2)">年龄↑</button>
+            <button @click="setOrder(1)">年龄↓</button>
+            <button @click="setOrder(0)">还原</button>
+        </div>
+        <label>
+            <input
+                    type="text"
+                    placeholder="请输入搜索的内容"
+                    v-model="searchStr"
+                    @keyup.enter="search"
+            >
+        </label>
+        <ul>
+            <li v-for="(item,index) in filterPersons">
+                {{ index + 1 }} 姓名：{{ item.name }}， 性别：{{ item.sex }}，年龄：{{ item.age }}，手机号：{{ item.phone}}
+            </li>
+        </ul>
+    </div>
+    <script src="../js/vue-development.js"></script>
+    <script>
+        let vm = new Vue({
+            el:"#app",
+            data(){
+                return{
+                    searchStr:"",
+                    persons:[
+                        {name: '张三', sex: '女', age: 19, phone: '18921212121'},
+                        {name: '李四', sex: '男', age: 29, phone: '18921221121'},
+                        {name: '王五', sex: '女', age: 39, phone: '18921788721'},
+                        {name: '赵六', sex: '男', age: 49, phone: '18921556121'},
+                        {name: '李四', sex: '男', age: 29, phone: '18921221121'},
+                        {name: '王五', sex: '女', age: 39, phone: '18921788721'},
+                        {name: '李四', sex: '男', age: 29, phone: '18921221121'},
+                        {name: '王五', sex: '女', age: 39, phone: '18921788721'},
+                        {name: '王五', sex: '女', age: 39, phone: '18921788721'},
+                        {name: '赵六', sex: '男', age: 49, phone: '18921556121'},
+                        {name: '李思思', sex: '男', age: 29, phone: '18921221121'},
+                        {name: '张三', sex: '女', age: 19, phone: '18921212121'},
+                        {name: '李四', sex: '男', age: 29, phone: '18921221121'},
+                        {name: '王五', sex: '女', age: 39, phone: '18921788721'},
+                        {name: '赵六', sex: '男', age: 49, phone: '18921556121'},
+                        {name: '李四', sex: '男', age: 10, phone: '18921221121'},
+                        {name: '王五', sex: '女', age: 39, phone: '18921788721'},
+                        {name: '李四', sex: '男', age: 59, phone: '18921221121'},
+                        {name: '王五', sex: '女', age: 39, phone: '18921788721'},
+                        {name: '王五', sex: '女', age: 39, phone: '18921788721'},
+                        {name: '赵六', sex: '男', age: 49, phone: '18921556121'},
+                        {name: '李五五', sex: '男', age: 29, phone: '18921221121'}
+                    ],
+                    orderTypes:0, // 0不排序，2表示升序，1表示降序
+                }
+            },
+            computed:{
+                filterPersons(){
+                    //取出数据 如果searchStr,persons,orderTypes改变，计算属性会重新计算
+                    let { searchStr,persons,orderTypes } = this;
+                    //copy原生的person
+                    let arr = [...persons]
+                    if(searchStr.trim()){
+                        arr = this.persons.filter(p=>p.name.indexOf(searchStr) !== -1);
+                    }
+
+                    //排序
+                    if(orderTypes){
+                        arr.sort((p1,p2)=>{
+                            if(orderTypes === 1){
+                                //降序
+                                return p2.age - p1.age;
+                            }else{
+                                //升序
+                                return p1.age - p2.age;
+                            }
+                        })
+                    }
+
+                    return arr;
+                },
+            },
+            methods:{
+                setOrder(orderTypes){
+                    this.orderTypes = orderTypes
+                },
+                search(){
+                    this.filterPersons = this.persons.filter(p=>p.name.indexOf(this.searchStr) !== -1);
+                },
+            },
+        });
+    </script>
+</body>
+</html>

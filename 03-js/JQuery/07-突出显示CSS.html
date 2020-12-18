@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        *{margin:0;padding:0}
+        body{
+            background-color: #000;
+        }
+        .fader{
+            width: 630px;
+            height: 392px;
+            border: 1px solid #fff;
+            margin:100px auto 0;
+            padding:10px 0 0 10px;
+        }
+        .fader li{
+            width: 200px;
+            height: 186px;
+            margin:0 10px 10px 0;
+            float: left;
+            list-style:none;
+            cursor:pointer;
+        }
+    </style>
+    <!--引入JQ-->
+    <script src="./js/jquery-1.11.3.js"></script>
+</head>
+<body>
+    <ul class="fader">
+        <li><img src="images/29/01.jpg" width="200" height="186" alt=""></li>
+        <li><img src="images/29/02.jpg" width="200" height="186" alt=""></li>
+        <li><img src="images/29/03.jpg" width="200" height="186" alt=""></li>
+        <li><img src="images/29/04.jpg" width="200" height="186" alt=""></li>
+        <li><img src="images/29/05.jpg" width="200" height="186" alt=""></li>
+        <li><img src="images/29/06.jpg" width="200" height="186" alt=""></li>
+    </ul>
+    <script>
+        $(function () {
+            //我的代码
+            $(".fader li").mouseover(function(){
+                $(this).siblings().stop(true).fadeTo(500, .5);
+            })
+            $(".fader li").mouseout(function(){
+                $(this).siblings().stop(true).fadeTo(500,1);
+            })
+            $(".fader li").click(function(){
+                $(this).children().stop(true).slideUp().slideDown();
+            })
+        })
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

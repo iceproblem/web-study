@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        *{margin:0;padding:0}
+        .content{
+            margin:50px auto;
+            display:block;
+        }
+        #kefu{
+            width: 131px;
+            height: 311px;
+            position:fixed;
+            /*right:0px;*/   /*显示*/
+            right:-131px;    /*隐藏*/
+            top:50%;
+            margin-top:-156px;
+        }
+        #kefu span{
+            width: 29px;
+            height: 117px;
+            background: url('images/30/qqL.jpg');
+            position:absolute;
+            left:-29px;
+            top:97px;
+            cursor:pointer;
+        }
+    </style>
+    <!--引入JQ-->
+    <script src="./js/jquery-1.11.3.js"></script>
+</head>
+<body>
+    <img src="images/30/bg.jpg" alt="" class="content">
+    <div id="kefu">
+        <img src="images/30/qq.jpg" alt="">
+        <span></span>
+    </div>
+    <script>
+        /*$(function () {
+            // 老师的代码
+            let flag = true;
+            $("#kefu span").click(function () {
+                if(flag){
+                    $(this).css("background","url('images/30/qqLOpen.jpg')");
+                    flag = false;
+                }else{
+                    $(this).css("background","url('images/30/qqL.jpg')");
+                    flag = true;
+                }
+
+            });
+        })*/
+
+        // $(function () {
+
+        //     //老师的代码
+        //     let flag = true;
+        //     $("#kefu span").click(function () {
+        //         if(flag){
+        //             $(this).css("background","url('images/30/qqLOpen.jpg')");
+        //             $("#kefu").animate({right:0},500)
+        //         }else{
+        //             $(this).css("background","url('images/30/qqL.jpg')");
+        //             $("#kefu").animate({right:-131},500)
+        //         }
+        //         flag = !flag
+        //     });
+        // })
+
+        $(function(){
+            //我的代码
+
+            let flag = true;
+            $("#kefu span").click(function(){
+                if(flag){
+                    $(this).css("background","url('images/30/qqLOpen.jpg')");
+                    $("#kefu").animate({right:0},500);
+                }else{
+                    $(this).css("background","url('images/30/qqL.jpg')");
+                    $("#kefu").animate({right:-131},500);
+                }
+                flag = !flag;
+            })
+            
+        })
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

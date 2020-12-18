@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        *{margin:0;padding:0}
+        #pingfen{
+            width: 135px;
+            height: 28px;
+            margin:10px auto 0;
+        }
+        #pingfen ul{
+            overflow:hidden;
+        }
+        #pingfen li{
+            width: 27px;
+            height: 28px;
+            background: url('images/21.gif');
+            list-style-type:none;
+            cursor:pointer;
+            float: left;
+        }
+        #pingfen li.jinxing{
+            background-position:left bottom;
+        }
+        #pingfen span{
+            color:#f60;
+            font-weight: bold;
+        }
+    </style>
+    <!--引入JQ-->
+    <script src="./js/jquery-1.11.3.js"></script>
+</head>
+<body>
+    <div id="pingfen">
+        <ul>
+            <li class="jinxing"></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+        <p>您的评分为：<span>1</span></p>
+    </div>
+    <script>
+        $(function () {
+            //我的代码
+            
+            //摸星星时
+            $("#pingfen li").mouseover(function(){
+                $(this).prevAll().addBack().attr("class","jinxing");
+                $(this).nextAll().attr("class","")
+            });
+            //点击星星时
+            $("#pingfen li").click(function(){
+                let pf = $(this).index()+1;
+                $("#pingfen span").html(pf);
+            });
+            //不摸星星时
+            $("#pingfen li").mouseout(function(){
+                let pf = Number.parseInt($("pingfen span").html());
+
+                $("#pingfen li:lt(${pf})").attr("class","jinxing");
+                $("#pingfen li:gt(${pf-1})").attr("class","");
+
+            });
+        })
+
+        //老师的代码
+        // $(function () {
+        //     // 摸星星时
+        //     $("#pingfen li").mouseover(function () {
+        //         $(this).prevAll().addBack().attr("class","jinxing")
+        //         $(this).nextAll().attr("class","")
+        //     });
+        //     // 点击星星时
+        //     $("#pingfen li").click(function () {
+        //         // alert($(this).index())
+        //         let pf = $(this).index()+1;
+        //         // .html(pf) 设置文本节点
+        //         $("#pingfen span").html(pf)
+        //     });
+        //     // 不摸星星时
+        //     $("#pingfen li").mouseout(function () {
+        //         // .html()获取文本节点
+        //         let pf = Number.parseInt($("#pingfen span").html());
+        //         // JQ中提供了大量的选择器
+        //         $(`#pingfen li:lt(${pf})`).attr("class","jinxing")
+        //         $(`#pingfen li:gt(${pf-1})`).attr("class","")
+        //     });
+        // })
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

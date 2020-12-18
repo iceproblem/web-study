@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        *{margin:0;padding:0}
+        img{
+            vertical-align: middle;
+            border:0 none;
+        }
+        .banner{
+            width: 490px;
+            height: 170px;
+            border: 1px solid #ccc;
+            padding: 5px;
+            margin:100px auto 0;
+        }
+        .banner div{
+            width: 490px;
+            height: 170px;
+            position:relative;
+            overflow:hidden;
+        }
+        .banner ul{
+            position:absolute;
+            left:0;
+            top:0px;
+        }
+        .banner ul li{
+            list-style-type:none;
+        }
+        .banner ol{
+            position:absolute;
+            right:15px;
+            bottom:15px;
+        }
+        .banner ol li{
+            list-style-type:none;
+            width: 20px;
+            height: 20px;
+            background-color: #fff;
+            cursor:pointer;
+            text-align: center;
+            line-height: 20px;
+            float: left;
+            margin-left: 10px;
+            border: 1px solid #ccc;
+        }
+        .banner ol li.cur{
+            background-color: yellow;
+        }
+    </style>
+    <script src="./js/jquery-1.11.3.js"></script>
+</head>
+<body>
+    <div class="banner">
+        <div>
+            <ul>
+                <li><a href="#"><img src="images/71/01.jpg" alt=""></a></li>
+                <li><a href="#"><img src="images/71/02.jpg" alt=""></a></li>
+                <li><a href="#"><img src="images/71/03.jpg" alt=""></a></li>
+                <li><a href="#"><img src="images/71/04.jpg" alt=""></a></li>
+                <li><a href="#"><img src="images/71/05.jpg" alt=""></a></li>
+            </ul>
+            <ol>
+                <li class="cur">1</li>
+                <li>2</li>
+                <li>3</li>
+                <li>4</li>
+                <li>5</li>
+            </ol>
+        </div>
+    </div>
+    <script>
+    //    $(function () {
+    //        //老师的代码
+    //         let index = 0;
+    //         let timer = null;
+    //         $(".banner ol li").mouseover(function () {
+    //             $(this).addClass("cur").siblings().removeClass("cur");
+    //             index = $(this).index();
+    //             $(".banner ul").stop(true).animate({top:-170*index},500)
+    //         });
+
+    //         function go(){
+    //             timer = setInterval(()=>{
+    //                 index++;
+    //                 if(index >= $(".banner ol li").length){
+    //                     index = 0;
+    //                 }
+    //                 $(".banner ol li").eq(index).addClass("cur").siblings().removeClass("cur");
+    //                 $(".banner ul").stop(true).animate({top:-170*index},500)
+    //             },2000)
+    //         }
+    //         $(".banner").mouseleave(go);
+    //         go();
+    //    })
+    $(function(){
+        //我的代码
+        let index = 0;
+        let timer = null;
+        $(".banner ol li").mouseenter(function(){
+            $(this).addClass("cur").siblings().removeClass("cur");
+            index = $(this).index();
+            $(".banner ul").stop(true).animate({top:-170*index},500);
+        });
+
+        function go(){
+            timer = setInterval(() => {
+                index++;
+                if(index > $(".banner ol li").length){
+                    index = 0;
+                }
+                $(".banner ol li").eq(index).addClass("cur").siblings().removeClass("cur");
+                $(".banner ul").stop(true).animate({top:-170*index},500);
+            }, 2000);
+        }
+        $(".banner").mouseleave(go);
+        go();
+    })
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

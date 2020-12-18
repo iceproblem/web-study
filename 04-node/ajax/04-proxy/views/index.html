@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--script标签的src也可以发起一个get请求-->
+    <!--<script src="http://localhost:3000/jquery-1.11.3.js"></script>-->
+
+    <!-- 没有写http://localhost:3000，它会向本服务器（http://localhost:3000/）发请求 -->
+    <script src="/jquery-1.11.3.js"></script>
+</head>
+<body>
+   <h2>测试发起ajax请求</h2>
+   <button>发送ajax</button>
+   <script>
+       $(function () {
+           $("button").click(function () {
+                // $.get("http://localhost:4000/newsList"  这样写有跨域问题
+
+                //$.get("http://localhost:3000/newsList"
+                $.get("/newsList",res=>{
+                    console.log(res); // res是3000服务器响应的数据
+                })
+
+           })
+       })
+   </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+

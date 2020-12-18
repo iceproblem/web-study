@@ -1,0 +1,13 @@
+/* pages/home/home.wxss */
+.msg{
+  margin-top: 20px;
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+.bind-class{
+  font-size: 50px;
+}
+.on{
+  color: aqua;
+}
