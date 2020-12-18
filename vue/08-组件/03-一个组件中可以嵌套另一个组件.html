@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <p>app</p>
+    <father></father>
+    <h3>{{ fatherData }}</h3>
+    <h3>{{ sonData }}</h3>
+</div>
+<template id="father">
+    <div>
+        <son></son>
+        <p>1</p>
+        <h3>{{ fatherData }}</h3>
+        <h3>{{ sonData }}</h3>
+    </div>
+</template>
+<template id="son">
+    <div>
+        <p>2</p>
+        <h3>{{ fatherData }}</h3>
+        <h3>{{ sonData }}</h3>
+    </div>
+</template>
+<script src="../js/vue-development.js"></script>
+<script>
+    let son = {
+        template:"#son",
+        data(){
+            return {
+                sonData:"2 son组件中的数据"
+            }
+        }
+    };
+    let father = {
+        template:"#father",
+        data(){
+            return {
+                fatherData:"1 father组件中的数据"
+            }
+        },
+        components:{
+            son
+        },
+    };
+    let vm = new Vue({
+        el:"#app",
+        components:{
+            father
+        }
+    });
+</script>
+
+</body>
+</html>

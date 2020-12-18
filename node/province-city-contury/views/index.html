@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>省市区三级联动</title>
+</head>
+<body>
+<h2>省市区三级联动</h2>
+<lable for="">请选择省份：</lable>
+<select  id="province">
+    <option value="">--省份--</option>
+</select>
+<select  id="city">
+    <option value="">--市区--</option>
+</select>
+<select  id="country">
+    <option value="">--区县--</option>
+</select>
+
+<script>
+    let province = document.getElementById("province");
+    let city = document.getElementById("city");
+    let country = document.getElementById("country");
+    //获取所有省份
+    //创建xhr对象
+    let xhr = new XMLHttpRequest();
+    //建立链接
+    xhr.open("get","./province");
+    //发出请求
+    xhr.send(null);
+    //监听服务器相应
+    xhr.onreadystatechange = function(){
+        if(xhr.readyState == 4){
+            let res = xhr.responseText;
+            let provinces = JSON.parse(res);
+            let str = `<option value="">--省份--</option>`
+            province.forEach(item=>{
+                str += `<option value="${item}">${item}</option>`
+            })
+            province.innerHTML =str;
+        }
+    }
+    //根据点击的省，获取所有的市
+    province.onchange = function(){
+        xhr.open("get","/city?province"+this.value);
+        xhr.send(null);
+        xhr.onreadystatechange = function (){
+            let res = xhr.responseText;
+        }
+    }
+</script>
+</body>
+</html>

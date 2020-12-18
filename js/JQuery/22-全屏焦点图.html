@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        *{margin:0;padding:0}
+        .banner{
+            width: 100%;  /*一屏的宽度*/
+            height: 380px;
+            position:relative;
+            overflow:hidden;
+        }
+        .banner ul{
+            width:1000%;   /*10屏的宽度*/
+            position:absolute;
+            top:0;
+            left:0%;
+        }
+        .banner li{
+            width:10%;  /*一屏的宽度*/
+            height: 380px;
+            background: url('images/74/1.jpg') no-repeat center top;
+            float: left;
+            list-style-type:none;
+        }
+        .banner span{
+            width: 100px;
+            height: 100px;
+            font-size: 100px;
+            position:absolute;
+            left:100px;
+            top:50%;
+            margin-top: -50px;
+            text-align: center;
+            line-height: 100px;
+            color:white;
+            cursor:pointer;
+            display:none;
+        }
+        .banner span.right-btn{
+            right:100px;
+            left:auto;
+        }
+    </style>
+    <script src="./js/jquery-1.11.3.js"></script>
+</head>
+<body>
+    <div class="banner">
+        <ul>
+            <li></li>
+            <li style="background-image:url('images/74/2.jpg')"></li>
+            <li style="background-image:url('images/74/3.jpg')"></li>
+            <li style="background-image:url('images/74/4.jpg')"></li>
+        </ul>
+        <span>&lt;</span>
+        <span class="right-btn">&gt;</span>
+    </div>
+    <script>
+    //    $(function () {
+        // //老师的代码
+    //         let index = 0;
+    //         let timer = null;
+    //         // hover 相当于 mouseover + mouseout
+    //         $(".banner").hover(function () {
+    //             $(".banner span").stop(true).fadeIn(500)
+    //         },function () {
+    //             $(".banner span").stop(true).fadeOut(500)
+    //         })
+
+    //        $(".banner span").eq(0).click(function () {
+    //            index--;
+    //            if(index < 0){ index=$(".banner li").length-1; }
+    //            $(".banner ul").stop(true).animate({left:"-"+index+'00%'},1000)
+    //        })
+    //        $(".banner span").eq(1).click(function () {
+    //             index++;
+    //             if(index >= $(".banner li").length){ index=0; }
+    //             $(".banner ul").stop(true).animate({left:"-"+index+'00%'},1000)
+    //        })
+    //        $(".banner").mouseleave(function () {
+    //             timer = setInterval(()=>{
+    //                 // 写代码触发点击事件
+    //                 $(".banner span").eq(1).click();
+    //             },2000)
+    //        });
+    //        $(".banner").mouseenter(function () {
+    //             clearInterval(timer)
+    //        })
+    //        $(".banner").mouseleave();
+    //    })
+
+
+    $(function(){
+        let index = 0;
+        let timer = null;
+        $(".banner").hover(function(){
+            $(".banner span").stop(true).fadeIn(500);
+        },function(){
+            $(".banner span").stop(true).fadeOut(500);
+        })
+
+        $(".banner span").eq(0).click(function(){
+            index--;
+            if(index < 0){index = $(".banner li").length-1}
+            $(".banner ul").stop(true).animate({left:"-"+index+"00%"},1000)
+        })
+        $(".banner span").eq(1).click(function(){
+            index++;
+            if(index >= $(".banner li").length){ index = 0}
+            $(".banner ul").stop(true).animate({left:"-"+index+"00%"},1000)
+        })
+        $(".banner").mouseleave(function(){
+            timer = setInterval(() => {
+                $(".banner").eq(1).click()
+            }, 2000);
+        })
+        $(".banner").mouseenter(function(){
+            clearInterval(timer)
+        })
+        $("/banner").mouseleave();
+    })
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

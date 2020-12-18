@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        *{margin:0;padding:0}
+        .content{
+            margin:20px auto;
+            display:block;
+        }
+        .ad{
+            position:fixed;
+            left:0;
+            top:50%;
+            border: 1px solid #000;
+            margin-top:-125px;
+        }
+        .ad span{
+            position:absolute;
+            top:0;
+            right:0;
+            font-size: 20px;
+            cursor:pointer;
+        }
+        .ad-right{
+            right:0;
+            left:auto;
+        }
+    </style>
+    <!--引入JQ-->
+    <script src="./js/jquery-1.11.3.js"></script>
+</head>
+<body>
+    <img src="images/19/1.jpg" alt="">
+    <img src="images/19/2.jpg" alt="">
+    <img src="images/19/3.jpg" alt="">
+    <img src="images/19/4.jpg" alt="">
+    <img src="images/19/5.jpg" alt="">
+    <script>
+        $(function () {
+            //老师的代码
+
+           /*$("img").click(function () {
+               // .css是JQ中的提供的api   用来操作CSS
+               // .css("width")  获取width
+               // .css("width","100px")  设置width
+               $(this).css("border","5px solid blue");
+               // siblings表示获取兄弟元素
+               $(this).siblings().css("border","0");
+           })*/
+
+            // $("img").click(function () {
+            //     // JQ中的链式写法
+            //     // $(this).css("border","5px solid blue").siblings().css("border","0");
+
+            //     $(this).siblings().css("border","0").end().css("border","5px solid blue")
+            // });
+
+            //我的代码
+            
+            $("img").click(function(){
+                $(this).css("border","5px solid red");
+                $(this).siblings().css("border","0");
+            })
+        })
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

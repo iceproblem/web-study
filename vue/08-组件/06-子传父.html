@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <father></father>
+</div>
+<template id="father">
+    <div>
+        <p>father:</p>
+        <p>dataFromson: {{ dataFromson }}</p>
+        <son @hello="f"></son>
+    </div>
+</template>
+<template id="son">
+    <div>
+        <p>son:</p>
+        <p>sonData: {{ sonData }}</p>
+        <button @click="g">点我调用son中的g方法</button>
+    </div>
+</template>
+<script src="../js/vue-development.js"></script>
+<script>
+    let son = {
+        template:"#son",
+        data(){ return { sonData:"son组件中的数据" } },
+        methods:{
+            g(){
+                this.$emit("hello",this.sonData)
+            }
+        },
+    }
+    let father = {
+        template:"#father",
+        data(){ return { dataFromson:"" } },
+        components:{son,},
+        methods:{
+            f(msg){
+                //console.log(msg);
+                this.dataFromson = msg;
+            }
+        },
+    }
+    let vm = new Vue({
+        el:"#app",
+        components:{father,},
+    })
+</script>
+</body>
+</html>
