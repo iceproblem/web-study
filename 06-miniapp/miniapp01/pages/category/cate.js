@@ -5,7 +5,11 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    newsItems:[
+      {id:1,newsImg:"/assets/001.jpg",newsName:"旺财"},
+      {id:1,newsImg:"/assets/002.jpg",newsName:"羊"},
+      {id:1,newsImg:"/assets/003.jpg",newsName:"哈4奇"},
+    ]
   },
 
   /**

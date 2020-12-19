@@ -1,0 +1,5 @@
+<!--components/newsItem/newsItem.wxml-->
+<view class="view">
+  <image src="{{newsItem.newsImg}}"></image>
+  <view class="title">{{newsItem.newsName}}</view>
+</view>

@@ -1,0 +1,7 @@
+/* components/newsItem/newsItem.wxss */
+.title{
+  text-align: center;
+}
+image{
+  border-radius: 8%;
+}

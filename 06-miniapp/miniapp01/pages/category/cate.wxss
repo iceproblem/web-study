@@ -1,1 +1,10 @@
 /* pages/category/cate.wxss */
+.image{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20rpx;
+}
+.image image{
+  width: 700rpx;
+}

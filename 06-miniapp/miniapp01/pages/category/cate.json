@@ -1,3 +1,5 @@
 {
-  "usingComponents": {}
+  "usingComponents": {
+    "newsItem":"/components/newsItem/newsItem"
+  }
 }

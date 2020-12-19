@@ -69,6 +69,18 @@
           "name": "db guide",
           "pathName": "pages/databaseGuide/databaseGuide",
           "query": ""
+        },
+        {
+          "name": "pages/category/cate",
+          "pathName": "pages/category/cate",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/car/car",
+          "pathName": "pages/car/car",
+          "query": "",
+          "scene": null
         }
       ]
     }

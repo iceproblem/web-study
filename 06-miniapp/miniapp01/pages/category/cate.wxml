@@ -1,2 +1,6 @@
 <!--pages/category/cate.wxml-->
-<text>pages/category/cate.wxml</text>
+<view class="image">
+  <block wx:for="{{ newsItems }}" wx:key="id">
+    <newsItem newsItem = "{{ item }}"></newsItem>
+  </block>
+</view>
