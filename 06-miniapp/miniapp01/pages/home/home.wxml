@@ -3,24 +3,7 @@
 
 <!-- 逻辑判断 -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<button type="primary" size="mini" bindtap="handleAjax">ajax请求</button>
 
 <!-- 1) 数据绑定 -->
 <text class="msg">{{ msg }}</text>

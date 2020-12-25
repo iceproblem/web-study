@@ -1,0 +1,111 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				// #ifdef MP
+				"navigationBarTitleText": "旺财商城",
+				// #endif
+				"app-plus":{
+					"titleNView":{
+						// 导航栏
+						"searchInput":{
+							"backgroundColor":"rgba(255,255,255,1)",
+							"placeholder":"请输入要买的商品，如：青菜",
+							"borderRadius":"30rpx"
+						},
+						"buttons":[
+							{
+								"fontSrc":"/static/font/lmicon.ttf",
+								"text":"\ue8ae",
+								"float":"left"
+								
+							},
+							{
+								"fontSrc":"/static/font/lmicon.ttf",
+								"text":"\ue8b9",
+								"float":"right"
+							}
+						]
+					}
+				}
+			}
+		},
+		{
+			"path":"pages/category/category",
+			"style":{
+				"navigationBarTitleText":"分类",
+				"enablePullDownRefresh":false
+			}
+		},
+		{
+			"path":"pages/cart/cart",
+			"style":{
+				"navigationBarTitleText":"购物车",
+				"enablePullDownRefresh":false
+			}
+		},
+		{
+			"path":"pages/mine/mine",
+			"style":{
+				"navigationBarTitleText":"个人中心",
+				// #ifdef MP
+				"navigationStyle":"custom",
+				// #endif
+				"app-plus":{
+					"titleNView":{
+						"type":"transparent",
+						"buttons":"none"
+					}
+				}
+			}
+		}
+	    ,{
+            "path" : "pages/login/login",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "旺财商城",
+		"navigationBarBackgroundColor": "#e42208",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar":{
+		"color":"#000000",
+		"selectedColor":"#e42208",
+		"borderStyle":"black",
+		"backgroundColor":"#FFFFFF",
+		"list":[
+			{
+				"pagePath":"pages/index/index",
+				"iconPath":"static/tabbar/home.png",
+				"selectedIconPath":"static/tabbar/home_selected.png",
+				"text":"首页"
+			},
+			{
+				"pagePath":"pages/category/category",
+				"iconPath":"static/tabbar/cate.png",
+				"selectedIconPath":"static/tabbar/cate_selected.png",
+				"text":"分类"
+			},
+			{
+				"pagePath":"pages/cart/cart",
+				"iconPath":"static/tabbar/car.png",
+				"selectedIconPath":"static/tabbar/car_selected.png",
+				"text":"购物车"
+			},
+			{
+				"pagePath":"pages/mine/mine",
+				"iconPath":"static/tabbar/mine.png",
+				"selectedIconPath":"static/tabbar/mine_selected.png",
+				"text":"我的"
+			}
+		]
+	}
+}

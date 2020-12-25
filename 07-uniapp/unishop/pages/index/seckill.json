@@ -1,0 +1,34 @@
+{
+	"data":[
+		{
+			"id":"001",
+			"pro_image":"https://m.360buyimg.com/mobilecms/s750x750_jfs/t1/152335/26/10954/199450/5fe0ebdcE795ff278/9d89b62a081f903a.jpg!q80.dpg.webp",
+			"name":"进口车厘子",
+			"price":"28.88"
+		},
+		{
+			"id":"002",
+			"pro_image":"https://m.360buyimg.com/mobilecms/s750x750_jfs/t25312/134/1983666171/147642/a17b1b62/5bc19e2eNf9565de8.jpg!q80.dpg.webp",
+			"name":"鲜水果芒果",
+			"price":"49.88"
+		},
+		{
+			"id":"003",
+			"pro_image":"https://m.360buyimg.com/mobilecms/s750x750_jfs/t1/122442/38/6516/142608/5f02b0d3E4b97f019/f8ae6d16025419d0.jpg!q80.dpg.webp",
+			"name":"白糯甜玉米",
+			"price":"28.88"
+		},
+		{
+			"id":"004",
+			"pro_image":"https://m.360buyimg.com/mobilecms/s750x750_jfs/t1/150682/23/11028/111145/5fdc0b84E9bee64c8/30b0f6542ec4f317.jpg!q80.dpg.webp",
+			"name":"爱媛38号果冻橙",
+			"price":"45.50"
+		},
+		{
+			"id":"005",
+			"pro_image":"https://m.360buyimg.com/mobilecms/s750x750_jfs/t1/121363/27/19615/162365/5fbb63e8Ef14f3d6d/6f8bdb6a2c5cd7ae.jpg!q80.dpg.webp",
+			"name":"国产大虾白虾",
+			"price":"99.70"
+		}
+	]
+}

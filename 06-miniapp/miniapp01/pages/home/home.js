@@ -29,6 +29,11 @@ Page({
       showColor:!this.showColor
     })
   },
+  handleAjax(){
+    wx.request({
+      url: 'https://www.baidu.com/'
+    })
+  },
 
   /**
    * 生命周期函数--监听页面加载

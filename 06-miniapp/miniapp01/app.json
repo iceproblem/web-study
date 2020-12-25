@@ -3,8 +3,7 @@
     "pages/home/home",
     "pages/category/cate",
     "pages/car/car",
-    "pages/mine/mine",
-    "pages/about/about"
+    "pages/mine/mine"
   ],
   "window": {
     "navigationBarBackgroundColor": "#dff0f8",

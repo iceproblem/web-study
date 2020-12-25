@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.js"></script>
+    <script src="js/vuex.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>使用vue中自己的状态:{{ msg }}</h1>
+        <h1>使用vuex中自己的状态:{{this.$store.state.counter}}</h1>
+        <hr>
+        <add-counter></add-counter>
+        <hr>
+        <sub-counter></sub-counter>
+
+    </div>
+    <template id="addcounter">
+       <div>
+           <p>addcounter组件</p>
+           <p>在addcounter中组件中使用仓库中的数据{{this.$store.state.counter}}</p>
+           <button @click="add">+1</button>
+       </div>
+    </template>
+    <template id="subcounter">
+        <div>
+            <p>subcounter组件</p>
+            <p>在subcounter中组件中使用仓库中的数据{{this.$store.state.counter}}</p>
+            <button @click="sub">-1</button>
+        </div>
+    </template>
+<script>
+    let store = new Vuex.Store({
+        state:{
+            counter:0,
+        },
+        mutations:{
+            add(state){
+                state.counter++;
+            },
+            sub(state) {
+                state.counter--;
+            }
+        },
+    })
+
+    let AddCounter = {
+        template:"#addcounter",
+        methods:{
+            add(){
+                this.$store.commit("add")
+            }
+        },
+    }
+
+    let SubCounter = {
+        template:"#subcounter",
+        methods:{
+            sub(){
+                this.$store.commit("sub")
+            }
+        },
+    }
+
+    let vm = new Vue({
+        el:"#app",
+        data(){
+            return{
+                msg:"hello"
+            }
+        },
+        components:{
+          AddCounter,
+          SubCounter
+        },
+        store,
+    })
+</script>
+</body>
+</html>
