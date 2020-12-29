@@ -300,7 +300,6 @@
 			.iconfont{
 				font-size: 60rpx;
 			}
-			
 		}
 	}
 </style>
