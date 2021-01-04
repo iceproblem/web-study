@@ -1,36 +1,45 @@
 <template>
 	<view class="container">
-		<!-- 左侧 -->
-		<scroll-view scroll-y="true" class="left-aside">
-			<view 
-				v-for="(litem,index) in left_list" 
-				:key="litem.id" 
-				class="left-item" 
-				:class="{active: litem.id === currentId}"
-				:scroll-into-view="leftinto"
-				@click="tapTap(litem)"
-			>
-				{{litem.name}}
-			</view>
-		</scroll-view>
-		<!-- 右侧 -->
+		<!-- 左边 -->
 		<scroll-view 
-			scroll-y="true" 
-			class="right-aside" 
-			:scroll-into-view="rightinto"
-			@scroll="leftAc"
+		   scroll-y="true"
+		   class="left-aside"	   
 		>
 			<view 
-				v-for="(ritem,index) in right_list"
-				:key="ritem.id"
-				:id="'V' + ritem.id"
-				class="right-aside"
+			  v-for="item in left_list"
+			  :key="item.id"
+			  class="left-item"
+			  :class="{active: item.id === currentId}"
+			  @click="tapTab(item)"
+			>
+				{{item.name}}
+			</view>
+		</scroll-view>
+		<!-- 右边 -->
+		<scroll-view 
+		  scroll-y="true" 
+		  class="right-aside"	
+		>
+			<view
+			  v-for="ritem in right_list"
+			  :key="ritem.id"
+			  class="right-list"
 			>
 				<text class="right-list-title">{{ritem.name}}</text>
 				<view class="right-list-content">
-					<view class="t-item" v-for="(product,index) in ritem.products" :key="product.id">
-						<image :src="product.small_image"></image>
-						<text>{{product.name}}</text>
+					<view
+					  class="t-item"
+					  v-for="product in ritem.products"
+					  :key="product.id"
+					>
+						<image :src="product.small_image" mode=""></image>
+						<view>
+							<text>{{product.name}}</text>
+							<text>¥{{product.price}}</text>
+						</view>
+					  <view  class="like-cart s-cart" @click.stop.prevent="addToCart(product)">
+						  <text class="iconfont icon-gouwucheman" style="font-size: 50rpx; color: #E9232C;"></text>
+					  </view> 
 					</view>
 				</view>
 			</view>
@@ -39,46 +48,86 @@
 </template>
 
 <script>
-	import left from "../../pages/category/left.json"
-	import right from "../../pages/category/right.json"
+	import { getCateLeft,getCateRight,addGoodsToCart } from "@/api/index.js"
+	import { mapState } from "vuex"
 	export default {
 		data() {
 			return {
-				left_list:left.data.cate,
-				right_list:right.data.cate,
-				currentId: "recommend",
-				rightinto:"",
-				leftinto:""
+				left_list: [],
+				right_list: [],
+				currentId: "lm001"
 			}
 		},
-		methods: {
-			tapTap(item) {
-				this.currentId = item.id,
-				this.rightinto = 'V'+ item.id
-			},
-			leftAc(){
-				
-			},
+		onLoad() {
+			this.getLeftData();
+			this.getRightData("lm001");
 		},
 		computed:{
+			...mapState(['hasLogin','userInfo'])
 		},
+		methods: {
+			// 获取左侧菜单 
+			async getLeftData(){
+				let result = await getCateLeft();
+				// console.log("left:",result);
+				if(result.status === 1){
+					this.left_list = result.data.cate;
+				}
+			},
+			// 获取右侧数据 
+			async getRightData(tag){
+				uni.showLoading({
+					title:"加载中..."
+				})
+				let result = await getCateRight(tag);
+				// console.log("right;",result);
+				if(result.status === 1){
+					uni.hideLoading()
+					this.right_list = result.data.cate;
+				}
+			},
+			
+			// 点击左侧
+			tapTab(item) {
+				this.currentId = item.id;
+				this.getRightData(this.currentId)
+			},
+			// 添加购物车
+			async addToCart(goods){
+				// 判断用户是否登录
+				if(!this.hasLogin){
+					uni.navigateTo({
+						url:"/pages/login/login"
+					})
+					return;
+				}
+				// 把商品加入到购物车
+				let {token} = this.userInfo;
+				let result = await addGoodsToCart(token, goods.id, goods.name, goods.buy_limit, goods.price, goods.small_image);
+				// console.log(result);
+				if(result.status === 1){
+					this.$msg("成功加入购物车")
+				}else{
+					this.$msg("加入购物车失败")
+				}
+			}
+		}
 	}
 </script>
 
-<style scoped lang="scss">
-	.container {
+<style lang="scss">
+	page,
+	.container{
 		width: 100%;
-		height: 1145rpx;
+		height: 100%;
 		background-color: #F8F8F8;
 		display: flex;
 		overflow: hidden;
-	
-		.left-aside {
+		.left-aside{
 			background-color: #fff;
 			width: 200rpx;
 			height: 100%;
-			
-			.left-item {
+			.left-item{
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -87,12 +136,9 @@
 				width: 100%;
 				height: 100rpx;
 				position: relative;
-				box-sizing: border-box;
-	
-				&.active {
+				&.active{
 					color: #e42208;
 					background-color: #F8F8F8;
-	
 					&:before {
 						content: '';
 						position: absolute;
@@ -106,54 +152,66 @@
 				}
 			}
 		}
-	
-		.right-aside {
+		.right-aside{
 			flex: 1;
 			overflow: hidden;
 			padding-left: 20rpx;
-	
-			.right-list-title {
+			.right-list-title{
 				color: #e42208;
 				display: flex;
 				align-items: center;
 				font-size: 28rpx;
 				height: 80rpx;
 			}
-	
-			.right-list-content {
+			.right-list-content{
 				flex: 1;
 				display: flex;
-				flex-wrap: wrap;
+				flex-direction: column;
 				width: 100%;
 				padding-top: 12rpx;
 				background-color: #fff;
-	
-				.t-item {
+				.t-item{
 					box-sizing: border-box;
-					width: 170rpx;
+					width: 100%;
 					display: flex;
-					flex-direction: column;
+					flex-direction: row;
 					align-items: center;
 					padding-bottom: 20rpx;
+					padding-top: 20rpx;
 					background-color: #fff;
 					color: #666;
-	
-					image {
+					border-bottom: 1rpx solid #e2e2e2;
+					position: relative;
+					image{
 						width: 140rpx;
 						height: 140rpx;
 					}
-	
-					text {
-						font-size: 28rpx;
-						text-align: center;
-						
-						width: 150rpx;
-						overflow: hidden;
-						text-overflow: ellipsis;
-						white-space: nowrap;
+					view{
+						flex: 1;
+						display: flex;
+						flex-direction: column;
+						align-items: flex-start;
+						margin-left: 15rpx;
+						text{
+							font-size: 28rpx;
+							text-align: center;
+							margin-bottom: 8rpx;
+						}
 					}
+					
 				}
 			}
 		}
+	}
+	
+	.like-cart{
+		position: absolute;
+		right: 10rpx;
+		bottom: 10rpx;
+	}
+	
+	.s-cart{
+		width: 60rpx;
+		height: 60rpx;
 	}
 </style>

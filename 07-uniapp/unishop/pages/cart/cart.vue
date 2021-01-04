@@ -1,58 +1,67 @@
 <template>
-	<!-- 
-		1）没有登录   显示 登录后才能查看购物车
-		2）登录了 
-			没有买东西  购物车空空如也
-			有商品加入到了购物车   商品列表页面
-	 -->
 	<view class="container">
-		<!-- 空白页面：1）登录后才能查看购物车  2）购物车空空如也 -->
-		<view class="empty" v-if="empty==true || !hasLogin">
-			<image src="../../static/cart/emptyCart.png"></image>
-			<view v-if="hasLogin" class="empty-tips">
-				<!-- 登录 -->
-				购物车空空如也
-				<navigator class="navigator" url="../index/index" open-type="switchTab">随便逛逛</navigator>
-			</view>
-			<view v-else class="empty-tips">
-				<!-- 没有登录 -->
-				登录后才能查看购物车
-				<view class="navigator" @click="navToLogin">去登录</view>
-			</view>
+		<!-- 空白页面 -->
+		<view class="empty"  v-if="!hasLogin || empty===true">
+			 <image src="../../static/cart/emptyCart.png" mode="aspectFit"></image>
+			 <view v-if="hasLogin" class="empty-tips">
+				 购物车空空如也
+				 <navigator
+				  class="navigator"
+				  url="../index/index"
+				  open-type="switchTab"
+				  >
+				   随便逛逛>
+				  </navigator>
+			 </view>
+			 <view v-else  class="empty-tips">
+				 购物车空空如也
+				 <view class="navigator" @click="navToLogin">去登录></view>
+			 </view>
 		</view>
-		<!-- 商品列表页面 已登录 -->
-		<view v-else>
-			<block v-for="(item, index) in cartList" :key="item.id">
+		<!-- 列表页面 -->
+		<view v-else class="no-empty">
+			<block v-for="(item, index) in cartList" :key="item.goods_id">
 				<view class="cart-item">
 					<!-- 左侧 -->
 					<view class="image-wrapper">
-						<image :src="item.image" mode="aspectFill" lazy-load @error="onImageError(index)">
-						</image>
-						<view class="iconfont icon-xuanzhong checkbox" 
-						:class="{checked: item.checked}" @click="check('item', index)"></view>
+						<image
+						 :src="item.small_image" 
+						 mode="aspectFill"
+						 lazy-load
+						 @error="onImageError(index)"
+						 >
+						 </image>
+						 <view
+						   class="iconfont icon-xuanzhong checkbox"
+						   :class="{checked: item.checked}"
+						   @click="check('item', index)"
+						 ></view>
 					</view>
 					<!-- 右侧 -->
 					<view class="item-right">
-						<text class="title">{{item.title}}</text>
-						<text class="attr">{{item.attr_val}}</text>
-						<text class="price">¥{{item.price}}</text>
-						<number-box :min="1" :max="item.stock" 
-						:value="item.number > item.stock ? item.stock : item.number" 
-						:isMax="item.number >= item.stock ? true : false"
-						 :isMin="item.number <= 1" 
-						 :index="index" @eventChange="numberChange"></number-box>
+						 <text class="title">{{item.goods_name}}</text>
+						 <text class="attr"></text>
+						 <text class="price">¥{{item.goods_price}}</text>
+						 <number-box
+						    :min="1"
+							:max="item.buy_limit===0?Infinity:item.buy_limit"
+							:value="item.num > (item.buy_limit===0?Infinity:item.buy_limit) ? (item.buy_limit===0?Infinity:item.buy_limit) : item.num"
+							:isMax="item.num >= (item.buy_limit===0?Infinity:item.buy_limit) ? true : false"
+							:isMin="item.num <= 1"
+							:index="index"
+							@eventChange="numberChange"
+						 ></number-box>
 					</view>
 					<!-- 删除 -->
 					<view class="del-btn" @click="deleteCartItem(index)">x</view>
 				</view>
 			</block>
 		</view>
-		<!-- 底部菜单栏 -->
-		<view class="bottom-section" v-show="empty !== true">
+	    <!-- 底部菜单栏 -->
+		<view class="bottom-section" v-show="hasLogin">
 			<!-- 左侧 -->
 			<view class="checkbox">
 				<image 
-				style="width: 40rpx;"
 				:src="allChecked ? '/static/cart/selected.png' : '/static/cart/select.png'" mode="aspectFit"
 				@click="check('all')"
 				>
@@ -65,13 +74,15 @@
 			<view class="total-box">
 				<text class="total">总计: </text>
 				<text class="price">¥{{total}}</text>
-				<button class="confirm-btn" type="primary">去结算</button>
+				<button class="confirm-btn" type="primary" @click="createOrder">去结算</button>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import { mapState} from 'vuex'
+	import {getCartList, changeCarNum, deleteCartOne, deleteCartAll} from '@/api/index.js'
 	import numberBox from '../../components/number-box.vue'
 	export default {
 		data(){
@@ -83,42 +94,38 @@
 				// 全选状态
 				allChecked: false,
 				// 总价
-				total: 0,
-				hasLogin:true,
+				total: 0
 			}
 		},
 		components:{
 			 numberBox
 		},
 		computed: {
+			...mapState(["hasLogin", "userInfo"])
 		},
 		onLoad() {
-			this.loadData()
+			if(this.hasLogin){
+				this.loadData()
+			}
+		},
+		onShow() {
+			if(this.hasLogin){
+				this.loadData()
+			}
 		},
 		methods:{
-			loadData(){
-				this.cartList = [
-					{
-						id: 1,
-						image: "http://img10.360buyimg.com/n2/s240x240_jfs/t1/148237/6/13541/260321/5fa6157aEb8b902f0/72ac8895bf838553.jpg!q70.jpg",
-						title: "百草味礼盒巨型零食大礼包",
-						attr_val: "味道好极了，好想吃呀",
-						price: 9.99,
-						number: 1,
-						stock: 10,
-						checked: true
-					},
-					{
-						id: 2,
-						image: "http://img10.360buyimg.com/n2/s240x240_jfs/t1/153784/37/10785/182271/5fe0556aEb0ceb6df/94e3c0c5ad81a4b3.jpg!q70.jpg",
-						title: "良品铺子纯肉零食大礼包",
-						attr_val: "味道好极了，好想吃呀",
-						price: 9.99,
-						number: 1,
-						stock: 10,
-						checked: true
-					},
-				];
+			async loadData(){
+				this.empty = false;
+				// 从接口获取购物车数据
+				let result = await getCartList(this.userInfo.token);
+				if(result.status === 1){
+					this.cartList = result.data;
+					if(this.cartList.length === 0){
+						this.empty = true;
+					}
+				}else{
+					this.$api.msg('获取购物车数据失败!');
+				}
 				// 计算总价
 				this.calcTotal();
 			},
@@ -137,6 +144,10 @@
 				if(type === 'item'){ // 单个商品选中和取消选中
 					this.cartList[index].checked = !this.cartList[index].checked;
 				}else{ // 全部商品
+				    if(this.cartList.length === 0){
+						this.$api.msg('当前购物车中没有商品!');
+						return;
+					} 
 				    const checked = !this.allChecked;
 					// 遍历
 					this.cartList.forEach(item=>{
@@ -150,30 +161,61 @@
 				this.calcTotal();
 			},
 			// 购物车商品数量发生改变
-			numberChange(data){
-				this.cartList[data.index].number = data.number;
-				// 计算总价
-				this.calcTotal();
+			async numberChange(data){
+				// 根据点击的索引获取商品
+				const goods_id = this.cartList[data.index].goods_id;
+				if(goods_id){
+					let result = await changeCarNum(this.userInfo.token, goods_id, data.number);
+					// console.log(result);
+					if(result.status === 1){
+						this.cartList[data.index].num = data.number;
+						// 计算总价
+						this.calcTotal();
+					}else{
+						this.$api.msg(result.msg, 500);
+					}
+				}else{
+					this.$api.msg('操作商品的id不存在', 500);
+				}
 			},
 			// 删除一个商品
-			deleteCartItem(index){
-				this.cartList.splice(index, 1);
-			    // 计算总价
-			    this.calcTotal();
+			async deleteCartItem(index){
+				const goods_id = this.cartList[index].goods_id;
+				if(goods_id){
+					let result = await deleteCartOne(this.userInfo.token, goods_id);
+					if(result.status === 1){
+						this.cartList.splice(index, 1);
+						// 计算总价
+						this.calcTotal();
+					}else{
+						this.$api.msg(result.msg, 500);
+					}
+				}else{
+					this.$api.msg('操作商品的id不存在', 500);
+				}
 			},
 			// 清空购物车
 			clearCart(){
 				uni.showModal({
 					content: '确定清空购物车吗?',
-					success: (e) => {
+					success: async (e) => {
 						// console.log(e);
 						if(e.confirm){
-							this.cartList = [];
-							this.empty =  true,
-							// 全选状态
-							this.allChecked =  false,
-							// 总价
-							this.total = 0;
+							uni.showLoading({
+								title: '正在操作...'
+							})
+							let result = await deleteCartAll(this.userInfo.token);
+							if(result.status === 1){
+								uni.hideLoading();
+								this.cartList = [];
+								this.empty =  true,
+								// 全选状态
+								this.allChecked =  false,
+								// 总价
+								this.total = 0;
+							}else{
+								this.$api.msg(result.msg, 500);
+							}
 						}
 					}
 				})
@@ -184,6 +226,8 @@
 				if(list.length === 0){
 					this.empty = true;
 					this.total = 0;
+					/* 细节点 */
+					this.allChecked = false;
 					return;
 				}
 				
@@ -191,7 +235,7 @@
 				let total = 0, checked = true;
 				list.forEach(item=>{
 					if(item.checked){
-						total += item.price * item.number; 
+						total += item.goods_price * item.num; 
 					}else if(item.checked === false){
 						checked = false;
 					}
@@ -200,6 +244,33 @@
 				// 更新
 				this.allChecked = checked;
 				this.total = Number(total.toFixed(2));
+			},
+			// 创建订单
+			createOrder(){
+				// 1. 获取购物车中所有已经选中的商品生成订单
+				let list = this.cartList;
+				let checkedList = [];
+				list.forEach(item=>{
+					if(item.checked){
+						checkedList.push(item);
+					}
+				});
+				
+				// 2. 过滤
+				if(checkedList.length === 0){
+					this.$msg('没有生成订单的商品', 1000);
+					return;
+				}
+				
+				//3. 处理数据
+				let orderObj = {
+					orderList: checkedList,
+					orderTotal: this.total 
+				}; 
+				
+				uni.navigateTo({
+					url: '/pages/order/createOrder?order=' + encodeURIComponent(JSON.stringify(orderObj))
+				})
 			}
 		}
 	}
@@ -371,7 +442,7 @@
 			}
 
 			.confirm-btn {
-				width: 180rpx;
+				width: 200rpx;
 				height: 70rpx;
 				display: flex;
 				justify-content: center;

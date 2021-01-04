@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<view class="list" v-for="(item,index) in addressList" :key='index'>
+		<view class="list" v-for="(item,index) in addressList" :key='index' @click="checkAddress(item)">
 			<view class="warpper">
 				<view class="address-box">
 					<text class="tag" v-if="item.default">默认</text>
@@ -18,40 +18,64 @@
 </template>
 
 <script>
+	import { getAddressList } from "@/api/index.js"
+	import { mapState } from "vuex"
 	export default {
 		data() {
 			return {
-				addressList:[
-					{
-						name:"张天",
-						mobile:"15687298763",
-						address:"北京市昌平区",
-						addressDetail:"沙河镇北京科技经营管理学院",
-						default:true
-					},
-					{
-						name:"李工",
-						mobile:"18376490827",
-						address:"郑州市中原区",
-						addressDetail:"国家广告产业园3号楼404",
-						default:false
-					},
-					{
-						name:"王可",
-						mobile:"15654298762",
-						address:"北京市朝阳区",
-						addressDetail:"中国传媒大学001号楼",
-						default:false
-					},
-				]
+				addressList:[],
+				source: 1
 			}
 		},
+		onLoad(option) {
+			if(!this.hasLogin){
+				uni.navigateTo({
+					url:"/pages/login/login"
+				})
+				return;
+			}
+			this.source = option.source;
+			
+			// 获取地址列表
+			this.getAddress();
+		},
+		onShow(option) {
+			if(!this.hasLogin){
+				uni.navigateTo({
+					url:"/pages/login/login"
+				})
+				return;
+			}
+			// 获取地址列表
+			this.getAddress();
+		},
+		computed:{
+			...mapState(['hasLogin','userInfo'])
+		},
 		methods: {
+			// ajax获取地址列表
+			async getAddress(){
+				let result = await getAddressList(this.userInfo.token);
+				console.log(result);
+				if(result.status === 1){
+					this.addressList = result.data
+				}else{
+					this.$msg("获取地址列表失败")
+				}
+			},
 			// 	处理新增地址和编辑地址
 			dealAddress(type,item){
 				uni.navigateTo({
 					url:`/pages/address/addressManage?type=${type}&data=${JSON.stringify(item)}`
 				})
+			},
+			checkAddress(item){
+				if(Number(this.source) == 1){
+					let pages = getCurrentPages();
+					let prePage = pages[pages.length - 2];
+					prePage.addressData = item;
+					uni.navigateBack();
+				}
 			}
 		}
 	}

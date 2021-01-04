@@ -5,8 +5,8 @@
 			<image class="user-bg" src="/static/mine/mine_bg.png" mode=""></image>
 			<!-- 用户头像 -->
 			<view class="user-info">
-				<image src="../../static/mine/normal_face.png" mode=""></image>
-				<text>游客</text>
+				<image :src="userInfo.icon ? SERVER_URL + userInfo.icon : '../../static/mine/normal_face.png'" mode=""></image>
+				<text>{{ userInfo.nick_name || '游客' }}</text>
 			</view>
 			<!-- 会员 -->
 			<view class="vip-card-box">
@@ -79,6 +79,8 @@
 
 <script>
 	import listCell from '@/components/list-cell.vue'
+	import { mapState } from "vuex"
+	import { SERVER_URL } from "@/api/index.js"
 	let startY = 0, moveY = 0, pageAtTop = true;
 	export default {
 		data(){
@@ -86,10 +88,11 @@
 				coverTransfrom: 'translateY(0px)',
 				coverTransition: '0s',
 				moving: false,
-				hasLogin:true
+				SERVER_URL
 			}
 		},
 		computed:{
+			...mapState(['hasLogin','userInfo'])
 		},
 		components:{
 			listCell
@@ -300,6 +303,7 @@
 			.iconfont{
 				font-size: 60rpx;
 			}
+			
 		}
 	}
 </style>

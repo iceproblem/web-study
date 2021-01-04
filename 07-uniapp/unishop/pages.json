@@ -1,8 +1,8 @@
 {
 	
-	"easycom": {
-		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
-	},
+	// "easycom": {
+	// 	"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+	// },
 	
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
@@ -23,13 +23,17 @@
 							{
 								"fontSrc":"/static/font/lmicon.ttf",
 								"text":"\ue8ae",
-								"float":"left"
-								
+								"float":"left",
+								"color":"#F0AD4E",
+								"colorPressed":"#e9232c",
+								"fontSize":"52rpx"
 							},
 							{
 								"fontSrc":"/static/font/lmicon.ttf",
 								"text":"\ue8b9",
-								"float":"right"
+								"color":"#F0AD4E",
+								"colorPressed":"#e9232c",
+								"fontSize":"52rpx"
 							}
 						]
 					}
@@ -70,7 +74,11 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
+                "navigationStyle":"custom",
+				"app-plus":{
+					"titleNView":false,
+					"animationDuration":"slide-in-bottom"
+				}
             }
             
         }
@@ -78,11 +86,19 @@
             "path" : "pages/order/order",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
+                "navigationBarTitleText": "创建订单"
             }
             
         }
+		,{
+		    "path" : "pages/order/createOrder",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		}
         ,{
             "path" : "pages/address/address",
             "style" :                                                                                    
@@ -110,6 +126,44 @@
             }
             
         }
+		,{
+		    "path" : "pages/pay/paySuccess",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "支付成功"
+		    }
+		    
+		}
+        ,{
+            "path" : "pages/set/set",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+		,{
+		    "path" : "pages/set/userinfo",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		}
+        ,{
+            "path" : "pages/detail/detail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "app-plus":{
+					"titleNView":"transparent"
+				}
+            }
+            
+        }
+		
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

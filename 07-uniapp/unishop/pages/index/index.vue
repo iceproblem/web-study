@@ -1,201 +1,253 @@
 <template>
 	<view class="content">
-		<!-- #ifdef MP -->
-			<view class="mp-search-input">
-				<input type="text" class="search-input" placeholder="请输入你要买的商品,如:苹果"/>
-			</view>
-		<!-- #endif -->
-		
-		<!-- 轮播图 start -->
-		<view class="carousel-section">
-			<swiper
-				class="carousel" 
-				:indicator-dots="true" 
-				:autoplay="true" 
-				:interval="2000" 
+		 <!-- #ifdef MP -->
+			 <view class="mp-search-box">
+				<input type="text" class="search-input" placeholder="请输入你要买的商品,如:苹果">
+			 </view>
+		 <!-- #endif -->
+		 
+		 <!-- 轮播图 start -->
+		 <view class="carousel-section">
+			 <swiper
+				class="carousel"
+				:indicator-dots="true"
+				:autoplay="true"
+				:interval="2000"
 				:duration="600"
 				indicator-active-color="#ffff"
 				circular
-			>
-				<swiper-item @click="toDetailPage(index,item)" class="carouse-item" v-for="(item,index) in carousel_list" :key="index">
-					<image :src="item.imgUrl"></image>
-				</swiper-item>
-			</swiper>
-		</view>
-		<!-- 轮播图 end -->
-		
-		<!-- 分类 start -->
-		<view class="cate-section">
-			<block v-for="(item,index) in category_list" :key="index">
-				<view class="cate-item">
-					<image :src="item.icon_url"></image>
-					<text>{{item.name}}</text>
-				</view>
-			</block>
-		</view>
-		<!-- 分类 end -->
-		
-		<!-- 限时秒杀 start -->
-		<view class="seckill-section">
-			<view class="s-header">
-				<image src="../../static/home/secskill-img.jpg" class="s-img"></image>
-				<view class="tip">10点场</view>
-				<view class="timer">06</view>
-				<view style="margin-right: 10rpx;">:</view>
-				<view class="timer">34</view>
-				<view style="margin-right: 10rpx;">:</view>
-				<view class="timer">12</view>
-			</view>
-			<!-- 滚动视图 -->
-			<scroll-view class="s-list" scroll-x="true">
+			 >
+				 <swiper-item @click="navToDetailPage(index,item)" class="carousel-item" v-for="(item,index) in carousel_list" :key="index">
+					 <image :src="item.icon_url"></image>
+				 </swiper-item>
+			 </swiper>
+		 </view>
+		 <!-- 轮播图 start -->
+		 
+		 <!-- 分类 start -->
+		 <view class="cate-section">
+			 <block v-for="(item,index) in category_list" :key="index">
+				 <view class="cate-item">
+					 <image :src="item.icon_url"></image>
+					 <text>{{item.name}}</text>
+				 </view>
+			 </block>
+		 </view>
+		 <!-- 分类 end -->
+		 
+		 <!-- 限时秒杀 start -->
+		 <view class="seckill-section">
+			 <view class="s-header">
+				 <image src="../../static/home/secskill-img.jpg" class="s-img"></image>
+				 <text class="tip">10点场</text>
+				 <text class="timer">06</text>
+				 <text style="margin-right: 10rpx;">:</text>
+				 <text class="timer">34</text>
+				 <text style="margin-right: 10rpx;">:</text>
+				 <text class="timer">12</text>
+			 </view>
+			 <!-- 滚动视图 -->
+			 <scroll-view class="s-list" scroll-x="true">
 				 <view class="s-wrapper">
 					 <view v-for="(item,index) in seckill_list" :key="item.id" class="s-item">
-						 <image :src="item.pro_image"></image>
+						 <image :src="item.small_image"></image>
 						 <view class="title">{{item.name}}</view>
 						 <view class="price">{{item.price}}</view>
+						 <!-- 购物车图标 -->
+						 <view class="common-cart s-cart" @click.stop="addToCart(item)">
+							 <text class="iconfont icon-gouwucheman" style="font-size: 50rpx; color: #e42208; position:relative; left:-60rpx;"></text>
+						 </view>
 					 </view>
 				 </view>
-			</scroll-view>
-		</view>
-		<!-- 限时秒杀 end -->
-		
-		<!-- 猜你喜欢 start -->
-		<view class="like-title">
-			<image src="../../static/home/h1.png" mode=""></image>
-			<view class="like-box">
-				<text>猜你喜欢</text>
-				<text>Guess You Like</text>
-			</view>
-		</view>
-		<!-- 内容 -->
-		<view class="like-content">
-			<view 
+			 </scroll-view>
+		 </view>
+		 <!-- 限时秒杀 end -->
+		 
+		 <!-- 猜你喜欢 start -->
+		 <view class="like-title">
+			 <image src="../../static/home/h1.png"></image>
+			 <view class="like-box">
+				 <text>猜你喜欢</text>
+				 <text>Guess You Like</text>
+			 </view>
+		 </view>
+		 <view class="like-content">
+			 <view
 				v-for="(item,index) in like_list"
 				:key="item.id"
 				@click="navToDetailPage"
 				class="like-item"
-			>
-				<image :src="item.small_image" mode=""></image>
-				<text class="title">{{item.name}}</text>
-				<text class="price">{{item.price}}</text>
-			</view>
-		</view>
-		<!-- 猜你喜欢 end -->
+			 >
+				 <image :src="item.small_image"></image>
+				 <text class="title">{{item.name}}</text>
+				 <text class="price">{{item.price}}</text>
+				 <!-- 购物车图标 -->
+				 <view class="common-cart s-cart"  @click.stop="addToCart(item)">
+				 	<text class="iconfont icon-gouwucheman" style="font-size: 50rpx; color: #e42208;"></text>
+				 </view>
+			 </view>
+		 </view>
+		 <!-- 猜你喜欢 end -->
+		 
 	</view>
 </template>
 
 <script>
-	import carousel from "../../pages/index/carousel_list.json"
-	import category from "../../pages/index/category.json"
-	import seckill from "../../pages/index/seckill.json"
-	import like_list from "../../pages/index/like_list.json"
+	
+	import { getHomeData,addGoodsToCart } from "@/api/index.js"
+	import { mapState } from "vuex"
+	
 	export default {
 		data() {
 			return {
-				carousel_list:carousel.data,
-				category_list:category.data,
-				seckill_list:seckill.data,
-				like_list:like_list.data
+				carousel_list:[],
+				category_list:[],
+				seckill_list:[],
+				like_list:[]
 			}
 		},
+		computed:{
+			...mapState(['hasLogin','userInfo'])
+		},
 		onLoad() {
-
+			this.getHomeList()
 		},
 		methods: {
-			toDetailPage(index,item){
-				console.log(index)
+			async getHomeList(){
+				let result = await getHomeData();
+				// console.log(result);
+				if(result.status === 1){
+					this.carousel_list = result.data.carousel_list;
+					this.category_list = result.data.cate_list;
+					this.seckill_list = result.data.second_list;
+					this.like_list = result.data.like_list;
+				}
+			},
+			navToDetailPage(index,item){
+				uni.navigateTo({
+					url:"/pages/detail/detail"
+				})
+			},
+			async addToCart(goods){
+				// console.log(goods);
+				// 判断用户是否登录
+				if(!this.hasLogin){
+					uni.navigateTo({
+						url:"/pages/login/login"
+					})
+					return;
+				}
+				// 把商品加入到购物车
+				let {token} = this.userInfo;
+				let result = await addGoodsToCart(token, goods.id, goods.name, goods.buy_limit, goods.price, goods.small_image);
+				// console.log(result);
+				if(result.status === 1){
+					this.$msg("成功加入购物车")
+				}else{
+					this.$msg("加入购物车失败")
+				}
 			}
 		}
 	}
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 	/* #ifdef MP */
-	.mp-search-input{
+	.mp-search-box {
 		position: fixed;
-		top: 0;
 		left: 0;
-		background-color: rgba(255,255,255,0.6);
+		top: 0;
+		background-color: rgba($color:#C7F2B2, $alpha: 0.6);
 		z-index: 9999;
 		width: 100%;
-		height: 80rpx;
+		height: 100rpx;
 		padding-left: 50rpx;
-		.search-input{
+
+		.search-input {
 			box-sizing: border-box;
 			width: 650rpx;
-			height: 60rpx;
-			margin-top: 20rpx;
+			height: 80rpx;
+			margin-top: 10rpx;
 			border-radius: 40rpx;
-			background-color: #fff;
+			background-color: #FFFFFF;
 			padding-left: 40rpx;
-			border: 1px solid red;
 		}
 	}
-	.carousel-section{
+
+	.carousel-section {
 		padding-top: 100rpx;
 	}
+
 	/* #endif */
-	
+
 	// 轮播图
-	.carousel-section{
-		.carousel{
+	.carousel-section {
+		.carousel {
 			width: 100%;
 			height: 350rpx;
-			.carouse-item{
+
+			.carousel-item {
 				width: 100%;
 				height: 100%;
 				overflow: hidden;
-				image{
+
+				image {
 					width: 100%;
 					height: 100%;
 				}
 			}
 		}
 	}
-	
-	//分类
-	.cate-section{
+
+	// 样式
+	.cate-section {
 		display: flex;
 		justify-content: space-around;
 		align-items: center;
 		flex-wrap: wrap;
 		padding: 30rpx 0;
-		.cate-item{
+
+		.cate-item {
 			width: 130rpx;
 			height: 150rpx;
 			display: flex;
-			flex-direction: column;
 			align-items: center;
 			font-size: 24rpx;
-			image{
+			flex-direction: column;
+
+			image {
 				width: 90rpx;
 				height: 90rpx;
 				margin-bottom: 10rpx;
 			}
 		}
 	}
-	
+
 	// 限时秒杀
-	.seckill-section{
+	.seckill-section {
 		padding: 4rpx 30rpx 20rpx;
-		.s-header{
+
+		.s-header {
 			display: flex;
 			align-items: center;
-			.s-img{
+
+			.s-img {
 				width: 140rpx;
 				height: 30rpx;
 			}
-			.tip{
+
+			.tip {
 				font-size: 28rpx;
 				color: #999999;
 				margin: 0 20rpx;
 			}
-			.timer{
-				width: 40rpx;
-				height: 40rpx;
+
+			.timer {
 				display: flex;
 				justify-content: center;
 				align-items: center;
+				width: 40rpx;
+				height: 40rpx;
 				background-color: rgba($color: #000000, $alpha: 0.5);
 				font-size: 28rpx;
 				margin-right: 10rpx;
@@ -203,28 +255,38 @@
 				color: #FFFFFF;
 			}
 		}
-		.s-list{
+
+		.s-list {
 			margin: 20rpx 0;
-			.s-wrapper{
+
+			.s-wrapper {
 				display: flex;
-				.s-item{
+
+				.s-item {
 					width: 300rpx;
+					// background-color: red;
 					margin-right: 20rpx;
 					display: flex;
 					flex-direction: column;
-					image{
+					position: relative;
+					padding-bottom: 30rpx;
+					padding-right: 20rpx;
+
+					image {
 						width: 250rpx;
 						height: 220rpx;
-						border-radius: 8rpx;
 					}
-					.title{
+
+					.title {
+						// background-color: red;
 						width: 300rpx;
 						font-size: 30rpx;
 						overflow: hidden;
 						text-overflow: ellipsis;
 						white-space: nowrap;
 					}
-					.price{
+
+					.price {
 						color: $uni-text-color-red;
 						font-size: $uni-font-size-base;
 					}
@@ -232,62 +294,85 @@
 			}
 		}
 	}
-	
+
 	// 猜你喜欢
-	.like-title{
+	.like-title {
 		display: flex;
 		align-items: center;
 		padding: 20rpx 30rpx 10rpx;
 		background-color: #efefef;
-		image{
+
+		image {
 			width: 80rpx;
 			height: 80rpx;
 			margin-right: 20rpx;
 		}
-		.like-box{
+
+		.like-box {
 			flex: 1;
 			display: flex;
 			flex-direction: column;
-			text{
+
+			text {
 				font-size: 30rpx;
-				color: #e42208;
+				color: #75A342;
 				line-height: 1.3;
 			}
 		}
 	}
-	.like-content{
+
+	// 猜你喜欢-内容
+	.like-content {
 		display: flex;
 		flex-wrap: wrap;
 		padding: 0 30rpx 80rpx;
 		background-color: #efefef;
-		justify-content: space-between;
-		.like-item{
+
+		.like-item {
 			box-sizing: border-box;
 			display: flex;
-			width: 48%;
 			flex-direction: column;
 			margin-top: 20rpx;
-			background-color: #FFFFFF;
+			width: 48%;
+			background-color: #fff;
 			padding: 20rpx;
-			border-radius: 8rpx;
-			image{
+			position: relative;
+
+			&:nth-child(2n+1) {
+				margin-right: 4%;
+			}
+
+			image {
 				width: 100%;
 				height: 300rpx;
-				border-radius: 8rpx;
 			}
-			.title{
+
+			.title {
 				font-size: 30rpx;
 				padding-bottom: 10rpx;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-				margin-top: 8rpx;
 			}
-			.price{
-				font-size: 28rpx;
+
+			.price {
 				color: $uni-text-color-red;
+				font-size: 28rpx;
 			}
 		}
 	}
-
+	
+	.common-cart{
+		width: 60rpx;
+		height: 60rpx;
+	}
+	
+	.like-cart{
+		position: absolute;
+		right: 20rpx;
+		bottom: 20rpx;
+	}
+	
+	.s-cart{
+		position: absolute;
+		right: 5rpx;
+		bottom: 10rpx;
+	}
 </style>
