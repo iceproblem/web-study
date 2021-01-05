@@ -1,11 +1,30 @@
-import ReactDOM from "react-dom";
-import MyCom from "./components/MyCom";
+import ReactDOM from "react-dom"
+import MyCom from "./components/MyCom"
 
 let outData = {
-    pname:"qiqi",
-    page:23,
-    psex:"man",
-    pfriend:"xm"
+    pname: "qiqi",
+    page: 200,
+    psex: "man",
+    friend: "xiaoming"
 }
+ReactDOM.render(<MyCom personObj={ outData } />, document.getElementById("root"))
 
-ReactDOM.render(<MyCom personObj={outData} name="杨洋" link="https://react.docschina.org"/>,document.getElementById("root"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
