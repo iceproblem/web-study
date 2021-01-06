@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 id="count"></h1>
+    <button onclick='Store.dispatch({type:"INCREMENT",num:1})' >+1</button>
+    <button onclick='Store.dispatch({type:"DECREMENT",num:1})' >-1</button>
+
+    <script>
+        const createStore = (state,reducer)=>{
+            
+            // 获取状态
+            const getState = ()=> state;
+
+            // 订阅
+            let subArrs = []; // 订阅的方法队列
+            const subscribe = (subArr) => subArrs.push(subArr);
+
+            //派发
+            const dispatch = (action) =>{
+                state = reducer(state,action)
+                subArrs.forEach(subArr => subArr())
+            }
+
+            return { // 返回的对象就是一个仓库
+                dispatch,  // 派发动作
+                getState,  // 获取状态
+                subscribe  // 订阅方法
+            }
+        }
+
+        // 初始状态
+        let initState = {count:0}
+
+        // reducer 接收一个状态和动作，返回新状态
+        function reducer (state,action) { 
+            switch(action.type){
+                case "INCREMENT":
+                    return {
+                        count:state.count + action.num
+                    }
+                case "DECREMENT":
+                    return {
+                        count:state.count - action.num
+                    }
+                default:state;
+            }
+        }
+
+        //创建一个仓库
+        let Store = createStore(initState,reducer);
+
+        // 初始渲染和更新渲染
+        function render () {
+            document.getElementById("count").innerHTML = Store.getState().count;
+        }
+        //初始化状态渲染
+        render ();
+
+        // 订阅渲染的方法
+        Store.subscribe(render);
+
+    </script>
+</body>
+</html>

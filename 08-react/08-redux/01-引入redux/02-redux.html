@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 id="count"></h1>
+    <button onclick="store.dispatch({type:'INCREAMENT',num:1})">+1</button>
+    <button onclick="store.dispatch({type:'DECREAMENT',num:1})">-1</button>
+    
+
+    <script>
+        const createstate = (state,reducer) => {
+            
+            // 获取状态值
+            const getstate = () => state;
+
+            // 订阅
+            let subArrs = []; // 订阅列表
+            const subscribe = (subArr) => subArrs.push(subArr)
+
+            // 捕获动作
+            const dispatch = (action) => {
+                state = reducer(state,action);
+                subArrs.forEach(subArr => subArr())
+            }
+
+            // 仓库内容
+            return {
+                getstate, // 获取状态值
+                dispatch, // 捕获动作
+                subscribe, // 订阅
+            }
+        }
+
+        // 初始化状态的值
+        let initstate = {count:0}
+        //reducer 根据动作和旧状态返回新状态
+        function reducer(state,action) {
+            switch(action.type){
+                case "INCREAMENT":
+                    return {
+                        count:state.count + action.num
+                    }
+                case "DECREAMENT":
+                    return {
+                        count:state.count - action.num
+                    }
+                default:state;
+            }
+        }
+
+        // 创建一个仓库
+        let store = createstate(initstate,reducer);
+
+        // 更新DOM
+        function render () {
+            document.getElementById("count").innerHTML = store.getstate().count;
+        }
+        // 调用render更新DOM
+        render ();
+
+        //订阅render
+        store.subscribe(render);
+
+
+    </script>
+</body>
+</html>
