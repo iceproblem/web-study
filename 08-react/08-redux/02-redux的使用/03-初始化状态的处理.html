@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./js/redux.js"></script>
+</head>
+<body>
+    <script>
+        // 准备初始化状态
+        let initState = { number:0 }
+
+        // 准备action creator
+        function increment(payload){
+            return { type:"INCREMENT",payload:payload}
+        }
+        function decrement(payload){
+            return { type:"DECREMENT",payload:payload}
+        }
+
+        // 管理员 reducer
+        function reducer(state=initState,action){
+            switch(action.type){
+                case "INCREMENT":
+                    return {number:state.number+action.payload}
+                case "DECREMENT":
+                    return {number:state.number-action.payload}
+                default:
+                    return state
+            }
+        }
+
+        // 允许浏览器插件获取数据
+        const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
+        // 创建仓库
+        let store = Redux.createStore(reducer,composeEnhancers())
+
+        //订阅
+        store.subscribe(()=>{
+            console.log("最新状态：",store.getState());
+        })
+
+        // 派发动作
+        store.dispatch(increment(1))
+        store.dispatch(increment(2))
+        store.dispatch(decrement(3))
+        store.dispatch(decrement(4))
+
+    </script>
+</body>
+</html>
