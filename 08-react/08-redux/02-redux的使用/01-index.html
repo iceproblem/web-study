@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="zh" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script src="./js/redux.js" charset="utf-8"></script>
+    <title>redux</title>
+  </head>
+  <body>
+    <script>
+      // 状态的初始化
+      let initState = {number:0}
+
+      // 准备好的action
+      let increment = {type:"INCREMENT"}
+      let decrement = {type:"DECREMENT"}
+
+      // reducer
+      function reducer(state=initState,action){
+        switch(action.type){
+          case "INCREMENT":
+            return {number:state.number+1}
+          case "INCREMENT":
+            return {number:state.number-1}
+          default:
+            return state
+        }
+      }
+
+      // 创建一个仓库
+      let store = Redux.createStore(reducer)
+
+      // 订阅
+      store.subscribe(()=>{
+        console.log("最新状态是：",store.getState())
+      })
+
+      // 派发动作
+      store.dispatch(increment)
+    </script>
+  </body>
+</html>
