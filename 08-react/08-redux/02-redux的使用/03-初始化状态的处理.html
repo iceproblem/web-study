@@ -35,7 +35,7 @@
         const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
         // 创建仓库
-        let store = Redux.createStore(reducer,composeEnhancers())
+        let store = Redux.createStore(reducer,initState,composeEnhancers())
 
         //订阅
         store.subscribe(()=>{
