@@ -11,7 +11,7 @@ export default class AddTodo extends Component{
     }
     // 当按下键盘的键
     _dealKeyDown(e){
-        this.state = store.getState();
+        this.state = store.getState(); // 加上这段，每次按下键，主动更新当前仓库中的state
         let { todos } = this.state;
         let lastTodoId = todos.length === 0 ? 0 : todos[todos.length-1].id;
 
