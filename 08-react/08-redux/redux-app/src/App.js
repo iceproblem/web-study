@@ -1,13 +1,22 @@
-import React, { Component } from 'react'
-import Counter from './pages/Counter';
+import React from 'react';
+import "./index.css"
 
-export default class App extends Component {
-    constructor(props) {
-        super();
-    }
-    render() {
+import AddTodo from './components/AddTodo'
+import TodoList from './components/TodoList'
+import Footer from './components/Footer'
+
+class App extends React.Component {
+    render(){
         return (
-          <Counter></Counter>
+            <div className="todo-container">
+                <div className="todo-wrap">
+                    <AddTodo />
+                    <TodoList />
+                    <Footer/>
+                </div>
+            </div>
         )
     }
 }
+
+export default App;
