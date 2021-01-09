@@ -10,7 +10,9 @@ import {
 let initState = {
     todos:[],
     // 已完成的todo计数
-    finishedCount:0
+    finishedCount:0,
+    // footer中的选择框是否选中
+    isChecked:false
 }
 
 export default function reducer (state=initState, action) {
@@ -57,6 +59,15 @@ export default function reducer (state=initState, action) {
             }
         })
         newState.finishedCount = temp;
+
+        // 修改全选框的状态
+        let flag = true;
+        newState.todos.forEach((todo,index)=>{
+            if(!todo.done){
+                flag = false
+            }
+        })
+        newState.isChecked = flag;
         return newState;
     }
 
@@ -89,6 +100,8 @@ export default function reducer (state=initState, action) {
         newState.todos.forEach((todo,index)=>{
             todo.done = action.flag;
         })
+        // 切换选择框
+        newState.isChecked = !newState.isChecked;
         //统计完成的todo个数
         let temp = 0;
         newState.todos.forEach((todo,index)=>{

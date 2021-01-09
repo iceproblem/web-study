@@ -22,12 +22,13 @@ export default class Foot extends Component {
         store.dispatch(isCheckedAllTodo(e.target.checked))
     }
     render() {
-        let { todos,finishedCount } = this.state
+        let { todos,finishedCount,isChecked } = this.state
         return (
             <div className="todo-footer">
                 <label>
                     <input
                         type="checkbox"
+                        checked={ isChecked }
                         onChange = { e=>this._dealChecked(e)}
                     />
                 </label>
