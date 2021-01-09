@@ -11,10 +11,10 @@ router.get('/api/todos', function(req, res, next) {
    res.json({
      status: 200,
      data: [
-       {id: 1, content: "redux", done: false},
-       {id: 2, content: "react", done: false},
-       {id: 3, content: "react-redux", done: false},
-       {id: 4, content: "umi", done: false}
+       {id: 0, content: "redux", done: false},
+       {id: 1, content: "react", done: false},
+       {id: 2, content: "react-redux", done: false},
+       {id: 3, content: "umi", done: false}
      ]
    })
 });
