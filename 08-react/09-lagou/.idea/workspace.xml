@@ -5,11 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a4ed49c2-65e9-4aa0-9cb4-5dfa54993025" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/js/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/libs/zepto.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/scss/init.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/js/controller/positionController.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/js/router/router.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/scss/index.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/position/position.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/all.css" beforeDir="false" afterPath="$PROJECT_DIR$/dev/all.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/all.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev/all.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gulpfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/gulpfile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scss/init.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/scss/init.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -49,6 +56,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -68,6 +76,9 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\AAAAA\document\web-study\08-react\09-lagou\src" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\AAAAA\document\web-study\08-react\09-lagou\src\js" />
+    </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -83,6 +94,11 @@
       <workItem from="1610457989555" duration="138000" />
       <workItem from="1610458154888" duration="213000" />
       <workItem from="1610458387576" duration="146000" />
+      <workItem from="1610458553742" duration="3733000" />
+      <workItem from="1610534428091" duration="4383000" />
+      <workItem from="1610540406600" duration="279000" />
+      <workItem from="1610542090960" duration="684000" />
+      <workItem from="1610543218177" duration="605000" />
     </task>
     <servers />
   </component>

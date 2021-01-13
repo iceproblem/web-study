@@ -86,14 +86,72 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/classCallCheck.js":
+/*!**************************************************************************************!*\
+  !*** ./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/classCallCheck.js ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("function _classCallCheck(instance, Constructor) {\n  if (!(instance instanceof Constructor)) {\n    throw new TypeError(\"Cannot call a class as a function\");\n  }\n}\n\nmodule.exports = _classCallCheck;\n\n//# sourceURL=webpack:///./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/classCallCheck.js?");
+
+/***/ }),
+
+/***/ "./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/createClass.js":
+/*!***********************************************************************************!*\
+  !*** ./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/createClass.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("function _defineProperties(target, props) {\n  for (var i = 0; i < props.length; i++) {\n    var descriptor = props[i];\n    descriptor.enumerable = descriptor.enumerable || false;\n    descriptor.configurable = true;\n    if (\"value\" in descriptor) descriptor.writable = true;\n    Object.defineProperty(target, descriptor.key, descriptor);\n  }\n}\n\nfunction _createClass(Constructor, protoProps, staticProps) {\n  if (protoProps) _defineProperties(Constructor.prototype, protoProps);\n  if (staticProps) _defineProperties(Constructor, staticProps);\n  return Constructor;\n}\n\nmodule.exports = _createClass;\n\n//# sourceURL=webpack:///./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/createClass.js?");
+
+/***/ }),
+
+/***/ "./src/js/controller/positionController.js":
+/*!*************************************************!*\
+  !*** ./src/js/controller/positionController.js ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/classCallCheck.js\");\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/createClass.js\");\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _views_position_position_html__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../views/position/position.html */ \"./src/views/position/position.html\");\n/* harmony import */ var _views_position_position_html__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_views_position_position_html__WEBPACK_IMPORTED_MODULE_2__);\n\n\n\n\nvar PositionController = /*#__PURE__*/function () {\n  function PositionController() {\n    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, PositionController);\n  }\n\n  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(PositionController, [{\n    key: \"render\",\n    value: function render() {\n      $(\"main\").html(_views_position_position_html__WEBPACK_IMPORTED_MODULE_2___default.a);\n    }\n  }]);\n\n  return PositionController;\n}();\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (new PositionController());\n\n//# sourceURL=webpack:///./src/js/controller/positionController.js?");
+
+/***/ }),
+
 /***/ "./src/js/index.js":
 /*!*************************!*\
   !*** ./src/js/index.js ***!
   \*************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/classCallCheck.js\");\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/createClass.js\");\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _router_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./router/router */ \"./src/js/router/router.js\");\n/* harmony import */ var _controller_positionController__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./controller/positionController */ \"./src/js/controller/positionController.js\");\n/* harmony import */ var _views_position_position_html__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../views/position/position.html */ \"./src/views/position/position.html\");\n/* harmony import */ var _views_position_position_html__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_views_position_position_html__WEBPACK_IMPORTED_MODULE_4__);\n\n\n\n\n\n\nvar App = /*#__PURE__*/function () {\n  function App() {\n    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, App);\n\n    console.log(\"constructor\"); // 上来直接渲染模板\n\n    _controller_positionController__WEBPACK_IMPORTED_MODULE_3__[\"default\"].render();\n    this.initEvent(_views_position_position_html__WEBPACK_IMPORTED_MODULE_4___default.a);\n  }\n\n  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(App, [{\n    key: \"initEvent\",\n    value: function initEvent() {\n      $(\"#nav li\").on(\"click\", function () {\n        $(this).addClass(\"active\").siblings().removeClass(\"active\");\n        $(this).find(\"svg\").find(\"path\").attr(\"fill\", \"#00b38a\");\n        $(this).siblings().find(\"svg\").find(\"path\").attr(\"fill\", \"#333\");\n        var url = $(this).attr(\"data-url\");\n        _router_router__WEBPACK_IMPORTED_MODULE_2__[\"default\"].go(url); // console.log($(this).find(\"svg\").find(\"path\"));\n      });\n    }\n  }]);\n\n  return App;\n}();\n\nnew App();\n\n//# sourceURL=webpack:///./src/js/index.js?");
+
+/***/ }),
+
+/***/ "./src/js/router/router.js":
+/*!*********************************!*\
+  !*** ./src/js/router/router.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/classCallCheck.js\");\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/createClass.js\");\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _controller_positionController__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../controller/positionController */ \"./src/js/controller/positionController.js\");\n\n\n\n\nvar Router = /*#__PURE__*/function () {\n  function Router() {\n    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Router);\n  }\n\n  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(Router, [{\n    key: \"go\",\n    value: function go(path) {\n      _controller_positionController__WEBPACK_IMPORTED_MODULE_2__[\"default\"].render();\n    }\n  }]);\n\n  return Router;\n}();\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (new Router());\n\n//# sourceURL=webpack:///./src/js/router/router.js?");
+
+/***/ }),
+
+/***/ "./src/views/position/position.html":
+/*!******************************************!*\
+  !*** ./src/views/position/position.html ***!
+  \******************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("// alert(\"你好~人类\")\n// class App{\n//     constructor(){\n//         console.log(\"constructor\");\n//         this.init();\n//     }\n//     async init(){\n//         let res = await this.getName()\n//         alert(res);\n//     }\n//     getName(){\n//         return new Promise((resolve,reject)=>{\n//             setTimeout(()=>{\n//                 resolve(\"包包\")\n//             },3000)\n//         })\n//     }\n// }\n// new App();\n\n//# sourceURL=webpack:///./src/js/index.js?");
+eval("module.exports = \"<!DOCTYPE html><html lang=\\\"zh\\\"><head>    <meta charset=\\\"UTF-8\\\">    <meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1.0\\\">    <title>职位列表</title></head><body><h1>职位列表</h1></body></html>\"\n\n//# sourceURL=webpack:///./src/views/position/position.html?");
 
 /***/ })
 

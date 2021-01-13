@@ -39,6 +39,10 @@ function complieJS(){
                                 plugins: ['@babel/plugin-transform-runtime']
                             }
                         }
+                    },
+                    {
+                        test:/\.html$/,
+                        loader:"string-loader"
                     }
                 ]
             }

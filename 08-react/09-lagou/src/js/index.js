@@ -1,19 +1,56 @@
-// alert("你好~人类")
-// class App{
-//     constructor(){
-//         console.log("constructor");
-//         this.init();
-//     }
-//     async init(){
-//         let res = await this.getName()
-//         alert(res);
-//     }
-//     getName(){
-//         return new Promise((resolve,reject)=>{
-//             setTimeout(()=>{
-//                 resolve("包包")
-//             },3000)
-//         })
-//     }
-// }
-// new App();
+import Router from "./router/router"
+import positionCtrl from "./controller/positionController"
+import positionTpl from "../views/position/position.html"
+
+class App{
+    constructor(){
+        console.log("constructor");
+        // 上来直接渲染模板
+        positionCtrl.render()
+        this.initEvent(positionTpl);
+    }
+    initEvent(){
+        $("#nav li").on("click",function(){
+            $(this).addClass("active").siblings().removeClass("active");
+            $(this).find("svg").find("path").attr("fill","#00b38a");
+            $(this).siblings().find("svg").find("path").attr("fill","#333")
+
+            let url = $(this).attr("data-url")
+            Router.go(url)
+
+            // console.log($(this).find("svg").find("path"));
+        })
+    }
+}
+new App();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,5 +1,10 @@
-$color:red;
-
+*{
+  margin: 0;
+  padding: 0;
+}
+html,body{
+  font-size: 100px;
+}
 body{
-  background-color: aliceblue;
+  height: 100%;
 }
