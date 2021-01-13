@@ -4,7 +4,6 @@ import positionTpl from "../views/position/position.html"
 
 class App{
     constructor(){
-        console.log("constructor");
         // 上来直接渲染模板
         positionCtrl.render()
         this.initEvent(positionTpl);
@@ -17,11 +16,10 @@ class App{
 
             let url = $(this).attr("data-url")
             Router.go(url)
-
-            // console.log($(this).find("svg").find("path"));
         })
     }
 }
+
 new App();
 
 

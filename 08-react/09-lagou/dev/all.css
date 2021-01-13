@@ -52,4 +52,38 @@ html, body {
   font-size: 100px; }
 
 body {
-  height: 100%; }
+  font-size: 0.14rem; }
+
+.custom {
+  display: flex;
+  padding: 0.14rem;
+  align-items: center; }
+  .custom span {
+    flex: 1;
+    color: #555; }
+  .custom button {
+    width: 0.84rem;
+    height: 0.3rem;
+    color: #00b38a;
+    background-color: #f5f5f5;
+    border-radius: 0.15rem;
+    border: none; }
+
+.position-list .item {
+  display: flex;
+  padding: 0.14rem;
+  border-top: 1px solid #e8e8e8; }
+  .position-list .item img {
+    width: 0.6rem;
+    height: 0.6rem; }
+  .position-list .item .desc {
+    flex: 1; }
+    .position-list .item .desc h2 {
+      font-size: 0.16rem; }
+    .position-list .item .desc .pos {
+      display: flex;
+      justify-content: space-between; }
+      .position-list .item .desc .pos .salary {
+        color: #00b38a;
+        font-size: 0.167rem;
+        font-weight: 400; }

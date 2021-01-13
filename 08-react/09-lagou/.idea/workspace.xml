@@ -5,19 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a4ed49c2-65e9-4aa0-9cb4-5dfa54993025" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/js/controller/positionController.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/js/router/router.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/scss/index.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/views/position/position.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/scss/position.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/all.css" beforeDir="false" afterPath="$PROJECT_DIR$/dev/all.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/all.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev/all.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gulpfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/gulpfile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/position/position.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/position/position.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/controller/positionController.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/controller/positionController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scss/init.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/scss/init.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/position/position.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/position/position.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +26,7 @@
       <list>
         <option value="HTML File" />
         <option value="JavaScript File" />
+        <option value="SCSS File" />
       </list>
     </option>
   </component>
@@ -62,6 +60,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
+    <property name="list.type.of.created.stylesheet" value="SCSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -98,7 +97,8 @@
       <workItem from="1610534428091" duration="4383000" />
       <workItem from="1610540406600" duration="279000" />
       <workItem from="1610542090960" duration="684000" />
-      <workItem from="1610543218177" duration="605000" />
+      <workItem from="1610543218177" duration="3159000" />
+      <workItem from="1610547665110" duration="1110000" />
     </task>
     <servers />
   </component>
