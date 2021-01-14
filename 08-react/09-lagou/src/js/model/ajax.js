@@ -28,11 +28,11 @@ axios.interceptors.response.use((response)=>{
 
 export  default function ajax(url = '', params = {}, type = 'GET') {
     // 0. 变量
-     let promise;
+    let promise;
 
     // 1. 返回promise
     return new Promise((resolve, reject)=>{
-         // 1.1 判断请求的类型
+        // 1.1 判断请求的类型
         if(type.toUpperCase() === 'GET'){ // get请求
             promise = axios({
                 url,

@@ -5,14 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a4ed49c2-65e9-4aa0-9cb4-5dfa54993025" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/scss/position.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/position/item.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/all.css" beforeDir="false" afterPath="$PROJECT_DIR$/dev/all.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/all.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev/all.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/position/position.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/position/position.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gulpfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/gulpfile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/controller/positionController.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/controller/positionController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/model/ajax.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/model/ajax.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scss/position.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/scss/position.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/position/position.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/position/position.html" afterDir="false" />
     </list>
@@ -25,8 +29,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="HTML File" />
-        <option value="JavaScript File" />
         <option value="SCSS File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -99,6 +103,8 @@
       <workItem from="1610542090960" duration="684000" />
       <workItem from="1610543218177" duration="3159000" />
       <workItem from="1610547665110" duration="1110000" />
+      <workItem from="1610609035288" duration="4057000" />
+      <workItem from="1610615591665" duration="3988000" />
     </task>
     <servers />
   </component>

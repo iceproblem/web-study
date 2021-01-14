@@ -3,6 +3,7 @@ const concat = require("gulp-concat");
 const sass = require("gulp-sass");
 const gulpServer = require('gulp-webserver');
 const webpackStream = require("webpack-stream");
+const proxy = require("http-proxy-middleware")
 const path = require("path")
 
 //这是一个任务，将复制html代码到dev
@@ -51,14 +52,24 @@ function complieJS(){
 }
 
 // 配置开发服务器
-function startServer () {
+function startServer(){
     return src("./dev/")
         .pipe(gulpServer({
             port:8080,    // 配置端口
             host:'127.0.0.1',  // 配置主机
             open:true,  // 自动打开浏览器
             livereload:true, // 是否支持热更新
-            directoryListing: false  // 是否显示项目目录结构
+            directoryListing: false,  // 是否显示项目目录结构
+            middleware:[
+                proxy('/api',{
+                    // 代理的目标地址
+                    target: 'http://localhost:3000/',
+                    changeOrigin:true, // 是否支持跨域
+                    pathRewrite:{
+                        "^/api":""
+                    }
+                })
+            ]
         }))
 }
 // 文件监控
