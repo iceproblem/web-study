@@ -1,6 +1,7 @@
-@mixin border_1px ($color) {
+
+@mixin border_1px($color) {
     position: relative;
-    @media (device-pixel-ratio:1) {
+    @media (-webkit-device-pixel-ratio:1),(device-pixel-ratio:1) {
         &::before{
             content: "";
             position: absolute;
@@ -47,4 +48,31 @@
             transform: scaleY(0.33333);
         }
     }
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

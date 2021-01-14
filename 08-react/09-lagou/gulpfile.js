@@ -92,5 +92,8 @@ function copyLibs(){
     return src("./src/libs/**/*.*")
         .pipe(dest("./dev/libs/"))
 }
+function copyImages(){
+    return src("./src/images/**/*.*").pipe(dest("./dev/images/"))
+}
 // 导出任务
-exports.default = series(copyHTML,compileSCSS,complieJS,copyLibs,startServer,watchFile)
+exports.default = series(copyHTML,copyImages,compileSCSS,complieJS,copyLibs,startServer,watchFile)

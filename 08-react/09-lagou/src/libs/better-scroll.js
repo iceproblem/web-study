@@ -1,12 +1,12 @@
 /*!
- * better-scroll / core
+ * better-scroll / better-scroll
  * (c) 2016-2021 ustbhuangyi
  * Released under the MIT License.
  */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
     typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.BScroll = {}));
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.BetterScroll = {}));
 }(this, (function (exports) { 'use strict';
 
     /*! *****************************************************************************
@@ -48,6 +48,44 @@
         };
         return __assign.apply(this, arguments);
     };
+
+    function __awaiter(thisArg, _arguments, P, generator) {
+        function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+        return new (P || (P = Promise))(function (resolve, reject) {
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+            step((generator = generator.apply(thisArg, _arguments || [])).next());
+        });
+    }
+
+    function __generator(thisArg, body) {
+        var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+        function verb(n) { return function (v) { return step([n, v]); }; }
+        function step(op) {
+            if (f) throw new TypeError("Generator is already executing.");
+            while (_) try {
+                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+                if (y = 0, t) op = [op[0] & 2, t.value];
+                switch (op[0]) {
+                    case 0: case 1: t = op; break;
+                    case 4: _.label++; return { value: op[1], done: false };
+                    case 5: _.label++; y = op[1]; op = [0]; continue;
+                    case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                    default:
+                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                        if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                        if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                        if (t[2]) _.ops.pop();
+                        _.trys.pop(); continue;
+                }
+                op = body.call(thisArg, _);
+            } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+            if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+        }
+    }
 
     function __spreadArrays() {
         for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
@@ -185,6 +223,9 @@
     function isUndef(v) {
         return v === undefined || v === null;
     }
+    function getDistance(x, y) {
+        return Math.sqrt(x * x + y * y);
+    }
     function between(x, min, max) {
         if (x < min) {
             return min;
@@ -193,6 +234,20 @@
             return max;
         }
         return x;
+    }
+    function findIndex(ary, fn) {
+        if (ary.findIndex) {
+            return ary.findIndex(fn);
+        }
+        var index = -1;
+        ary.some(function (item, i, ary) {
+            var ret = fn(item, i, ary);
+            if (ret) {
+                index = i;
+                return ret;
+            }
+        });
+        return index;
     }
 
     var elementStyle = (inBrowser &&
@@ -273,6 +328,13 @@
         return {
             left: left,
             top: top,
+        };
+    }
+    function offsetToBody(el) {
+        var rect = el.getBoundingClientRect();
+        return {
+            left: -(rect.left + window.pageXOffset),
+            top: -(rect.top + window.pageYOffset),
         };
     }
     var cssVendor = vendor && vendor !== 'standard' ? '-' + vendor.toLowerCase() + '-' : '';
@@ -387,6 +449,29 @@
     }
     function dblclick(e) {
         click(e, 'dblclick');
+    }
+    function prepend(el, target) {
+        var firstChild = target.firstChild;
+        if (firstChild) {
+            before(el, firstChild);
+        }
+        else {
+            target.appendChild(el);
+        }
+    }
+    function before(el, target) {
+        var parentNode = target.parentNode;
+        parentNode.insertBefore(el, target);
+    }
+    function removeChild(el, child) {
+        el.removeChild(child);
+    }
+    function hasClass(el, className) {
+        var reg = new RegExp('(^|\\s)' + className + '(\\s|$)');
+        return reg.test(el.className);
+    }
+    function HTMLCollectionToArray(el) {
+        return Array.prototype.slice.call(el, 0);
     }
 
     var ease = {
@@ -2421,14 +2506,3518 @@
     createBScroll.pluginsMap = BScrollConstructor.pluginsMap;
     var BScroll = createBScroll;
 
+    var MouseWheel = /** @class */ (function () {
+        function MouseWheel(scroll) {
+            this.scroll = scroll;
+            this.wheelEndTimer = 0;
+            this.wheelMoveTimer = 0;
+            this.wheelStart = false;
+            this.init();
+        }
+        MouseWheel.prototype.init = function () {
+            this.handleBScroll();
+            this.handleOptions();
+            this.handleHooks();
+            this.registerEvent();
+        };
+        MouseWheel.prototype.handleBScroll = function () {
+            this.scroll.registerType([
+                'alterOptions',
+                'mousewheelStart',
+                'mousewheelMove',
+                'mousewheelEnd',
+            ]);
+        };
+        MouseWheel.prototype.handleOptions = function () {
+            var userOptions = (this.scroll.options.mouseWheel === true
+                ? {}
+                : this.scroll.options.mouseWheel);
+            var defaultOptions = {
+                speed: 20,
+                invert: false,
+                easeTime: 300,
+                discreteTime: 400,
+                throttleTime: 0,
+                dampingFactor: 0.1,
+            };
+            this.mouseWheelOpt = extend(defaultOptions, userOptions);
+        };
+        MouseWheel.prototype.handleHooks = function () {
+            this.hooksFn = [];
+            this.registerHooks(this.scroll.hooks, 'destroy', this.destroy);
+        };
+        MouseWheel.prototype.registerEvent = function () {
+            this.eventRegister = new EventRegister(this.scroll.scroller.wrapper, [
+                {
+                    name: 'wheel',
+                    handler: this.wheelHandler.bind(this),
+                },
+                {
+                    name: 'mousewheel',
+                    handler: this.wheelHandler.bind(this),
+                },
+                {
+                    name: 'DOMMouseScroll',
+                    handler: this.wheelHandler.bind(this),
+                },
+            ]);
+        };
+        MouseWheel.prototype.registerHooks = function (hooks, name, handler) {
+            hooks.on(name, handler, this);
+            this.hooksFn.push([hooks, name, handler]);
+        };
+        MouseWheel.prototype.wheelHandler = function (e) {
+            if (!this.scroll.enabled) {
+                return;
+            }
+            this.beforeHandler(e);
+            // start
+            if (!this.wheelStart) {
+                this.wheelStartHandler(e);
+                this.wheelStart = true;
+            }
+            // move
+            var delta = this.getWheelDelta(e);
+            this.wheelMoveHandler(delta);
+            // end
+            this.wheelEndDetector(delta);
+        };
+        MouseWheel.prototype.wheelStartHandler = function (e) {
+            this.cleanCache();
+            var _a = this.scroll.scroller, scrollBehaviorX = _a.scrollBehaviorX, scrollBehaviorY = _a.scrollBehaviorY;
+            scrollBehaviorX.setMovingDirection(0 /* Default */);
+            scrollBehaviorY.setMovingDirection(0 /* Default */);
+            scrollBehaviorX.setDirection(0 /* Default */);
+            scrollBehaviorY.setDirection(0 /* Default */);
+            this.scroll.trigger(this.scroll.eventTypes.alterOptions, this.mouseWheelOpt);
+            this.scroll.trigger(this.scroll.eventTypes.mousewheelStart);
+        };
+        MouseWheel.prototype.cleanCache = function () {
+            this.deltaCache = [];
+        };
+        MouseWheel.prototype.wheelMoveHandler = function (delta) {
+            var _this = this;
+            var _a = this.mouseWheelOpt, throttleTime = _a.throttleTime, dampingFactor = _a.dampingFactor;
+            if (throttleTime && this.wheelMoveTimer) {
+                this.deltaCache.push(delta);
+            }
+            else {
+                var cachedDelta = this.deltaCache.reduce(function (prev, current) {
+                    return {
+                        x: prev.x + current.x,
+                        y: prev.y + current.y,
+                    };
+                }, { x: 0, y: 0 });
+                this.cleanCache();
+                var _b = this.scroll.scroller, scrollBehaviorX = _b.scrollBehaviorX, scrollBehaviorY = _b.scrollBehaviorY;
+                scrollBehaviorX.setMovingDirection(-delta.directionX);
+                scrollBehaviorY.setMovingDirection(-delta.directionY);
+                scrollBehaviorX.setDirection(delta.x);
+                scrollBehaviorY.setDirection(delta.y);
+                // when out of boundary, perform a damping scroll
+                var newX = scrollBehaviorX.performDampingAlgorithm(Math.round(delta.x) + cachedDelta.x, dampingFactor);
+                var newY = scrollBehaviorY.performDampingAlgorithm(Math.round(delta.y) + cachedDelta.x, dampingFactor);
+                if (!this.scroll.trigger(this.scroll.eventTypes.mousewheelMove, {
+                    x: newX,
+                    y: newY,
+                })) {
+                    var easeTime = this.getEaseTime();
+                    if (newX !== this.scroll.x || newY !== this.scroll.y) {
+                        this.scroll.scrollTo(newX, newY, easeTime);
+                    }
+                }
+                if (throttleTime) {
+                    this.wheelMoveTimer = window.setTimeout(function () {
+                        _this.wheelMoveTimer = 0;
+                    }, throttleTime);
+                }
+            }
+        };
+        MouseWheel.prototype.wheelEndDetector = function (delta) {
+            var _this = this;
+            window.clearTimeout(this.wheelEndTimer);
+            this.wheelEndTimer = window.setTimeout(function () {
+                _this.wheelStart = false;
+                window.clearTimeout(_this.wheelMoveTimer);
+                _this.wheelMoveTimer = 0;
+                _this.scroll.trigger(_this.scroll.eventTypes.mousewheelEnd, delta);
+            }, this.mouseWheelOpt.discreteTime);
+        };
+        MouseWheel.prototype.getWheelDelta = function (e) {
+            var _a = this.mouseWheelOpt, speed = _a.speed, invert = _a.invert;
+            var wheelDeltaX = 0;
+            var wheelDeltaY = 0;
+            var direction = invert ? -1 /* Negative */ : 1 /* Positive */;
+            switch (true) {
+                case 'deltaX' in e:
+                    if (e.deltaMode === 1) {
+                        wheelDeltaX = -e.deltaX * speed;
+                        wheelDeltaY = -e.deltaY * speed;
+                    }
+                    else {
+                        wheelDeltaX = -e.deltaX;
+                        wheelDeltaY = -e.deltaY;
+                    }
+                    break;
+                case 'wheelDeltaX' in e:
+                    wheelDeltaX = (e.wheelDeltaX / 120) * speed;
+                    wheelDeltaY = (e.wheelDeltaY / 120) * speed;
+                    break;
+                case 'wheelDelta' in e:
+                    wheelDeltaX = wheelDeltaY = (e.wheelDelta / 120) * speed;
+                    break;
+                case 'detail' in e:
+                    wheelDeltaX = wheelDeltaY = (-e.detail / 3) * speed;
+                    break;
+            }
+            wheelDeltaX *= direction;
+            wheelDeltaY *= direction;
+            if (!this.scroll.hasVerticalScroll) {
+                wheelDeltaX = wheelDeltaY;
+                wheelDeltaY = 0;
+            }
+            if (!this.scroll.hasHorizontalScroll) {
+                wheelDeltaX = 0;
+            }
+            var directionX = wheelDeltaX > 0
+                ? -1 /* Negative */
+                : wheelDeltaX < 0
+                    ? 1 /* Positive */
+                    : 0 /* Default */;
+            var directionY = wheelDeltaY > 0
+                ? -1 /* Negative */
+                : wheelDeltaY < 0
+                    ? 1 /* Positive */
+                    : 0 /* Default */;
+            return {
+                x: wheelDeltaX,
+                y: wheelDeltaY,
+                directionX: directionX,
+                directionY: directionY,
+            };
+        };
+        MouseWheel.prototype.beforeHandler = function (e) {
+            var _a = this.scroll.options, preventDefault = _a.preventDefault, stopPropagation = _a.stopPropagation, preventDefaultException = _a.preventDefaultException;
+            if (preventDefault &&
+                !preventDefaultExceptionFn(e.target, preventDefaultException)) {
+                e.preventDefault();
+            }
+            if (stopPropagation) {
+                e.stopPropagation();
+            }
+        };
+        MouseWheel.prototype.getEaseTime = function () {
+            var SAFE_EASETIME = 100;
+            var easeTime = this.mouseWheelOpt.easeTime;
+            // scrollEnd event will be triggered in every calling of scrollTo when easeTime is too small
+            // easeTime needs to be greater than 100
+            if (easeTime < SAFE_EASETIME) {
+                warn("easeTime should be greater than 100." +
+                    "If mouseWheel easeTime is too small," +
+                    "scrollEnd will be triggered many times.");
+            }
+            return Math.max(easeTime, SAFE_EASETIME);
+        };
+        MouseWheel.prototype.destroy = function () {
+            this.eventRegister.destroy();
+            window.clearTimeout(this.wheelEndTimer);
+            window.clearTimeout(this.wheelMoveTimer);
+            this.hooksFn.forEach(function (item) {
+                var hooks = item[0];
+                var hooksName = item[1];
+                var handlerFn = item[2];
+                hooks.off(hooksName, handlerFn);
+            });
+        };
+        MouseWheel.pluginName = 'mouseWheel';
+        MouseWheel.applyOrder = "pre" /* Pre */;
+        return MouseWheel;
+    }());
+
+    var ObserveDOM = /** @class */ (function () {
+        function ObserveDOM(scroll) {
+            this.scroll = scroll;
+            this.stopObserver = false;
+            this.init();
+        }
+        ObserveDOM.prototype.init = function () {
+            this.handleMutationObserver();
+            this.handleHooks();
+        };
+        ObserveDOM.prototype.handleMutationObserver = function () {
+            var _this = this;
+            if (typeof MutationObserver !== 'undefined') {
+                var timer_1 = 0;
+                this.observer = new MutationObserver(function (mutations) {
+                    _this.mutationObserverHandler(mutations, timer_1);
+                });
+                this.startObserve(this.observer);
+            }
+            else {
+                this.checkDOMUpdate();
+            }
+        };
+        ObserveDOM.prototype.handleHooks = function () {
+            var _this = this;
+            this.hooksFn = [];
+            this.registerHooks(this.scroll.hooks, this.scroll.hooks.eventTypes.contentChanged, function () {
+                _this.stopObserve();
+                // launch a new mutationObserver
+                _this.handleMutationObserver();
+            });
+            this.registerHooks(this.scroll.hooks, this.scroll.hooks.eventTypes.enable, function () {
+                if (_this.stopObserver) {
+                    _this.handleMutationObserver();
+                }
+            });
+            this.registerHooks(this.scroll.hooks, this.scroll.hooks.eventTypes.disable, function () {
+                _this.stopObserve();
+            });
+            this.registerHooks(this.scroll.hooks, this.scroll.hooks.eventTypes.destroy, function () {
+                _this.destroy();
+            });
+        };
+        ObserveDOM.prototype.mutationObserverHandler = function (mutations, timer) {
+            var _this = this;
+            if (this.shouldNotRefresh()) {
+                return;
+            }
+            var immediateRefresh = false;
+            var deferredRefresh = false;
+            for (var i = 0; i < mutations.length; i++) {
+                var mutation = mutations[i];
+                if (mutation.type !== 'attributes') {
+                    immediateRefresh = true;
+                    break;
+                }
+                else {
+                    if (mutation.target !== this.scroll.scroller.content) {
+                        deferredRefresh = true;
+                        break;
+                    }
+                }
+            }
+            if (immediateRefresh) {
+                this.scroll.refresh();
+            }
+            else if (deferredRefresh) {
+                // attributes changes too often
+                clearTimeout(timer);
+                timer = window.setTimeout(function () {
+                    if (!_this.shouldNotRefresh()) {
+                        _this.scroll.refresh();
+                    }
+                }, 60);
+            }
+        };
+        ObserveDOM.prototype.startObserve = function (observer) {
+            var config = {
+                attributes: true,
+                childList: true,
+                subtree: true,
+            };
+            observer.observe(this.scroll.scroller.content, config);
+        };
+        ObserveDOM.prototype.shouldNotRefresh = function () {
+            var scroller = this.scroll.scroller;
+            var scrollBehaviorX = scroller.scrollBehaviorX, scrollBehaviorY = scroller.scrollBehaviorY;
+            var outsideBoundaries = scrollBehaviorX.currentPos > scrollBehaviorX.minScrollPos ||
+                scrollBehaviorX.currentPos < scrollBehaviorX.maxScrollPos ||
+                scrollBehaviorY.currentPos > scrollBehaviorY.minScrollPos ||
+                scrollBehaviorY.currentPos < scrollBehaviorY.maxScrollPos;
+            return scroller.animater.pending || outsideBoundaries;
+        };
+        ObserveDOM.prototype.checkDOMUpdate = function () {
+            var _this = this;
+            var content = this.scroll.scroller.content;
+            var contentRect = getRect(content);
+            var oldWidth = contentRect.width;
+            var oldHeight = contentRect.height;
+            var check = function () {
+                if (_this.stopObserver) {
+                    return;
+                }
+                contentRect = getRect(content);
+                var newWidth = contentRect.width;
+                var newHeight = contentRect.height;
+                if (oldWidth !== newWidth || oldHeight !== newHeight) {
+                    _this.scroll.refresh();
+                }
+                oldWidth = newWidth;
+                oldHeight = newHeight;
+                next();
+            };
+            var next = function () {
+                setTimeout(function () {
+                    check();
+                }, 1000);
+            };
+            next();
+        };
+        ObserveDOM.prototype.registerHooks = function (hooks, name, handler) {
+            hooks.on(name, handler, this);
+            this.hooksFn.push([hooks, name, handler]);
+        };
+        ObserveDOM.prototype.stopObserve = function () {
+            this.stopObserver = true;
+            if (this.observer) {
+                this.observer.disconnect();
+            }
+        };
+        ObserveDOM.prototype.destroy = function () {
+            this.stopObserve();
+            this.hooksFn.forEach(function (item) {
+                var hooks = item[0];
+                var hooksName = item[1];
+                var handlerFn = item[2];
+                hooks.off(hooksName, handlerFn);
+            });
+            this.hooksFn.length = 0;
+        };
+        ObserveDOM.pluginName = 'observeDOM';
+        return ObserveDOM;
+    }());
+
+    var sourcePrefix = 'plugins.pullDownRefresh';
+    var propertiesMap = [
+        {
+            key: 'finishPullDown',
+            name: 'finishPullDown'
+        },
+        {
+            key: 'openPullDown',
+            name: 'openPullDown'
+        },
+        {
+            key: 'closePullDown',
+            name: 'closePullDown'
+        },
+        {
+            key: 'autoPullDownRefresh',
+            name: 'autoPullDownRefresh'
+        }
+    ];
+    var propertiesConfig$1 = propertiesMap.map(function (item) {
+        return {
+            key: item.key,
+            sourceKey: sourcePrefix + "." + item.name
+        };
+    });
+
+    var PULL_DOWN_HOOKS_NAME = 'pullingDown';
+    var PullDown = /** @class */ (function () {
+        function PullDown(scroll) {
+            this.scroll = scroll;
+            this.pulling = false;
+            this.init();
+        }
+        PullDown.prototype.init = function () {
+            this.handleBScroll();
+            this.handleOptions(this.scroll.options.pullDownRefresh);
+            this.handleHooks();
+            this.watch();
+        };
+        PullDown.prototype.handleBScroll = function () {
+            this.scroll.registerType([PULL_DOWN_HOOKS_NAME]);
+            this.scroll.proxy(propertiesConfig$1);
+        };
+        PullDown.prototype.handleOptions = function (userOptions) {
+            if (userOptions === void 0) { userOptions = {}; }
+            userOptions = (userOptions === true ? {} : userOptions);
+            var defaultOptions = {
+                threshold: 90,
+                stop: 40,
+            };
+            this.options = extend(defaultOptions, userOptions);
+            // plugin relies on scrollTo api
+            // set it to Realtime make bs dispatch scroll、scrollEnd hooks
+            this.scroll.options.probeType = 3 /* Realtime */;
+        };
+        PullDown.prototype.handleHooks = function () {
+            var _this = this;
+            this.hooksFn = [];
+            var scroller = this.scroll.scroller;
+            var scrollBehaviorY = scroller.scrollBehaviorY;
+            this.currentMinScrollY = this.cachedOriginanMinScrollY =
+                scrollBehaviorY.minScrollPos;
+            this.registerHooks(this.scroll.hooks, this.scroll.hooks.eventTypes.contentChanged, function () {
+                _this.finishPullDown();
+            });
+            this.registerHooks(scrollBehaviorY.hooks, scrollBehaviorY.hooks.eventTypes.computeBoundary, function (boundary) {
+                // content is smaller than wrapper
+                if (boundary.maxScrollPos > 0) {
+                    // allow scrolling when content is not full of wrapper
+                    boundary.maxScrollPos = -1;
+                }
+                boundary.minScrollPos = _this.currentMinScrollY;
+            });
+            // integrate with mousewheel
+            if (this.scroll.eventTypes.alterOptions) {
+                this.registerHooks(this.scroll, this.scroll.eventTypes.alterOptions, function (mouseWheelOptions) {
+                    var SANE_DISCRETE_TIME = 300;
+                    var SANE_EASE_TIME = 350;
+                    mouseWheelOptions.discreteTime = SANE_DISCRETE_TIME;
+                    // easeTime > discreteTime ensure goInto checkPullDown function
+                    mouseWheelOptions.easeTime = SANE_EASE_TIME;
+                });
+                this.registerHooks(this.scroll, this.scroll.eventTypes.mousewheelEnd, function () {
+                    // mouseWheel need trigger checkPullDown manually
+                    scroller.hooks.trigger(scroller.hooks.eventTypes.end);
+                });
+            }
+        };
+        PullDown.prototype.registerHooks = function (hooks, name, handler) {
+            hooks.on(name, handler, this);
+            this.hooksFn.push([hooks, name, handler]);
+        };
+        PullDown.prototype.watch = function () {
+            var scroller = this.scroll.scroller;
+            this.watching = true;
+            this.registerHooks(scroller.hooks, scroller.hooks.eventTypes.end, this.checkPullDown);
+        };
+        PullDown.prototype.unwatch = function () {
+            var scroller = this.scroll.scroller;
+            this.watching = false;
+            scroller.hooks.off(scroller.hooks.eventTypes.end, this.checkPullDown);
+        };
+        PullDown.prototype.checkPullDown = function () {
+            var _a = this.options, threshold = _a.threshold, stop = _a.stop;
+            // check if a real pull down action
+            if (this.scroll.y < threshold) {
+                return false;
+            }
+            if (!this.pulling) {
+                this.modifyBehaviorYBoundary(stop);
+                this.pulling = true;
+                this.scroll.trigger(PULL_DOWN_HOOKS_NAME);
+            }
+            this.scroll.scrollTo(this.scroll.x, stop, this.scroll.options.bounceTime, ease.bounce);
+            return this.pulling;
+        };
+        PullDown.prototype.modifyBehaviorYBoundary = function (stopDistance) {
+            var scrollBehaviorY = this.scroll.scroller.scrollBehaviorY;
+            // manually modify minScrollPos for a hang animation
+            // to prevent from resetPosition
+            this.cachedOriginanMinScrollY = scrollBehaviorY.minScrollPos;
+            this.currentMinScrollY = stopDistance;
+            scrollBehaviorY.computeBoundary();
+        };
+        PullDown.prototype.finishPullDown = function () {
+            if (this.pulling === true) {
+                var scrollBehaviorY = this.scroll.scroller.scrollBehaviorY;
+                // restore minScrollY since the hang animation has ended
+                this.currentMinScrollY = this.cachedOriginanMinScrollY;
+                scrollBehaviorY.computeBoundary();
+                this.pulling = false;
+                this.scroll.resetPosition(this.scroll.options.bounceTime, ease.bounce);
+            }
+        };
+        // allow 'true' type is compat for beta version implements
+        PullDown.prototype.openPullDown = function (config) {
+            if (config === void 0) { config = {}; }
+            this.handleOptions(config);
+            if (!this.watching) {
+                this.watch();
+            }
+        };
+        PullDown.prototype.closePullDown = function () {
+            this.unwatch();
+        };
+        PullDown.prototype.autoPullDownRefresh = function () {
+            var _a = this.options, threshold = _a.threshold, stop = _a.stop;
+            if (this.pulling || !this.watching) {
+                return;
+            }
+            this.pulling = true;
+            this.modifyBehaviorYBoundary(stop);
+            this.scroll.scrollTo(this.scroll.x, threshold);
+            this.scroll.trigger(PULL_DOWN_HOOKS_NAME);
+            this.scroll.scrollTo(this.scroll.x, stop, this.scroll.options.bounceTime, ease.bounce);
+        };
+        PullDown.pluginName = 'pullDownRefresh';
+        return PullDown;
+    }());
+
+    var sourcePrefix$1 = 'plugins.pullUpLoad';
+    var propertiesMap$1 = [
+        {
+            key: 'finishPullUp',
+            name: 'finishPullUp'
+        },
+        {
+            key: 'openPullUp',
+            name: 'openPullUp'
+        },
+        {
+            key: 'closePullUp',
+            name: 'closePullUp'
+        },
+        {
+            key: 'autoPullUpLoad',
+            name: 'autoPullUpLoad'
+        }
+    ];
+    var propertiesConfig$2 = propertiesMap$1.map(function (item) {
+        return {
+            key: item.key,
+            sourceKey: sourcePrefix$1 + "." + item.name
+        };
+    });
+
+    var PULL_UP_HOOKS_NAME = 'pullingUp';
+    var PullUp = /** @class */ (function () {
+        function PullUp(scroll) {
+            this.scroll = scroll;
+            this.pulling = false;
+            this.watching = false;
+            this.init();
+        }
+        PullUp.prototype.init = function () {
+            this.handleBScroll();
+            this.handleOptions(this.scroll.options.pullUpLoad);
+            this.handleHooks();
+            this.watch();
+        };
+        PullUp.prototype.handleBScroll = function () {
+            this.scroll.registerType([PULL_UP_HOOKS_NAME]);
+            this.scroll.proxy(propertiesConfig$2);
+        };
+        PullUp.prototype.handleOptions = function (userOptions) {
+            if (userOptions === void 0) { userOptions = {}; }
+            userOptions = (userOptions === true ? {} : userOptions);
+            var defaultOptions = {
+                threshold: 0,
+            };
+            this.options = extend(defaultOptions, userOptions);
+            this.scroll.options.probeType = 3 /* Realtime */;
+        };
+        PullUp.prototype.handleHooks = function () {
+            var _this = this;
+            this.hooksFn = [];
+            var scrollBehaviorY = this.scroll.scroller.scrollBehaviorY;
+            this.registerHooks(this.scroll.hooks, this.scroll.hooks.eventTypes.contentChanged, function () {
+                _this.finishPullUp();
+            });
+            this.registerHooks(scrollBehaviorY.hooks, scrollBehaviorY.hooks.eventTypes.computeBoundary, function (boundary) {
+                // content is smaller than wrapper
+                if (boundary.maxScrollPos > 0) {
+                    // allow scrolling when content is not full of wrapper
+                    boundary.maxScrollPos = -1;
+                }
+            });
+        };
+        PullUp.prototype.registerHooks = function (hooks, name, handler) {
+            hooks.on(name, handler, this);
+            this.hooksFn.push([hooks, name, handler]);
+        };
+        PullUp.prototype.watch = function () {
+            if (this.watching) {
+                return;
+            }
+            this.watching = true;
+            this.registerHooks(this.scroll, this.scroll.eventTypes.scroll, this.checkPullUp);
+        };
+        PullUp.prototype.unwatch = function () {
+            this.watching = false;
+            this.scroll.off(this.scroll.eventTypes.scroll, this.checkPullUp);
+        };
+        PullUp.prototype.checkPullUp = function (pos) {
+            var _this = this;
+            var threshold = this.options.threshold;
+            if (this.scroll.movingDirectionY === 1 /* Positive */ &&
+                pos.y <= this.scroll.maxScrollY + threshold) {
+                this.pulling = true;
+                // must reset pulling after scrollEnd
+                this.scroll.once(this.scroll.eventTypes.scrollEnd, function () {
+                    _this.pulling = false;
+                });
+                this.unwatch();
+                this.scroll.trigger(PULL_UP_HOOKS_NAME);
+            }
+        };
+        PullUp.prototype.finishPullUp = function () {
+            var _this = this;
+            // reset Direction, fix #936
+            this.scroll.scroller.scrollBehaviorY.setMovingDirection(0 /* Default */);
+            if (this.pulling) {
+                this.scroll.once(this.scroll.eventTypes.scrollEnd, function () {
+                    _this.watch();
+                });
+            }
+            else {
+                this.watch();
+            }
+        };
+        // allow 'true' type is compat for beta version implements
+        PullUp.prototype.openPullUp = function (config) {
+            if (config === void 0) { config = {}; }
+            this.handleOptions(config);
+            this.watch();
+        };
+        PullUp.prototype.closePullUp = function () {
+            this.unwatch();
+        };
+        PullUp.prototype.autoPullUpLoad = function () {
+            var threshold = this.options.threshold;
+            var scrollBehaviorY = this.scroll.scroller.scrollBehaviorY;
+            if (this.pulling || !this.watching) {
+                return;
+            }
+            // simulate a pullUp action
+            var NEGATIVE_VALUE = -1;
+            var outOfBoundaryPos = scrollBehaviorY.maxScrollPos + threshold + NEGATIVE_VALUE;
+            this.scroll.scroller.scrollBehaviorY.setMovingDirection(NEGATIVE_VALUE);
+            this.scroll.scrollTo(this.scroll.x, outOfBoundaryPos, this.scroll.options.bounceTime);
+        };
+        PullUp.pluginName = 'pullUpLoad';
+        return PullUp;
+    }());
+
+    var EventHandler = /** @class */ (function () {
+        function EventHandler(indicator, options) {
+            this.indicator = indicator;
+            this.options = options;
+            this.bscroll = indicator.bscroll;
+            this.startEventRegister = new EventRegister(this.indicator.el, [
+                {
+                    name: options.disableMouse ? 'touchstart' : 'mousedown',
+                    handler: this._start.bind(this)
+                }
+            ]);
+            this.endEventRegister = new EventRegister(window, [
+                {
+                    name: options.disableMouse ? 'touchend' : 'mouseup',
+                    handler: this._end.bind(this)
+                }
+            ]);
+            this.hooks = new EventEmitter(['touchStart', 'touchMove', 'touchEnd']);
+        }
+        EventHandler.prototype._start = function (e) {
+            if (!this.bscroll.scroller.actions.enabled) {
+                return;
+            }
+            var point = (e.touches ? e.touches[0] : e);
+            e.preventDefault();
+            e.stopPropagation();
+            this.initiated = true;
+            this.moved = false;
+            this.lastPoint = point[this.indicator.keysMap.pointPos];
+            var disableMouse = this.bscroll.options.disableMouse;
+            this.moveEventRegister = new EventRegister(window, [
+                {
+                    name: disableMouse ? 'touchmove' : 'mousemove',
+                    handler: this._move.bind(this)
+                }
+            ]);
+            this.hooks.trigger('touchStart');
+        };
+        EventHandler.prototype._move = function (e) {
+            var point = (e.touches ? e.touches[0] : e);
+            var pointPos = point[this.indicator.keysMap.pointPos];
+            e.preventDefault();
+            e.stopPropagation();
+            var delta = pointPos - this.lastPoint;
+            this.lastPoint = pointPos;
+            if (!this.moved) {
+                this.hooks.trigger('touchMove', this.moved, delta);
+                this.moved = true;
+                return;
+            }
+            this.hooks.trigger('touchMove', this.moved, delta);
+        };
+        EventHandler.prototype._end = function (e) {
+            if (!this.initiated) {
+                return;
+            }
+            this.initiated = false;
+            e.preventDefault();
+            e.stopPropagation();
+            this.moveEventRegister.destroy();
+            this.hooks.trigger('touchEnd', this.moved);
+        };
+        EventHandler.prototype.destroy = function () {
+            this.startEventRegister.destroy();
+            this.moveEventRegister && this.moveEventRegister.destroy();
+            this.endEventRegister.destroy();
+        };
+        return EventHandler;
+    }());
+
+    var INDICATOR_MIN_LEN = 8;
+    var Indicator = /** @class */ (function () {
+        function Indicator(bscroll, options) {
+            this.bscroll = bscroll;
+            this.options = options;
+            this.keyVals = {
+                sizeRatio: 1,
+                maxPos: 0,
+                initialSize: 0,
+            };
+            this.curPos = 0;
+            this.hooksHandlers = [];
+            this.wrapper = options.wrapper;
+            this.wrapperStyle = this.wrapper.style;
+            this.el = this.wrapper.children[0];
+            this.elStyle = this.el.style;
+            this.direction = options.direction;
+            this.keysMap = this._getKeysMap();
+            if (options.fade) {
+                this.visible = 0;
+                this.wrapperStyle.opacity = '0';
+            }
+            else {
+                this.visible = 1;
+            }
+            this._listenHooks(options.fade, options.interactive);
+            this.refresh();
+        }
+        Indicator.prototype._listenHooks = function (fade, interactive) {
+            var _this = this;
+            var bscroll = this.bscroll;
+            var bscrollHooks = bscroll;
+            var translaterHooks = bscroll.scroller.translater.hooks;
+            var animaterHooks = bscroll.scroller.animater.hooks;
+            this._listen(bscrollHooks, 'refresh', this.refresh);
+            this._listen(translaterHooks, 'translate', this.updatePosAndSize);
+            this._listen(animaterHooks, 'time', function (time) {
+                _this.setTransitionTime(time);
+            });
+            this._listen(animaterHooks, 'timeFunction', function (ease) {
+                _this.setTransitionTimingFunction(ease);
+            });
+            if (fade) {
+                this._listen(bscrollHooks, 'scrollEnd', function () {
+                    _this.fade();
+                });
+                this._listen(bscrollHooks, 'scrollStart', function () {
+                    _this.fade(true);
+                });
+                // for mousewheel event
+                if (bscroll.eventTypes.mousewheelStart &&
+                    bscroll.eventTypes.mousewheelEnd) {
+                    this._listen(bscrollHooks, 'mousewheelStart', function () {
+                        _this.fade(true);
+                    });
+                    this._listen(bscrollHooks, 'mousewheelEnd', function () {
+                        _this.fade();
+                    });
+                }
+            }
+            if (interactive) {
+                var disableMouse = this.bscroll.options.disableMouse;
+                this.eventHandler = new EventHandler(this, { disableMouse: disableMouse });
+                var eventHandlerHooks = this.eventHandler.hooks;
+                this._listen(eventHandlerHooks, 'touchStart', this.startHandler);
+                this._listen(eventHandlerHooks, 'touchMove', this.moveHandler);
+                this._listen(eventHandlerHooks, 'touchEnd', this.endHandler);
+            }
+        };
+        Indicator.prototype._getKeysMap = function () {
+            if (this.direction === "vertical" /* Vertical */) {
+                return {
+                    hasScroll: 'hasVerticalScroll',
+                    size: 'height',
+                    wrapperSize: 'clientHeight',
+                    scrollerSize: 'scrollerHeight',
+                    maxScroll: 'maxScrollY',
+                    pos: 'y',
+                    pointPos: 'pageY',
+                    translate: 'translateY',
+                };
+            }
+            return {
+                hasScroll: 'hasHorizontalScroll',
+                size: 'width',
+                wrapperSize: 'clientWidth',
+                scrollerSize: 'scrollerWidth',
+                maxScroll: 'maxScrollX',
+                pos: 'x',
+                pointPos: 'pageX',
+                translate: 'translateX',
+            };
+        };
+        Indicator.prototype.fade = function (visible) {
+            var time = visible ? 250 : 500;
+            this.wrapperStyle[style.transitionDuration] = time + 'ms';
+            this.wrapperStyle.opacity = visible ? '1' : '0';
+            this.visible = visible ? 1 : 0;
+        };
+        Indicator.prototype.refresh = function () {
+            var hasScroll = this.keysMap.hasScroll;
+            if (this._setShowBy(this.bscroll[hasScroll])) {
+                var _a = this.keysMap, wrapperSize = _a.wrapperSize, scrollerSize = _a.scrollerSize, maxScroll = _a.maxScroll;
+                this.keyVals = this._refreshKeyValues(this.wrapper[wrapperSize], this.bscroll[scrollerSize], this.bscroll[maxScroll]);
+                this.updatePosAndSize({
+                    x: this.bscroll.x,
+                    y: this.bscroll.y,
+                });
+            }
+        };
+        Indicator.prototype._setShowBy = function (hasScroll) {
+            if (hasScroll) {
+                this.wrapper.style.display = '';
+                return true;
+            }
+            this.wrapper.style.display = 'none';
+            return false;
+        };
+        Indicator.prototype._refreshKeyValues = function (wrapperSize, scrollerSize, maxScroll) {
+            var initialSize = Math.max(Math.round((wrapperSize * wrapperSize) / (scrollerSize || wrapperSize || 1)), INDICATOR_MIN_LEN);
+            var maxPos = wrapperSize - initialSize;
+            // sizeRatio is negative
+            var sizeRatio = maxPos / maxScroll;
+            return {
+                initialSize: initialSize,
+                maxPos: maxPos,
+                sizeRatio: sizeRatio,
+            };
+        };
+        Indicator.prototype.updatePosAndSize = function (endPoint) {
+            var _a = this._refreshPosAndSizeValue(endPoint, this.keyVals), pos = _a.pos, size = _a.size;
+            this.curPos = pos;
+            this._refreshPosAndSizeStyle(size, pos);
+        };
+        Indicator.prototype._refreshPosAndSizeValue = function (endPoint, keyVals) {
+            var posKey = this.keysMap.pos;
+            var sizeRatio = keyVals.sizeRatio, initialSize = keyVals.initialSize, maxPos = keyVals.maxPos;
+            var pos = Math.round(sizeRatio * endPoint[posKey]);
+            var size;
+            if (pos < 0) {
+                size = Math.max(initialSize + pos * 3, INDICATOR_MIN_LEN);
+                pos = 0;
+            }
+            else if (pos > maxPos) {
+                size = Math.max(initialSize - (pos - maxPos) * 3, INDICATOR_MIN_LEN);
+                pos = maxPos + initialSize - size;
+            }
+            else {
+                size = initialSize;
+            }
+            return {
+                pos: pos,
+                size: size,
+            };
+        };
+        Indicator.prototype._refreshPosAndSizeStyle = function (size, pos) {
+            var _a = this.keysMap, translate = _a.translate, sizeKey = _a.size;
+            this.elStyle[sizeKey] = size + "px";
+            this.elStyle[style.transform] = translate + "(" + pos + "px)" + this.bscroll.options.translateZ;
+        };
+        Indicator.prototype.setTransitionTime = function (time) {
+            if (time === void 0) { time = 0; }
+            this.elStyle[style.transitionDuration] = time + 'ms';
+        };
+        Indicator.prototype.setTransitionTimingFunction = function (easing) {
+            this.elStyle[style.transitionTimingFunction] = easing;
+        };
+        Indicator.prototype.startHandler = function () {
+            this.setTransitionTime();
+            this.bscroll.trigger('beforeScrollStart');
+        };
+        Indicator.prototype.moveHandler = function (moved, delta) {
+            if (!moved) {
+                this.bscroll.trigger('scrollStart');
+            }
+            var newScrollPos = this._calScrollDesPos(this.curPos, delta, this.keyVals);
+            // TODO freeScroll ？
+            if (this.direction === "vertical" /* Vertical */) {
+                this.bscroll.scrollTo(this.bscroll.x, newScrollPos);
+            }
+            else {
+                this.bscroll.scrollTo(newScrollPos, this.bscroll.y);
+            }
+            this.bscroll.trigger('scroll', {
+                x: this.bscroll.x,
+                y: this.bscroll.y,
+            });
+        };
+        Indicator.prototype._calScrollDesPos = function (curPos, delta, keyVals) {
+            var maxPos = keyVals.maxPos, sizeRatio = keyVals.sizeRatio;
+            var newPos = curPos + delta;
+            if (newPos < 0) {
+                newPos = 0;
+            }
+            else if (newPos > maxPos) {
+                newPos = maxPos;
+            }
+            return Math.round(newPos / sizeRatio);
+        };
+        Indicator.prototype.endHandler = function (moved) {
+            if (moved) {
+                this.bscroll.trigger('scrollEnd', {
+                    x: this.bscroll.x,
+                    y: this.bscroll.y,
+                });
+            }
+        };
+        Indicator.prototype.destroy = function () {
+            if (this.options.interactive) {
+                this.eventHandler.destroy();
+            }
+            this.wrapper.parentNode.removeChild(this.wrapper);
+            this.hooksHandlers.forEach(function (item) {
+                var hooks = item[0];
+                var hooksName = item[1];
+                var handlerFn = item[2];
+                hooks.off(hooksName, handlerFn);
+            });
+            this.hooksHandlers.length = 0;
+        };
+        Indicator.prototype._listen = function (hooks, name, handler) {
+            hooks.on(name, handler, this);
+            this.hooksHandlers.push([hooks, name, handler]);
+        };
+        return Indicator;
+    }());
+
+    var ScrollBar = /** @class */ (function () {
+        function ScrollBar(scroll) {
+            this.indicators = [];
+            this.indicators = this.createIndicators(scroll);
+            scroll.on(scroll.eventTypes.destroy, this.destroy, this);
+        }
+        ScrollBar.prototype.createIndicators = function (bscroll) {
+            var _this = this;
+            var _a = bscroll.options
+                .scrollbar, _b = _a.fade, fade = _b === void 0 ? true : _b, _c = _a.interactive, interactive = _c === void 0 ? false : _c;
+            var indicatorOption;
+            var scrolls = {
+                scrollX: "horizontal" /* Horizontal */,
+                scrollY: "vertical" /* Vertical */,
+            };
+            var indicators = [];
+            Object.keys(scrolls).forEach(function (key) {
+                var direction = scrolls[key];
+                if (bscroll.options[key]) {
+                    indicatorOption = {
+                        wrapper: _this.createIndicatorElement(direction),
+                        direction: direction,
+                        fade: fade,
+                        interactive: interactive,
+                    };
+                    bscroll.wrapper.appendChild(indicatorOption.wrapper);
+                    indicators.push(new Indicator(bscroll, indicatorOption));
+                }
+            });
+            return indicators;
+        };
+        ScrollBar.prototype.createIndicatorElement = function (direction) {
+            var scrollbarEl = document.createElement('div');
+            var indicatorEl = document.createElement('div');
+            scrollbarEl.style.cssText =
+                'position:absolute;z-index:9999;pointerEvents:none';
+            indicatorEl.style.cssText =
+                'box-sizing:border-box;position:absolute;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.9);border-radius:3px;';
+            indicatorEl.className = 'bscroll-indicator';
+            if (direction === 'horizontal') {
+                scrollbarEl.style.cssText += ';height:7px;left:2px;right:2px;bottom:0';
+                indicatorEl.style.height = '100%';
+                scrollbarEl.className = 'bscroll-horizontal-scrollbar';
+            }
+            else {
+                scrollbarEl.style.cssText += ';width:7px;bottom:2px;top:2px;right:1px';
+                indicatorEl.style.width = '100%';
+                scrollbarEl.className = 'bscroll-vertical-scrollbar';
+            }
+            scrollbarEl.style.cssText += ';overflow:hidden';
+            scrollbarEl.appendChild(indicatorEl);
+            return scrollbarEl;
+        };
+        ScrollBar.prototype.destroy = function () {
+            for (var _i = 0, _a = this.indicators; _i < _a.length; _i++) {
+                var indicator = _a[_i];
+                indicator.destroy();
+            }
+        };
+        ScrollBar.pluginName = 'scrollbar';
+        return ScrollBar;
+    }());
+
+    var PagesMatrix = /** @class */ (function () {
+        function PagesMatrix(scroll) {
+            this.scroll = scroll;
+            this.init();
+        }
+        PagesMatrix.prototype.init = function () {
+            var scroller = this.scroll.scroller;
+            var scrollBehaviorX = scroller.scrollBehaviorX, scrollBehaviorY = scroller.scrollBehaviorY;
+            this.wrapperWidth = scrollBehaviorX.wrapperSize;
+            this.wrapperHeight = scrollBehaviorY.wrapperSize;
+            this.scrollerHeight = scrollBehaviorY.contentSize;
+            this.scrollerWidth = scrollBehaviorX.contentSize;
+            this.pages = this.buildPagesMatrix(this.wrapperWidth, this.wrapperHeight);
+            this.pageLengthOfX = this.pages ? this.pages.length : 0;
+            this.pageLengthOfY = this.pages && this.pages[0] ? this.pages[0].length : 0;
+        };
+        PagesMatrix.prototype.getPageStats = function (pageX, pageY) {
+            return this.pages[pageX][pageY];
+        };
+        PagesMatrix.prototype.getNearestPageIndex = function (x, y) {
+            var pageX = 0;
+            var pageY = 0;
+            var l = this.pages.length;
+            for (; pageX < l - 1; pageX++) {
+                if (x >= this.pages[pageX][0].cx) {
+                    break;
+                }
+            }
+            l = this.pages[pageX].length;
+            for (; pageY < l - 1; pageY++) {
+                if (y >= this.pages[0][pageY].cy) {
+                    break;
+                }
+            }
+            return {
+                pageX: pageX,
+                pageY: pageY,
+            };
+        };
+        // (n x 1) matrix for horizontal scroll or
+        // (1 * n) matrix for vertical scroll
+        PagesMatrix.prototype.buildPagesMatrix = function (stepX, stepY) {
+            var pages = [];
+            var x = 0;
+            var y;
+            var cx;
+            var cy;
+            var i = 0;
+            var l;
+            var maxScrollPosX = this.scroll.scroller.scrollBehaviorX.maxScrollPos;
+            var maxScrollPosY = this.scroll.scroller.scrollBehaviorY.maxScrollPos;
+            cx = Math.round(stepX / 2);
+            cy = Math.round(stepY / 2);
+            while (x > -this.scrollerWidth) {
+                pages[i] = [];
+                l = 0;
+                y = 0;
+                while (y > -this.scrollerHeight) {
+                    pages[i][l] = {
+                        x: Math.max(x, maxScrollPosX),
+                        y: Math.max(y, maxScrollPosY),
+                        width: stepX,
+                        height: stepY,
+                        cx: x - cx,
+                        cy: y - cy,
+                    };
+                    y -= stepY;
+                    l++;
+                }
+                x -= stepX;
+                i++;
+            }
+            return pages;
+        };
+        return PagesMatrix;
+    }());
+
+    var BASE_PAGE = {
+        pageX: 0,
+        pageY: 0,
+        x: 0,
+        y: 0,
+    };
+
+    var SlidePages = /** @class */ (function () {
+        function SlidePages(scroll, slideOptions) {
+            this.scroll = scroll;
+            this.slideOptions = slideOptions;
+            this.slideX = false;
+            this.slideY = false;
+            this.currentPage = extend({}, BASE_PAGE);
+        }
+        SlidePages.prototype.refresh = function () {
+            this.pagesMatrix = new PagesMatrix(this.scroll);
+            this.checkSlideLoop();
+            this.currentPage = this.getAdjustedCurrentPage();
+        };
+        SlidePages.prototype.getAdjustedCurrentPage = function () {
+            var _a = this.currentPage, pageX = _a.pageX, pageY = _a.pageY;
+            // page index should be handled
+            // because page counts may reduce
+            pageX = Math.min(pageX, this.pagesMatrix.pageLengthOfX - 1);
+            pageY = Math.min(pageY, this.pagesMatrix.pageLengthOfY - 1);
+            // loop scene should also be respected
+            // because clonedNode will cause pageLength increasing
+            if (this.loopX) {
+                pageX = Math.min(pageX, this.pagesMatrix.pageLengthOfX - 2);
+            }
+            if (this.loopY) {
+                pageY = Math.min(pageY, this.pagesMatrix.pageLengthOfY - 2);
+            }
+            var _b = this.pagesMatrix.getPageStats(pageX, pageY), x = _b.x, y = _b.y;
+            return { pageX: pageX, pageY: pageY, x: x, y: y };
+        };
+        SlidePages.prototype.setCurrentPage = function (newPage) {
+            this.currentPage = newPage;
+        };
+        SlidePages.prototype.getInternalPage = function (pageX, pageY) {
+            if (pageX >= this.pagesMatrix.pageLengthOfX) {
+                pageX = this.pagesMatrix.pageLengthOfX - 1;
+            }
+            else if (pageX < 0) {
+                pageX = 0;
+            }
+            if (pageY >= this.pagesMatrix.pageLengthOfY) {
+                pageY = this.pagesMatrix.pageLengthOfY - 1;
+            }
+            else if (pageY < 0) {
+                pageY = 0;
+            }
+            var _a = this.pagesMatrix.getPageStats(pageX, pageY), x = _a.x, y = _a.y;
+            return {
+                pageX: pageX,
+                pageY: pageY,
+                x: x,
+                y: y,
+            };
+        };
+        SlidePages.prototype.getInitialPage = function (resetInitPage) {
+            if (resetInitPage === void 0) { resetInitPage = false; }
+            var initialPageX = this.loopX ? 1 : 0;
+            var initialPageY = this.loopY ? 1 : 0;
+            var pageX = resetInitPage ? initialPageX : this.currentPage.pageX;
+            var pageY = resetInitPage ? initialPageY : this.currentPage.pageY;
+            var _a = this.pagesMatrix.getPageStats(pageX, pageY), x = _a.x, y = _a.y;
+            return {
+                pageX: pageX,
+                pageY: pageY,
+                x: x,
+                y: y,
+            };
+        };
+        SlidePages.prototype.getExposedPage = function (page) {
+            var exposedPage = extend({}, page);
+            // only pageX or pageY need fix
+            if (this.loopX) {
+                exposedPage.pageX = this.fixedPage(exposedPage.pageX, this.pagesMatrix.pageLengthOfX - 2);
+            }
+            if (this.loopY) {
+                exposedPage.pageY = this.fixedPage(exposedPage.pageY, this.pagesMatrix.pageLengthOfY - 2);
+            }
+            return exposedPage;
+        };
+        SlidePages.prototype.getExposedPageByPageIndex = function (pageIndexX, pageIndexY) {
+            var page = {
+                pageX: pageIndexX,
+                pageY: pageIndexY,
+            };
+            if (this.loopX) {
+                page.pageX = pageIndexX + 1;
+            }
+            if (this.loopY) {
+                page.pageY = pageIndexY + 1;
+            }
+            var _a = this.pagesMatrix.getPageStats(page.pageX, page.pageY), x = _a.x, y = _a.y;
+            return {
+                x: x,
+                y: y,
+                pageX: pageIndexX,
+                pageY: pageIndexY,
+            };
+        };
+        SlidePages.prototype.getWillChangedPage = function (page) {
+            page = extend({}, page);
+            // Page need fix
+            if (this.loopX) {
+                page.pageX = this.fixedPage(page.pageX, this.pagesMatrix.pageLengthOfX - 2);
+                page.x = this.pagesMatrix.getPageStats(page.pageX + 1, 0).x;
+            }
+            if (this.loopY) {
+                page.pageY = this.fixedPage(page.pageY, this.pagesMatrix.pageLengthOfY - 2);
+                page.y = this.pagesMatrix.getPageStats(0, page.pageY + 1).y;
+            }
+            return page;
+        };
+        SlidePages.prototype.fixedPage = function (page, realPageLen) {
+            var pageIndex = [];
+            for (var i = 0; i < realPageLen; i++) {
+                pageIndex.push(i);
+            }
+            pageIndex.unshift(realPageLen - 1);
+            pageIndex.push(0);
+            return pageIndex[page];
+        };
+        SlidePages.prototype.getPageStats = function () {
+            return this.pagesMatrix.getPageStats(this.currentPage.pageX, this.currentPage.pageY);
+        };
+        SlidePages.prototype.getValidPageIndex = function (x, y) {
+            var lastX = this.pagesMatrix.pageLengthOfX - 1;
+            var lastY = this.pagesMatrix.pageLengthOfY - 1;
+            var firstX = 0;
+            var firstY = 0;
+            if (this.loopX) {
+                x += 1;
+                firstX = firstX + 1;
+                lastX = lastX - 1;
+            }
+            if (this.loopY) {
+                y += 1;
+                firstY = firstY + 1;
+                lastY = lastY - 1;
+            }
+            x = between(x, firstX, lastX);
+            y = between(y, firstY, lastY);
+            return {
+                pageX: x,
+                pageY: y,
+            };
+        };
+        SlidePages.prototype.nextPageIndex = function () {
+            return this.getPageIndexByDirection("positive" /* Positive */);
+        };
+        SlidePages.prototype.prevPageIndex = function () {
+            return this.getPageIndexByDirection("negative" /* Negative */);
+        };
+        SlidePages.prototype.getNearestPage = function (x, y) {
+            var pageIndex = this.pagesMatrix.getNearestPageIndex(x, y);
+            var pageX = pageIndex.pageX, pageY = pageIndex.pageY;
+            var newX = this.pagesMatrix.getPageStats(pageX, 0).x;
+            var newY = this.pagesMatrix.getPageStats(0, pageY).y;
+            return {
+                x: newX,
+                y: newY,
+                pageX: pageX,
+                pageY: pageY,
+            };
+        };
+        SlidePages.prototype.getPageByDirection = function (page, directionX, directionY) {
+            var pageX = page.pageX, pageY = page.pageY;
+            if (pageX === this.currentPage.pageX) {
+                pageX = between(pageX + directionX, 0, this.pagesMatrix.pageLengthOfX - 1);
+            }
+            if (pageY === this.currentPage.pageY) {
+                pageY = between(pageY + directionY, 0, this.pagesMatrix.pageLengthOfY - 1);
+            }
+            var x = this.pagesMatrix.getPageStats(pageX, 0).x;
+            var y = this.pagesMatrix.getPageStats(0, pageY).y;
+            return {
+                x: x,
+                y: y,
+                pageX: pageX,
+                pageY: pageY,
+            };
+        };
+        SlidePages.prototype.resetLoopPage = function () {
+            if (this.loopX) {
+                if (this.currentPage.pageX === 0) {
+                    return {
+                        pageX: this.pagesMatrix.pageLengthOfX - 2,
+                        pageY: this.currentPage.pageY,
+                    };
+                }
+                if (this.currentPage.pageX === this.pagesMatrix.pageLengthOfX - 1) {
+                    return {
+                        pageX: 1,
+                        pageY: this.currentPage.pageY,
+                    };
+                }
+            }
+            if (this.loopY) {
+                if (this.currentPage.pageY === 0) {
+                    return {
+                        pageX: this.currentPage.pageX,
+                        pageY: this.pagesMatrix.pageLengthOfY - 2,
+                    };
+                }
+                if (this.currentPage.pageY === this.pagesMatrix.pageLengthOfY - 1) {
+                    return {
+                        pageX: this.currentPage.pageX,
+                        pageY: 1,
+                    };
+                }
+            }
+        };
+        SlidePages.prototype.getPageIndexByDirection = function (direction) {
+            var x = this.currentPage.pageX;
+            var y = this.currentPage.pageY;
+            if (this.slideX) {
+                x = direction === "negative" /* Negative */ ? x - 1 : x + 1;
+            }
+            if (this.slideY) {
+                y = direction === "negative" /* Negative */ ? y - 1 : y + 1;
+            }
+            return {
+                pageX: x,
+                pageY: y,
+            };
+        };
+        SlidePages.prototype.checkSlideLoop = function () {
+            this.wannaLoop = this.slideOptions.loop;
+            if (this.pagesMatrix.pageLengthOfX > 1) {
+                this.slideX = true;
+            }
+            else {
+                this.slideX = false;
+            }
+            if (this.pagesMatrix.pages[0] && this.pagesMatrix.pageLengthOfY > 1) {
+                this.slideY = true;
+            }
+            else {
+                this.slideY = false;
+            }
+            this.loopX = this.wannaLoop && this.slideX;
+            this.loopY = this.wannaLoop && this.slideY;
+            if (this.slideX && this.slideY) {
+                warn('slide does not support two direction at the same time.');
+            }
+        };
+        return SlidePages;
+    }());
+
+    var sourcePrefix$2 = 'plugins.slide';
+    var propertiesMap$2 = [
+        {
+            key: 'next',
+            name: 'next',
+        },
+        {
+            key: 'prev',
+            name: 'prev',
+        },
+        {
+            key: 'goToPage',
+            name: 'goToPage',
+        },
+        {
+            key: 'getCurrentPage',
+            name: 'getCurrentPage',
+        },
+        {
+            key: 'startPlay',
+            name: 'startPlay',
+        },
+        {
+            key: 'pausePlay',
+            name: 'pausePlay',
+        },
+    ];
+    var propertiesConfig$3 = propertiesMap$2.map(function (item) {
+        return {
+            key: item.key,
+            sourceKey: sourcePrefix$2 + "." + item.name,
+        };
+    });
+
+    var samePage = function (p1, p2) {
+        return p1.pageX === p2.pageX && p1.pageY === p2.pageY;
+    };
+    var Slide = /** @class */ (function () {
+        function Slide(scroll) {
+            this.scroll = scroll;
+            this.cachedClonedPageDOM = [];
+            this.resetLooping = false;
+            this.autoplayTimer = 0;
+            if (!this.satisfyInitialization()) {
+                return;
+            }
+            this.init();
+        }
+        Slide.prototype.satisfyInitialization = function () {
+            if (this.scroll.scroller.content.children.length <= 0) {
+                warn("slide need at least one slide page to be initialised." +
+                    "please check your DOM layout.");
+                return false;
+            }
+            return true;
+        };
+        Slide.prototype.init = function () {
+            this.willChangeToPage = extend({}, BASE_PAGE);
+            this.handleBScroll();
+            this.handleOptions();
+            this.handleHooks();
+            this.createPages();
+        };
+        Slide.prototype.createPages = function () {
+            this.pages = new SlidePages(this.scroll, this.options);
+        };
+        Slide.prototype.handleBScroll = function () {
+            this.scroll.registerType(['slideWillChange', 'slidePageChanged']);
+            this.scroll.proxy(propertiesConfig$3);
+        };
+        Slide.prototype.handleOptions = function () {
+            var userOptions = (this.scroll.options.slide === true
+                ? {}
+                : this.scroll.options.slide);
+            var defaultOptions = {
+                loop: true,
+                threshold: 0.1,
+                speed: 400,
+                easing: ease.bounce,
+                listenFlick: true,
+                autoplay: true,
+                interval: 3000,
+            };
+            this.options = extend(defaultOptions, userOptions);
+        };
+        Slide.prototype.handleLoop = function (prevSlideContent) {
+            var loop = this.options.loop;
+            var slideContent = this.scroll.scroller.content;
+            var currentSlidePagesLength = slideContent.children.length;
+            // only should respect loop scene
+            if (loop) {
+                if (slideContent !== prevSlideContent) {
+                    this.resetLoopChangedStatus();
+                    this.removeClonedSlidePage(prevSlideContent);
+                    currentSlidePagesLength > 1 &&
+                        this.cloneFirstAndLastSlidePage(slideContent);
+                }
+                else {
+                    // many pages reduce to one page
+                    if (currentSlidePagesLength === 3 && this.initialised) {
+                        this.removeClonedSlidePage(slideContent);
+                        this.moreToOnePageInLoop = true;
+                        this.oneToMorePagesInLoop = false;
+                    }
+                    else if (currentSlidePagesLength > 1) {
+                        // one page increases to many page
+                        if (this.initialised && this.cachedClonedPageDOM.length === 0) {
+                            this.oneToMorePagesInLoop = true;
+                            this.moreToOnePageInLoop = false;
+                        }
+                        else {
+                            this.removeClonedSlidePage(slideContent);
+                            this.resetLoopChangedStatus();
+                        }
+                        this.cloneFirstAndLastSlidePage(slideContent);
+                    }
+                    else {
+                        this.resetLoopChangedStatus();
+                    }
+                }
+            }
+        };
+        Slide.prototype.resetLoopChangedStatus = function () {
+            this.moreToOnePageInLoop = false;
+            this.oneToMorePagesInLoop = false;
+        };
+        Slide.prototype.handleHooks = function () {
+            var _this = this;
+            var scrollHooks = this.scroll.hooks;
+            var scrollerHooks = this.scroll.scroller.hooks;
+            var listenFlick = this.options.listenFlick;
+            this.prevContent = this.scroll.scroller.content;
+            this.hooksFn = [];
+            // scroll
+            this.registerHooks(this.scroll, this.scroll.eventTypes.beforeScrollStart, this.pausePlay);
+            this.registerHooks(this.scroll, this.scroll.eventTypes.scrollEnd, this.modifyCurrentPage);
+            this.registerHooks(this.scroll, this.scroll.eventTypes.scrollEnd, this.startPlay);
+            // for mousewheel event
+            if (this.scroll.eventTypes.mousewheelMove) {
+                this.registerHooks(this.scroll, this.scroll.eventTypes.mousewheelMove, function () {
+                    // prevent default action of mousewheelMove
+                    return true;
+                });
+                this.registerHooks(this.scroll, this.scroll.eventTypes.mousewheelEnd, function (delta) {
+                    if (delta.directionX === 1 /* Positive */ ||
+                        delta.directionY === 1 /* Positive */) {
+                        _this.next();
+                    }
+                    if (delta.directionX === -1 /* Negative */ ||
+                        delta.directionY === -1 /* Negative */) {
+                        _this.prev();
+                    }
+                });
+            }
+            // scrollHooks
+            this.registerHooks(scrollHooks, scrollHooks.eventTypes.refresh, this.refreshHandler);
+            this.registerHooks(scrollHooks, scrollHooks.eventTypes.destroy, this.destroy);
+            // scroller
+            this.registerHooks(scrollerHooks, scrollerHooks.eventTypes.beforeRefresh, function () {
+                _this.handleLoop(_this.prevContent);
+                _this.setSlideInlineStyle();
+            });
+            this.registerHooks(scrollerHooks, scrollerHooks.eventTypes.momentum, this.modifyScrollMetaHandler);
+            this.registerHooks(scrollerHooks, scrollerHooks.eventTypes.scroll, this.scrollHandler);
+            // a click operation will clearTimer, so restart a new one
+            this.registerHooks(scrollerHooks, scrollerHooks.eventTypes.checkClick, this.startPlay);
+            if (listenFlick) {
+                this.registerHooks(scrollerHooks, scrollerHooks.eventTypes.flick, this.flickHandler);
+            }
+        };
+        Slide.prototype.startPlay = function () {
+            var _this = this;
+            var _a = this.options, interval = _a.interval, autoplay = _a.autoplay;
+            if (autoplay) {
+                clearTimeout(this.autoplayTimer);
+                this.autoplayTimer = window.setTimeout(function () {
+                    _this.next();
+                }, interval);
+            }
+        };
+        Slide.prototype.pausePlay = function () {
+            if (this.options.autoplay) {
+                clearTimeout(this.autoplayTimer);
+            }
+        };
+        Slide.prototype.setSlideInlineStyle = function () {
+            var styleConfigurations = [
+                {
+                    direction: 'scrollX',
+                    sizeType: 'offsetWidth',
+                    styleType: 'width',
+                },
+                {
+                    direction: 'scrollY',
+                    sizeType: 'offsetHeight',
+                    styleType: 'height',
+                },
+            ];
+            var _a = this.scroll.scroller, slideContent = _a.content, slideWrapper = _a.wrapper;
+            var scrollOptions = this.scroll.options;
+            styleConfigurations.forEach(function (_a) {
+                var direction = _a.direction, sizeType = _a.sizeType, styleType = _a.styleType;
+                // wanna scroll in this direction
+                if (scrollOptions[direction]) {
+                    var size = slideWrapper[sizeType];
+                    var children = slideContent.children;
+                    var length_1 = children.length;
+                    for (var i = 0; i < length_1; i++) {
+                        var slidePageDOM = children[i];
+                        slidePageDOM.style[styleType] = size + 'px';
+                    }
+                    slideContent.style[styleType] = size * length_1 + 'px';
+                }
+            });
+        };
+        Slide.prototype.next = function (time, easing) {
+            var _a = this.pages.nextPageIndex(), pageX = _a.pageX, pageY = _a.pageY;
+            this.goTo(pageX, pageY, time, easing);
+        };
+        Slide.prototype.prev = function (time, easing) {
+            var _a = this.pages.prevPageIndex(), pageX = _a.pageX, pageY = _a.pageY;
+            this.goTo(pageX, pageY, time, easing);
+        };
+        Slide.prototype.goToPage = function (pageX, pageY, time, easing) {
+            var pageIndex = this.pages.getValidPageIndex(pageX, pageY);
+            this.goTo(pageIndex.pageX, pageIndex.pageY, time, easing);
+        };
+        Slide.prototype.getCurrentPage = function () {
+            return this.exposedPage || this.pages.getInitialPage(true);
+        };
+        Slide.prototype.setCurrentPage = function (page) {
+            this.pages.setCurrentPage(page);
+            this.exposedPage = this.pages.getExposedPage(page);
+        };
+        Slide.prototype.nearestPage = function (x, y) {
+            var _a = this.scroll.scroller, scrollBehaviorX = _a.scrollBehaviorX, scrollBehaviorY = _a.scrollBehaviorY;
+            var maxScrollPosX = scrollBehaviorX.maxScrollPos, minScrollPosX = scrollBehaviorX.minScrollPos;
+            var maxScrollPosY = scrollBehaviorY.maxScrollPos, minScrollPosY = scrollBehaviorY.minScrollPos;
+            return this.pages.getNearestPage(between(x, maxScrollPosX, minScrollPosX), between(y, maxScrollPosY, minScrollPosY));
+        };
+        Slide.prototype.satisfyThreshold = function (x, y) {
+            var _a = this.scroll.scroller, scrollBehaviorX = _a.scrollBehaviorX, scrollBehaviorY = _a.scrollBehaviorY;
+            var satisfied = true;
+            if (Math.abs(x - scrollBehaviorX.absStartPos) <= this.thresholdX &&
+                Math.abs(y - scrollBehaviorY.absStartPos) <= this.thresholdY) {
+                satisfied = false;
+            }
+            return satisfied;
+        };
+        Slide.prototype.refreshHandler = function (content) {
+            var _this = this;
+            if (!this.satisfyInitialization()) {
+                return;
+            }
+            this.pages.refresh();
+            this.computeThreshold();
+            var contentChanged = (this.contentChanged = this.prevContent !== content);
+            if (contentChanged) {
+                this.prevContent = content;
+            }
+            var initPage = this.pages.getInitialPage(!this.initialised ||
+                contentChanged ||
+                this.oneToMorePagesInLoop ||
+                this.moreToOnePageInLoop);
+            if (this.initialised) {
+                this.goTo(initPage.pageX, initPage.pageY, 0);
+            }
+            else {
+                this.registerHooks(this.scroll.hooks, this.scroll.hooks.eventTypes.beforeInitialScrollTo, function (position) {
+                    _this.initialised = true;
+                    position.x = initPage.x;
+                    position.y = initPage.y;
+                });
+            }
+            this.startPlay();
+        };
+        Slide.prototype.computeThreshold = function () {
+            var threshold = this.options.threshold;
+            // Integer
+            if (threshold % 1 === 0) {
+                this.thresholdX = threshold;
+                this.thresholdY = threshold;
+            }
+            else {
+                // decimal
+                var _a = this.pages.getPageStats(), width = _a.width, height = _a.height;
+                this.thresholdX = Math.round(width * threshold);
+                this.thresholdY = Math.round(height * threshold);
+            }
+        };
+        Slide.prototype.cloneFirstAndLastSlidePage = function (slideContent) {
+            var children = slideContent.children;
+            var preprendDOM = children[children.length - 1].cloneNode(true);
+            var appendDOM = children[0].cloneNode(true);
+            prepend(preprendDOM, slideContent);
+            slideContent.appendChild(appendDOM);
+            this.cachedClonedPageDOM = [preprendDOM, appendDOM];
+        };
+        Slide.prototype.removeClonedSlidePage = function (slideContent) {
+            // maybe slideContent has removed from DOM Tree
+            var slidePages = (slideContent && slideContent.children) || [];
+            if (slidePages.length) {
+                this.cachedClonedPageDOM.forEach(function (el) {
+                    removeChild(slideContent, el);
+                });
+            }
+            this.cachedClonedPageDOM = [];
+        };
+        Slide.prototype.modifyCurrentPage = function (point) {
+            var scroller = this.scroll.scroller;
+            // if in animation, and force stopping
+            if (scroller.animater.forceStopped) {
+                return;
+            }
+            var _a = this.getCurrentPage(), prevExposedPageX = _a.pageX, prevExposedPageY = _a.pageY;
+            var newPage = this.nearestPage(point.x, point.y);
+            this.setCurrentPage(newPage);
+            /* istanbul ignore if */
+            if (this.contentChanged) {
+                this.contentChanged = false;
+                return true;
+            }
+            var _b = this.getCurrentPage(), currentExposedPageX = _b.pageX, currentExposedPageY = _b.pageY;
+            this.pageWillChangeTo(newPage);
+            // loop is true, and one page becomes many pages when call bs.refresh
+            if (this.oneToMorePagesInLoop) {
+                this.oneToMorePagesInLoop = false;
+                return true;
+            }
+            // loop is true, and many page becomes one page when call bs.refresh
+            // if prevPage > 0, dispatch slidePageChanged and scrollEnd events
+            /* istanbul ignore if */
+            if (this.moreToOnePageInLoop &&
+                prevExposedPageX === 0 &&
+                prevExposedPageY === 0) {
+                this.moreToOnePageInLoop = false;
+                return true;
+            }
+            if (prevExposedPageX !== currentExposedPageX ||
+                prevExposedPageY !== currentExposedPageY) {
+                // only trust pageX & pageY when loop is true
+                var page = this.pages.getExposedPageByPageIndex(currentExposedPageX, currentExposedPageY);
+                this.scroll.trigger(this.scroll.eventTypes.slidePageChanged, page);
+            }
+            // triggered by resetLoop
+            if (this.resetLooping) {
+                this.resetLooping = false;
+                return;
+            }
+            var changePage = this.pages.resetLoopPage();
+            if (changePage) {
+                this.resetLooping = true;
+                this.goTo(changePage.pageX, changePage.pageY, 0);
+                // stop user's scrollEnd
+                // since it is a seamless scroll
+                return true;
+            }
+        };
+        Slide.prototype.goTo = function (pageX, pageY, time, easing) {
+            var newPage = this.pages.getInternalPage(pageX, pageY);
+            var scrollEasing = easing || this.options.easing || ease.bounce;
+            var x = newPage.x, y = newPage.y;
+            var deltaX = x - this.scroll.scroller.scrollBehaviorX.currentPos;
+            var deltaY = y - this.scroll.scroller.scrollBehaviorY.currentPos;
+            /* istanbul ignore if */
+            if (!deltaX && !deltaY) {
+                return;
+            }
+            time = time === undefined ? this.getEaseTime(deltaX, deltaY) : time;
+            this.scroll.scroller.scrollTo(x, y, time, scrollEasing);
+        };
+        Slide.prototype.flickHandler = function () {
+            var _a = this.scroll.scroller, scrollBehaviorX = _a.scrollBehaviorX, scrollBehaviorY = _a.scrollBehaviorY;
+            var currentPosX = scrollBehaviorX.currentPos, startPosX = scrollBehaviorX.startPos, directionX = scrollBehaviorX.direction;
+            var currentPosY = scrollBehaviorY.currentPos, startPosY = scrollBehaviorY.startPos, directionY = scrollBehaviorY.direction;
+            var _b = this.pages.currentPage, pageX = _b.pageX, pageY = _b.pageY;
+            var time = this.getEaseTime(currentPosX - startPosX, currentPosY - startPosY);
+            this.goTo(pageX + directionX, pageY + directionY, time);
+        };
+        Slide.prototype.getEaseTime = function (deltaX, deltaY) {
+            return (this.options.speed ||
+                Math.max(Math.max(Math.min(Math.abs(deltaX), 1000), Math.min(Math.abs(deltaY), 1000)), 300));
+        };
+        Slide.prototype.modifyScrollMetaHandler = function (scrollMeta) {
+            var _a = this.scroll.scroller, scrollBehaviorX = _a.scrollBehaviorX, scrollBehaviorY = _a.scrollBehaviorY, animater = _a.animater;
+            var newX = scrollMeta.newX;
+            var newY = scrollMeta.newY;
+            var newPage = this.satisfyThreshold(newX, newY) || animater.forceStopped
+                ? this.pages.getPageByDirection(this.nearestPage(newX, newY), scrollBehaviorX.direction, scrollBehaviorY.direction)
+                : this.pages.currentPage;
+            scrollMeta.time = this.getEaseTime(scrollMeta.newX - newPage.x, scrollMeta.newY - newPage.y);
+            scrollMeta.newX = newPage.x;
+            scrollMeta.newY = newPage.y;
+            scrollMeta.easing = this.options.easing || ease.bounce;
+        };
+        Slide.prototype.scrollHandler = function (_a) {
+            var x = _a.x, y = _a.y;
+            if (this.satisfyThreshold(x, y)) {
+                var newPage = this.nearestPage(x, y);
+                this.pageWillChangeTo(newPage);
+            }
+        };
+        Slide.prototype.pageWillChangeTo = function (newPage) {
+            var changeToPage = this.pages.getWillChangedPage(newPage);
+            if (!samePage(this.willChangeToPage, changeToPage)) {
+                this.willChangeToPage = changeToPage;
+                this.scroll.trigger(this.scroll.eventTypes.slideWillChange, this.willChangeToPage);
+            }
+        };
+        Slide.prototype.registerHooks = function (hooks, name, handler) {
+            hooks.on(name, handler, this);
+            this.hooksFn.push([hooks, name, handler]);
+        };
+        Slide.prototype.destroy = function () {
+            var slideContent = this.scroll.scroller.content;
+            var _a = this.options, loop = _a.loop, autoplay = _a.autoplay;
+            if (loop) {
+                this.removeClonedSlidePage(slideContent);
+            }
+            if (autoplay) {
+                clearTimeout(this.autoplayTimer);
+            }
+            this.hooksFn.forEach(function (item) {
+                var hooks = item[0];
+                var hooksName = item[1];
+                var handlerFn = item[2];
+                if (hooks.eventTypes[hooksName]) {
+                    hooks.off(hooksName, handlerFn);
+                }
+            });
+            this.hooksFn.length = 0;
+        };
+        Slide.pluginName = 'slide';
+        return Slide;
+    }());
+
+    var sourcePrefix$3 = 'plugins.wheel';
+    var propertiesMap$3 = [
+        {
+            key: 'wheelTo',
+            name: 'wheelTo',
+        },
+        {
+            key: 'getSelectedIndex',
+            name: 'getSelectedIndex',
+        },
+        {
+            key: 'restorePosition',
+            name: 'restorePosition',
+        },
+    ];
+    var propertiesConfig$4 = propertiesMap$3.map(function (item) {
+        return {
+            key: item.key,
+            sourceKey: sourcePrefix$3 + "." + item.name,
+        };
+    });
+
+    var WHEEL_INDEX_CHANGED_EVENT_NAME = 'wheelIndexChanged';
+    var CONSTANTS = {
+        rate: 4,
+    };
+    var Wheel = /** @class */ (function () {
+        function Wheel(scroll) {
+            this.scroll = scroll;
+            this.init();
+        }
+        Wheel.prototype.init = function () {
+            this.handleBScroll();
+            this.handleOptions();
+            this.handleHooks();
+            // init boundary for Wheel
+            this.refreshBoundary();
+            this.setSelectedIndex(this.options.selectedIndex);
+        };
+        Wheel.prototype.handleBScroll = function () {
+            this.scroll.proxy(propertiesConfig$4);
+            this.scroll.registerType([WHEEL_INDEX_CHANGED_EVENT_NAME]);
+        };
+        Wheel.prototype.handleOptions = function () {
+            var userOptions = (this.scroll.options.wheel === true
+                ? {}
+                : this.scroll.options.wheel);
+            var defaultOptions = {
+                wheelWrapperClass: 'wheel-scroll',
+                wheelItemClass: 'wheel-item',
+                rotate: 25,
+                adjustTime: 400,
+                selectedIndex: 0,
+                wheelDisabledItemClass: 'wheel-disabled-item',
+            };
+            this.options = extend(defaultOptions, userOptions);
+        };
+        Wheel.prototype.handleHooks = function () {
+            var _this = this;
+            var scroll = this.scroll;
+            var scroller = this.scroll.scroller;
+            var actionsHandler = scroller.actionsHandler, scrollBehaviorX = scroller.scrollBehaviorX, scrollBehaviorY = scroller.scrollBehaviorY, animater = scroller.animater;
+            var prevContent = scroller.content;
+            // BScroll
+            scroll.on(scroll.eventTypes.scrollEnd, function (position) {
+                var index = _this.findNearestValidWheel(position.y).index;
+                if (scroller.animater.forceStopped && !_this.isAdjustingPosition) {
+                    _this.target = _this.items[index];
+                    // since stopped from an animation.
+                    // prevent user's scrollEnd callback triggered twice
+                    return true;
+                }
+                else {
+                    _this.setSelectedIndex(index);
+                    if (_this.isAdjustingPosition) {
+                        _this.isAdjustingPosition = false;
+                    }
+                }
+            });
+            // BScroll.hooks
+            this.scroll.hooks.on(this.scroll.hooks.eventTypes.refresh, function (content) {
+                if (content !== prevContent) {
+                    prevContent = content;
+                    _this.setSelectedIndex(_this.options.selectedIndex, true);
+                }
+                // rotate all wheel-items
+                // because position may not change
+                _this.rotateX(_this.scroll.y);
+                // check we are stop at a disable item or not
+                _this.wheelTo(_this.selectedIndex, 0);
+            });
+            this.scroll.hooks.on(this.scroll.hooks.eventTypes.beforeInitialScrollTo, function (position) {
+                // selectedIndex has higher priority than bs.options.startY
+                position.x = 0;
+                position.y = -(_this.selectedIndex * _this.itemHeight);
+            });
+            // Scroller
+            scroller.hooks.on(scroller.hooks.eventTypes.checkClick, function () {
+                var index = HTMLCollectionToArray(_this.items).indexOf(_this.target);
+                if (index === -1)
+                    return true;
+                _this.wheelTo(index, _this.options.adjustTime, ease.swipe);
+                return true;
+            });
+            scroller.hooks.on(scroller.hooks.eventTypes.scrollTo, function (endPoint) {
+                endPoint.y = _this.findNearestValidWheel(endPoint.y).y;
+            });
+            // when content is scrolling
+            // click wheel-item DOM repeatedly and crazily will cause scrollEnd not triggered
+            // so reset forceStopped
+            scroller.hooks.on(scroller.hooks.eventTypes.minDistanceScroll, function () {
+                var animater = scroller.animater;
+                if (animater.forceStopped === true) {
+                    animater.forceStopped = false;
+                }
+            });
+            scroller.hooks.on(scroller.hooks.eventTypes.scrollToElement, function (el, pos) {
+                if (!hasClass(el, _this.options.wheelItemClass)) {
+                    return true;
+                }
+                else {
+                    pos.top = _this.findNearestValidWheel(pos.top).y;
+                }
+            });
+            // ActionsHandler
+            actionsHandler.hooks.on(actionsHandler.hooks.eventTypes.beforeStart, function (e) {
+                _this.target = e.target;
+            });
+            // ScrollBehaviorX
+            // Wheel has no x direction now
+            scrollBehaviorX.hooks.on(scrollBehaviorX.hooks.eventTypes.computeBoundary, function (boundary) {
+                boundary.maxScrollPos = 0;
+                boundary.minScrollPos = 0;
+            });
+            // ScrollBehaviorY
+            scrollBehaviorY.hooks.on(scrollBehaviorY.hooks.eventTypes.computeBoundary, function (boundary) {
+                _this.items = _this.scroll.scroller.content.children;
+                _this.checkWheelAllDisabled();
+                _this.itemHeight =
+                    _this.items.length > 0
+                        ? scrollBehaviorY.contentSize / _this.items.length
+                        : 0;
+                boundary.maxScrollPos = -_this.itemHeight * (_this.items.length - 1);
+                boundary.minScrollPos = 0;
+            });
+            scrollBehaviorY.hooks.on(scrollBehaviorY.hooks.eventTypes.momentum, function (momentumInfo, distance) {
+                momentumInfo.rate = CONSTANTS.rate;
+                momentumInfo.destination = _this.findNearestValidWheel(momentumInfo.destination).y;
+                // TODO algorithm optimize
+                var maxDistance = 1000;
+                var minDuration = 800;
+                if (distance < maxDistance) {
+                    momentumInfo.duration = Math.max(minDuration, (distance / maxDistance) * _this.scroll.options.swipeTime);
+                }
+            });
+            scrollBehaviorY.hooks.on(scrollBehaviorY.hooks.eventTypes.end, function (momentumInfo) {
+                var validWheel = _this.findNearestValidWheel(scrollBehaviorY.currentPos);
+                momentumInfo.destination = validWheel.y;
+                momentumInfo.duration = _this.options.adjustTime;
+            });
+            // Animater
+            animater.hooks.on(animater.hooks.eventTypes.time, function (time) {
+                _this.transitionDuration(time);
+            });
+            animater.hooks.on(animater.hooks.eventTypes.timeFunction, function (easing) {
+                _this.timeFunction(easing);
+            });
+            // bs.stop() to make wheel stop at a correct position when pending
+            animater.hooks.on(animater.hooks.eventTypes.callStop, function () {
+                var index = _this.findNearestValidWheel(_this.scroll.y).index;
+                _this.isAdjustingPosition = true;
+                _this.wheelTo(index, 0);
+            });
+            // Translater
+            animater.translater.hooks.on(animater.translater.hooks.eventTypes.translate, function (endPoint) {
+                _this.rotateX(endPoint.y);
+            });
+        };
+        Wheel.prototype.refreshBoundary = function () {
+            var _a = this.scroll.scroller, scrollBehaviorX = _a.scrollBehaviorX, scrollBehaviorY = _a.scrollBehaviorY, content = _a.content;
+            scrollBehaviorX.refresh(content);
+            scrollBehaviorY.refresh(content);
+        };
+        Wheel.prototype.setSelectedIndex = function (index, contentChanged) {
+            if (contentChanged === void 0) { contentChanged = false; }
+            var prevSelectedIndex = this.selectedIndex;
+            this.selectedIndex = index;
+            // if content DOM changed, should not trigger event
+            if (prevSelectedIndex !== index && !contentChanged) {
+                this.scroll.trigger(WHEEL_INDEX_CHANGED_EVENT_NAME, index);
+            }
+        };
+        Wheel.prototype.getSelectedIndex = function () {
+            return this.selectedIndex;
+        };
+        Wheel.prototype.wheelTo = function (index, time, ease) {
+            if (index === void 0) { index = 0; }
+            if (time === void 0) { time = 0; }
+            var y = -index * this.itemHeight;
+            this.scroll.scrollTo(0, y, time, ease);
+        };
+        Wheel.prototype.restorePosition = function () {
+            // bs is scrolling
+            var isPending = this.scroll.pending;
+            if (isPending) {
+                var selectedIndex = this.getSelectedIndex();
+                this.scroll.scroller.animater.clearTimer();
+                this.wheelTo(selectedIndex, 0);
+            }
+        };
+        Wheel.prototype.transitionDuration = function (time) {
+            for (var i = 0; i < this.items.length; i++) {
+                this.items[i].style[style.transitionDuration] =
+                    time + 'ms';
+            }
+        };
+        Wheel.prototype.timeFunction = function (easing) {
+            for (var i = 0; i < this.items.length; i++) {
+                this.items[i].style[style.transitionTimingFunction] = easing;
+            }
+        };
+        Wheel.prototype.rotateX = function (y) {
+            var _a = this.options.rotate, rotate = _a === void 0 ? 25 : _a;
+            for (var i = 0; i < this.items.length; i++) {
+                var deg = rotate * (y / this.itemHeight + i);
+                // Too small value is invalid in some phones, issue 1026
+                var SafeDeg = deg.toFixed(3);
+                this.items[i].style[style.transform] = "rotateX(" + SafeDeg + "deg)";
+            }
+        };
+        Wheel.prototype.findNearestValidWheel = function (y) {
+            y = y > 0 ? 0 : y < this.scroll.maxScrollY ? this.scroll.maxScrollY : y;
+            var currentIndex = Math.abs(Math.round(-y / this.itemHeight));
+            var cacheIndex = currentIndex;
+            var items = this.items;
+            var wheelDisabledItemClassName = this.options
+                .wheelDisabledItemClass;
+            // implement web native select element
+            // first, check whether there is a enable item whose index is smaller than currentIndex
+            // then, check whether there is a enable item whose index is bigger than currentIndex
+            // otherwise, there are all disabled items, just keep currentIndex unchange
+            while (currentIndex >= 0) {
+                if (!hasClass(items[currentIndex], wheelDisabledItemClassName)) {
+                    break;
+                }
+                currentIndex--;
+            }
+            if (currentIndex < 0) {
+                currentIndex = cacheIndex;
+                while (currentIndex <= items.length - 1) {
+                    if (!hasClass(items[currentIndex], wheelDisabledItemClassName)) {
+                        break;
+                    }
+                    currentIndex++;
+                }
+            }
+            // keep it unchange when all the items are disabled
+            if (currentIndex === items.length) {
+                currentIndex = cacheIndex;
+            }
+            // when all the items are disabled, selectedIndex should always be -1
+            return {
+                index: this.wheelItemsAllDisabled ? -1 : currentIndex,
+                y: -currentIndex * this.itemHeight,
+            };
+        };
+        Wheel.prototype.checkWheelAllDisabled = function () {
+            var wheelDisabledItemClassName = this.options.wheelDisabledItemClass;
+            var items = this.items;
+            this.wheelItemsAllDisabled = true;
+            for (var i = 0; i < items.length; i++) {
+                if (!hasClass(items[i], wheelDisabledItemClassName)) {
+                    this.wheelItemsAllDisabled = false;
+                    break;
+                }
+            }
+        };
+        Wheel.pluginName = 'wheel';
+        return Wheel;
+    }());
+
+    var sourcePrefix$4 = 'plugins.zoom';
+    var propertiesMap$4 = [
+        {
+            key: 'zoomTo',
+            name: 'zoomTo'
+        }
+    ];
+    var propertiesConfig$5 = propertiesMap$4.map(function (item) {
+        return {
+            key: item.key,
+            sourceKey: sourcePrefix$4 + "." + item.name
+        };
+    });
+
+    var TWO_FINGERS = 2;
+    var RAW_SCALE = 1;
+    var Zoom = /** @class */ (function () {
+        function Zoom(scroll) {
+            this.scroll = scroll;
+            this.scale = RAW_SCALE;
+            this.prevScale = 1;
+            this.init();
+        }
+        Zoom.prototype.init = function () {
+            this.handleBScroll();
+            this.handleOptions();
+            this.handleHooks();
+            this.tryInitialZoomTo(this.zoomOpt);
+        };
+        Zoom.prototype.zoomTo = function (scale, x, y, bounceTime) {
+            var _a = this.resolveOrigin(x, y), originX = _a.originX, originY = _a.originY;
+            var origin = {
+                x: originX,
+                y: originY,
+                baseScale: this.scale,
+            };
+            this._doZoomTo(scale, origin, bounceTime, true);
+        };
+        Zoom.prototype.handleBScroll = function () {
+            this.scroll.proxy(propertiesConfig$5);
+            this.scroll.registerType([
+                'beforeZoomStart',
+                'zoomStart',
+                'zooming',
+                'zoomEnd',
+            ]);
+        };
+        Zoom.prototype.handleOptions = function () {
+            var userOptions = (this.scroll.options.zoom === true
+                ? {}
+                : this.scroll.options.zoom);
+            var defaultOptions = {
+                start: 1,
+                min: 1,
+                max: 4,
+                initialOrigin: [0, 0],
+                minimalZoomDistance: 5,
+                bounceTime: 800,
+            };
+            this.zoomOpt = extend(defaultOptions, userOptions);
+        };
+        Zoom.prototype.handleHooks = function () {
+            var _this = this;
+            var scroll = this.scroll;
+            var scroller = this.scroll.scroller;
+            this.wrapper = this.scroll.scroller.wrapper;
+            this.setTransformOrigin(this.scroll.scroller.content);
+            var scrollBehaviorX = scroller.scrollBehaviorX;
+            var scrollBehaviorY = scroller.scrollBehaviorY;
+            this.hooksFn = [];
+            // BScroll
+            this.registerHooks(scroll.hooks, scroll.hooks.eventTypes.contentChanged, function (content) {
+                _this.setTransformOrigin(content);
+                _this.scale = RAW_SCALE;
+                _this.tryInitialZoomTo(_this.zoomOpt);
+            });
+            this.registerHooks(scroll.hooks, scroll.hooks.eventTypes.beforeInitialScrollTo, function () {
+                // if perform a zoom action, we should prevent initial scroll when initialised
+                if (_this.zoomOpt.start !== RAW_SCALE) {
+                    return true;
+                }
+            });
+            // enlarge boundary
+            this.registerHooks(scrollBehaviorX.hooks, scrollBehaviorX.hooks.eventTypes.beforeComputeBoundary, function () {
+                // content may change, don't cache it's size
+                var contentSize = getRect(_this.scroll.scroller.content);
+                scrollBehaviorX.contentSize = Math.floor(contentSize.width * _this.scale);
+            });
+            this.registerHooks(scrollBehaviorY.hooks, scrollBehaviorY.hooks.eventTypes.beforeComputeBoundary, function () {
+                // content may change, don't cache it's size
+                var contentSize = getRect(_this.scroll.scroller.content);
+                scrollBehaviorY.contentSize = Math.floor(contentSize.height * _this.scale);
+            });
+            // touch event
+            this.registerHooks(scroller.actions.hooks, scroller.actions.hooks.eventTypes.start, function (e) {
+                var numberOfFingers = (e.touches && e.touches.length) || 0;
+                _this.fingersOperation(numberOfFingers);
+                if (numberOfFingers === TWO_FINGERS) {
+                    _this.zoomStart(e);
+                }
+            });
+            this.registerHooks(scroller.actions.hooks, scroller.actions.hooks.eventTypes.beforeMove, function (e) {
+                var numberOfFingers = (e.touches && e.touches.length) || 0;
+                _this.fingersOperation(numberOfFingers);
+                if (numberOfFingers === TWO_FINGERS) {
+                    _this.zoom(e);
+                    return true;
+                }
+            });
+            this.registerHooks(scroller.actions.hooks, scroller.actions.hooks.eventTypes.beforeEnd, function (e) {
+                var numberOfFingers = _this.fingersOperation();
+                if (numberOfFingers === TWO_FINGERS) {
+                    _this.zoomEnd();
+                    return true;
+                }
+            });
+            this.registerHooks(scroller.translater.hooks, scroller.translater.hooks.eventTypes.beforeTranslate, function (transformStyle, point) {
+                var scale = point.scale ? point.scale : _this.prevScale;
+                _this.prevScale = scale;
+                transformStyle.push("scale(" + scale + ")");
+            });
+            this.registerHooks(scroller.hooks, scroller.hooks.eventTypes.scrollEnd, function () {
+                if (_this.fingersOperation() === TWO_FINGERS) {
+                    _this.scroll.trigger(_this.scroll.eventTypes.zoomEnd, {
+                        scale: _this.scale,
+                    });
+                }
+            });
+            this.registerHooks(this.scroll.hooks, 'destroy', this.destroy);
+        };
+        Zoom.prototype.setTransformOrigin = function (content) {
+            content.style[style.transformOrigin] = '0 0';
+        };
+        Zoom.prototype.tryInitialZoomTo = function (options) {
+            var start = options.start, initialOrigin = options.initialOrigin;
+            var _a = this.scroll.scroller, scrollBehaviorX = _a.scrollBehaviorX, scrollBehaviorY = _a.scrollBehaviorY;
+            if (start !== RAW_SCALE) {
+                // Movable plugin may wanna modify minScrollPos or maxScrollPos
+                // so we force Movable to caculate them
+                this.resetBoundaries([scrollBehaviorX, scrollBehaviorY]);
+                this.zoomTo(start, initialOrigin[0], initialOrigin[1], 0);
+            }
+        };
+        // getter or setter operation
+        Zoom.prototype.fingersOperation = function (amounts) {
+            if (typeof amounts === 'number') {
+                this.numberOfFingers = amounts;
+            }
+            else {
+                return this.numberOfFingers;
+            }
+        };
+        Zoom.prototype._doZoomTo = function (scale, origin, time, useCurrentPos) {
+            var _this = this;
+            if (time === void 0) { time = this.zoomOpt.bounceTime; }
+            if (useCurrentPos === void 0) { useCurrentPos = false; }
+            var _a = this.zoomOpt, min = _a.min, max = _a.max;
+            var fromScale = this.scale;
+            var toScale = between(scale, min, max);
+            (function () {
+                if (time === 0) {
+                    _this.scroll.trigger(_this.scroll.eventTypes.zooming, {
+                        scale: toScale,
+                    });
+                    return;
+                }
+                if (time > 0) {
+                    var timer_1;
+                    var startTime_1 = getNow();
+                    var endTime_1 = startTime_1 + time;
+                    var scheduler_1 = function () {
+                        var now = getNow();
+                        if (now >= endTime_1) {
+                            _this.scroll.trigger(_this.scroll.eventTypes.zooming, {
+                                scale: toScale,
+                            });
+                            cancelAnimationFrame(timer_1);
+                            return;
+                        }
+                        var ratio = ease.bounce.fn((now - startTime_1) / time);
+                        var currentScale = ratio * (toScale - fromScale) + fromScale;
+                        _this.scroll.trigger(_this.scroll.eventTypes.zooming, {
+                            scale: currentScale,
+                        });
+                        timer_1 = requestAnimationFrame(scheduler_1);
+                    };
+                    // start scheduler job
+                    scheduler_1();
+                }
+            })();
+            // suppose you are zooming by two fingers
+            this.fingersOperation(2);
+            this._zoomTo(toScale, fromScale, origin, time, useCurrentPos);
+        };
+        Zoom.prototype._zoomTo = function (toScale, fromScale, origin, time, useCurrentPos) {
+            if (useCurrentPos === void 0) { useCurrentPos = false; }
+            var ratio = toScale / origin.baseScale;
+            this.setScale(toScale);
+            var scroller = this.scroll.scroller;
+            var scrollBehaviorX = scroller.scrollBehaviorX, scrollBehaviorY = scroller.scrollBehaviorY;
+            this.resetBoundaries([scrollBehaviorX, scrollBehaviorY]);
+            // position is restrained in boundary
+            var newX = this.getNewPos(origin.x, ratio, scrollBehaviorX, true, useCurrentPos);
+            var newY = this.getNewPos(origin.y, ratio, scrollBehaviorY, true, useCurrentPos);
+            if (scrollBehaviorX.currentPos !== Math.round(newX) ||
+                scrollBehaviorY.currentPos !== Math.round(newY) ||
+                toScale !== fromScale) {
+                scroller.scrollTo(newX, newY, time, ease.bounce, {
+                    start: {
+                        scale: fromScale,
+                    },
+                    end: {
+                        scale: toScale,
+                    },
+                });
+            }
+        };
+        Zoom.prototype.resolveOrigin = function (x, y) {
+            var _a = this.scroll.scroller, scrollBehaviorX = _a.scrollBehaviorX, scrollBehaviorY = _a.scrollBehaviorY;
+            var resolveFormula = {
+                left: function () {
+                    return 0;
+                },
+                top: function () {
+                    return 0;
+                },
+                right: function () {
+                    return scrollBehaviorX.contentSize;
+                },
+                bottom: function () {
+                    return scrollBehaviorY.contentSize;
+                },
+                center: function (index) {
+                    var baseSize = index === 0
+                        ? scrollBehaviorX.contentSize
+                        : scrollBehaviorY.contentSize;
+                    return baseSize / 2;
+                },
+            };
+            return {
+                originX: typeof x === 'number' ? x : resolveFormula[x](0),
+                originY: typeof y === 'number' ? y : resolveFormula[y](1),
+            };
+        };
+        Zoom.prototype.zoomStart = function (e) {
+            var firstFinger = e.touches[0];
+            var secondFinger = e.touches[1];
+            this.startDistance = this.getFingerDistance(e);
+            this.startScale = this.scale;
+            var _a = offsetToBody(this.wrapper), left = _a.left, top = _a.top;
+            this.origin = {
+                x: Math.abs(firstFinger.pageX + secondFinger.pageX) / 2 +
+                    left -
+                    this.scroll.x,
+                y: Math.abs(firstFinger.pageY + secondFinger.pageY) / 2 +
+                    top -
+                    this.scroll.y,
+                baseScale: this.startScale,
+            };
+            this.scroll.trigger(this.scroll.eventTypes.beforeZoomStart);
+        };
+        Zoom.prototype.zoom = function (e) {
+            var currentDistance = this.getFingerDistance(e);
+            // at least minimalZoomDistance pixels for the zoom to initiate
+            if (!this.zoomed &&
+                Math.abs(currentDistance - this.startDistance) <
+                    this.zoomOpt.minimalZoomDistance) {
+                return;
+            }
+            // when out of boundary , perform a damping algorithm
+            var endScale = this.dampingScale((currentDistance / this.startDistance) * this.startScale);
+            var ratio = endScale / this.startScale;
+            this.setScale(endScale);
+            if (!this.zoomed) {
+                this.zoomed = true;
+                this.scroll.trigger(this.scroll.eventTypes.zoomStart);
+            }
+            var scroller = this.scroll.scroller;
+            var scrollBehaviorX = scroller.scrollBehaviorX, scrollBehaviorY = scroller.scrollBehaviorY;
+            var x = this.getNewPos(this.origin.x, ratio, scrollBehaviorX, false, false);
+            var y = this.getNewPos(this.origin.y, ratio, scrollBehaviorY, false, false);
+            this.scroll.trigger(this.scroll.eventTypes.zooming, {
+                scale: this.scale,
+            });
+            scroller.translater.translate({ x: x, y: y, scale: endScale });
+        };
+        Zoom.prototype.zoomEnd = function () {
+            if (!this.zoomed)
+                return;
+            // if out of boundary, do rebound!
+            if (this.shouldRebound()) {
+                this._doZoomTo(this.scale, this.origin, this.zoomOpt.bounceTime);
+                return;
+            }
+            this.scroll.trigger(this.scroll.eventTypes.zoomEnd, { scale: this.scale });
+        };
+        Zoom.prototype.getFingerDistance = function (e) {
+            var firstFinger = e.touches[0];
+            var secondFinger = e.touches[1];
+            var deltaX = Math.abs(firstFinger.pageX - secondFinger.pageX);
+            var deltaY = Math.abs(firstFinger.pageY - secondFinger.pageY);
+            return getDistance(deltaX, deltaY);
+        };
+        Zoom.prototype.shouldRebound = function () {
+            var _a = this.zoomOpt, min = _a.min, max = _a.max;
+            var currentScale = this.scale;
+            // scale exceeded!
+            if (currentScale !== between(currentScale, min, max)) {
+                return true;
+            }
+            var _b = this.scroll.scroller, scrollBehaviorX = _b.scrollBehaviorX, scrollBehaviorY = _b.scrollBehaviorY;
+            // enlarge boundaries manually when zoom is end
+            this.resetBoundaries([scrollBehaviorX, scrollBehaviorY]);
+            var xInBoundary = scrollBehaviorX.checkInBoundary().inBoundary;
+            var yInBoundary = scrollBehaviorX.checkInBoundary().inBoundary;
+            return !(xInBoundary && yInBoundary);
+        };
+        Zoom.prototype.dampingScale = function (scale) {
+            var _a = this.zoomOpt, min = _a.min, max = _a.max;
+            if (scale < min) {
+                scale = 0.5 * min * Math.pow(2.0, scale / min);
+            }
+            else if (scale > max) {
+                scale = 2.0 * max * Math.pow(0.5, max / scale);
+            }
+            return scale;
+        };
+        Zoom.prototype.setScale = function (scale) {
+            this.scale = scale;
+        };
+        Zoom.prototype.resetBoundaries = function (scrollBehaviorPairs) {
+            scrollBehaviorPairs.forEach(function (behavior) { return behavior.computeBoundary(); });
+        };
+        Zoom.prototype.getNewPos = function (origin, lastScale, scrollBehavior, shouldInBoundary, useCurrentPos) {
+            if (useCurrentPos === void 0) { useCurrentPos = false; }
+            var newPos = origin -
+                origin * lastScale +
+                (useCurrentPos ? scrollBehavior.currentPos : scrollBehavior.startPos);
+            if (shouldInBoundary) {
+                newPos = between(newPos, scrollBehavior.maxScrollPos, scrollBehavior.minScrollPos);
+            }
+            // maxScrollPos or minScrollPos maybe a negative or positive digital
+            return newPos > 0 ? Math.floor(newPos) : Math.ceil(newPos);
+        };
+        Zoom.prototype.registerHooks = function (hooks, name, handler) {
+            hooks.on(name, handler, this);
+            this.hooksFn.push([hooks, name, handler]);
+        };
+        Zoom.prototype.destroy = function () {
+            this.hooksFn.forEach(function (item) {
+                var hooks = item[0];
+                var hooksName = item[1];
+                var handlerFn = item[2];
+                hooks.off(hooksName, handlerFn);
+            });
+            this.hooksFn.length = 0;
+        };
+        Zoom.pluginName = 'zoom';
+        return Zoom;
+    }());
+
+    var BScrollFamily = /** @class */ (function () {
+        function BScrollFamily(scroll) {
+            this.ancestors = [];
+            this.descendants = [];
+            this.hooksManager = [];
+            this.analyzed = false;
+            this.selfScroll = scroll;
+        }
+        BScrollFamily.create = function (scroll) {
+            return new BScrollFamily(scroll);
+        };
+        BScrollFamily.prototype.hasAncestors = function (bscrollFamily) {
+            var index = findIndex(this.ancestors, function (_a) {
+                var item = _a[0];
+                return item === bscrollFamily;
+            });
+            return index > -1;
+        };
+        BScrollFamily.prototype.hasDescendants = function (bscrollFamily) {
+            var index = findIndex(this.descendants, function (_a) {
+                var item = _a[0];
+                return item === bscrollFamily;
+            });
+            return index > -1;
+        };
+        BScrollFamily.prototype.addAncestor = function (bscrollFamily, distance) {
+            var ancestors = this.ancestors;
+            ancestors.push([bscrollFamily, distance]);
+            // by ascend
+            ancestors.sort(function (a, b) {
+                return a[1] - b[1];
+            });
+        };
+        BScrollFamily.prototype.addDescendant = function (bscrollFamily, distance) {
+            var descendants = this.descendants;
+            descendants.push([bscrollFamily, distance]);
+            // by ascend
+            descendants.sort(function (a, b) {
+                return a[1] - b[1];
+            });
+        };
+        BScrollFamily.prototype.removeAncestor = function (bscrollFamily) {
+            var ancestors = this.ancestors;
+            if (ancestors.length) {
+                var index = findIndex(this.ancestors, function (_a) {
+                    var item = _a[0];
+                    return item === bscrollFamily;
+                });
+                if (index > -1) {
+                    return ancestors.splice(index, 1);
+                }
+            }
+        };
+        BScrollFamily.prototype.removeDescendant = function (bscrollFamily) {
+            var descendants = this.descendants;
+            if (descendants.length) {
+                var index = findIndex(this.descendants, function (_a) {
+                    var item = _a[0];
+                    return item === bscrollFamily;
+                });
+                if (index > -1) {
+                    return descendants.splice(index, 1);
+                }
+            }
+        };
+        BScrollFamily.prototype.registerHooks = function (hook, eventType, handler) {
+            hook.on(eventType, handler);
+            this.hooksManager.push([hook, eventType, handler]);
+        };
+        BScrollFamily.prototype.setAnalyzed = function (flag) {
+            if (flag === void 0) { flag = false; }
+            this.analyzed = flag;
+        };
+        BScrollFamily.prototype.purge = function () {
+            var _this = this;
+            // remove self from graph
+            this.ancestors.forEach(function (_a) {
+                var bscrollFamily = _a[0];
+                bscrollFamily.removeDescendant(_this);
+            });
+            this.descendants.forEach(function (_a) {
+                var bscrollFamily = _a[0];
+                bscrollFamily.removeAncestor(_this);
+            });
+            // remove all hook handlers
+            this.hooksManager.forEach(function (_a) {
+                var hooks = _a[0], eventType = _a[1], handler = _a[2];
+                hooks.off(eventType, handler);
+            });
+            this.hooksManager = [];
+        };
+        return BScrollFamily;
+    }());
+
+    var sourcePrefix$5 = 'plugins.nestedScroll';
+    var propertiesMap$5 = [
+        {
+            key: 'purgeNestedScroll',
+            name: 'purgeNestedScroll',
+        },
+    ];
+    var propertiesConfig$6 = propertiesMap$5.map(function (item) {
+        return {
+            key: item.key,
+            sourceKey: sourcePrefix$5 + "." + item.name,
+        };
+    });
+
+    var DEFAUL_GROUP_ID = 'INTERNAL_NESTED_SCROLL';
+    var forceScrollStopHandler = function (scrolls) {
+        scrolls.forEach(function (scroll) {
+            if (scroll.pending) {
+                scroll.stop();
+                scroll.resetPosition();
+            }
+        });
+    };
+    var enableScrollHander = function (scrolls) {
+        scrolls.forEach(function (scroll) {
+            scroll.enable();
+        });
+    };
+    var disableScrollHander = function (scrolls) {
+        scrolls.forEach(function (scroll) {
+            scroll.disable();
+        });
+    };
+    var syncTouchstartData = function (scrolls) {
+        scrolls.forEach(function (scroll) {
+            var _a = scroll.scroller, actions = _a.actions, scrollBehaviorX = _a.scrollBehaviorX, scrollBehaviorY = _a.scrollBehaviorY;
+            // prevent click triggering many times
+            actions.fingerMoved = true;
+            actions.contentMoved = false;
+            actions.directionLockAction.reset();
+            scrollBehaviorX.start();
+            scrollBehaviorY.start();
+            scrollBehaviorX.resetStartPos();
+            scrollBehaviorY.resetStartPos();
+            actions.startTime = +new Date();
+        });
+    };
+    var isOutOfBoundary = function (scroll) {
+        var hasHorizontalScroll = scroll.hasHorizontalScroll, hasVerticalScroll = scroll.hasVerticalScroll, x = scroll.x, y = scroll.y, minScrollX = scroll.minScrollX, maxScrollX = scroll.maxScrollX, minScrollY = scroll.minScrollY, maxScrollY = scroll.maxScrollY, movingDirectionX = scroll.movingDirectionX, movingDirectionY = scroll.movingDirectionY;
+        var ret = false;
+        var outOfLeftBoundary = x >= minScrollX && movingDirectionX === -1 /* Negative */;
+        var outOfRightBoundary = x <= maxScrollX && movingDirectionX === 1 /* Positive */;
+        var outOfTopBoundary = y >= minScrollY && movingDirectionY === -1 /* Negative */;
+        var outOfBottomBoundary = y <= maxScrollY && movingDirectionY === 1 /* Positive */;
+        if (hasVerticalScroll) {
+            ret = outOfTopBoundary || outOfBottomBoundary;
+        }
+        else if (hasHorizontalScroll) {
+            ret = outOfLeftBoundary || outOfRightBoundary;
+        }
+        return ret;
+    };
+    var isResettingPosition = function (scroll) {
+        var hasHorizontalScroll = scroll.hasHorizontalScroll, hasVerticalScroll = scroll.hasVerticalScroll, x = scroll.x, y = scroll.y, minScrollX = scroll.minScrollX, maxScrollX = scroll.maxScrollX, minScrollY = scroll.minScrollY, maxScrollY = scroll.maxScrollY;
+        var ret = false;
+        var outOfLeftBoundary = x > minScrollX;
+        var outOfRightBoundary = x < maxScrollX;
+        var outOfTopBoundary = y > minScrollY;
+        var outOfBottomBoundary = y < maxScrollY;
+        if (hasVerticalScroll) {
+            ret = outOfTopBoundary || outOfBottomBoundary;
+        }
+        else if (hasHorizontalScroll) {
+            ret = outOfLeftBoundary || outOfRightBoundary;
+        }
+        return ret;
+    };
+    var resetPositionHandler = function (scroll) {
+        scroll.scroller.reflow();
+        scroll.resetPosition(0 /* Immediately */);
+    };
+    var calculateDistance = function (childNode, parentNode) {
+        var distance = 0;
+        var parent = childNode.parentNode;
+        while (parent && parent !== parentNode) {
+            distance++;
+            parent = parent.parentNode;
+        }
+        return distance;
+    };
+    var NestedScroll = /** @class */ (function () {
+        function NestedScroll(scroll) {
+            var groupId = this.handleOptions(scroll);
+            var instance = NestedScroll.instancesMap[groupId];
+            if (!instance) {
+                instance = NestedScroll.instancesMap[groupId] = this;
+                instance.store = [];
+                instance.hooksFn = [];
+            }
+            instance.init(scroll);
+            return instance;
+        }
+        NestedScroll.getAllNestedScrolls = function () {
+            var instancesMap = NestedScroll.instancesMap;
+            return Object.keys(instancesMap).map(function (key) { return instancesMap[key]; });
+        };
+        NestedScroll.purgeAllNestedScrolls = function () {
+            var nestedScrolls = NestedScroll.getAllNestedScrolls();
+            nestedScrolls.forEach(function (ns) { return ns.purgeNestedScroll(); });
+        };
+        NestedScroll.prototype.handleOptions = function (scroll) {
+            var userOptions = (scroll.options.nestedScroll === true
+                ? {}
+                : scroll.options.nestedScroll);
+            var defaultOptions = {
+                groupId: DEFAUL_GROUP_ID,
+            };
+            this.options = extend(defaultOptions, userOptions);
+            var groupIdType = typeof this.options.groupId;
+            if (groupIdType !== 'string' && groupIdType !== 'number') {
+                warn('groupId must be string or number for NestedScroll plugin');
+            }
+            return this.options.groupId;
+        };
+        NestedScroll.prototype.init = function (scroll) {
+            scroll.proxy(propertiesConfig$6);
+            this.addBScroll(scroll);
+            this.buildBScrollGraph();
+            this.analyzeBScrollGraph();
+            this.ensureEventInvokeSequence();
+            this.handleHooks(scroll);
+        };
+        NestedScroll.prototype.handleHooks = function (scroll) {
+            var _this = this;
+            this.registerHooks(scroll.hooks, scroll.hooks.eventTypes.destroy, function () {
+                _this.deleteScroll(scroll);
+            });
+        };
+        NestedScroll.prototype.deleteScroll = function (scroll) {
+            var wrapper = scroll.wrapper;
+            wrapper.isBScrollContainer = undefined;
+            var store = this.store;
+            var hooksFn = this.hooksFn;
+            var i = findIndex(store, function (bscrollFamily) {
+                return bscrollFamily.selfScroll === scroll;
+            });
+            if (i > -1) {
+                var bscrollFamily = store[i];
+                bscrollFamily.purge();
+                store.splice(i, 1);
+            }
+            var k = findIndex(hooksFn, function (_a) {
+                var hooks = _a[0];
+                return hooks === scroll.hooks;
+            });
+            if (k > -1) {
+                var _a = hooksFn[k], hooks = _a[0], eventType = _a[1], handler = _a[2];
+                hooks.off(eventType, handler);
+                hooksFn.splice(k, 1);
+            }
+        };
+        NestedScroll.prototype.addBScroll = function (scroll) {
+            this.store.push(BScrollFamily.create(scroll));
+        };
+        NestedScroll.prototype.buildBScrollGraph = function () {
+            var store = this.store;
+            var bf1;
+            var bf2;
+            var wrapper1;
+            var wrapper2;
+            var len = this.store.length;
+            // build graph
+            for (var i = 0; i < len; i++) {
+                bf1 = store[i];
+                wrapper1 = bf1.selfScroll.wrapper;
+                for (var j = 0; j < len; j++) {
+                    bf2 = store[j];
+                    wrapper2 = bf2.selfScroll.wrapper;
+                    // same bs
+                    if (bf1 === bf2)
+                        continue;
+                    if (!wrapper1.contains(wrapper2))
+                        continue;
+                    // bs1 contains bs2
+                    var distance = calculateDistance(wrapper2, wrapper1);
+                    if (!bf1.hasDescendants(bf2)) {
+                        bf1.addDescendant(bf2, distance);
+                    }
+                    if (!bf2.hasAncestors(bf1)) {
+                        bf2.addAncestor(bf1, distance);
+                    }
+                }
+            }
+        };
+        NestedScroll.prototype.analyzeBScrollGraph = function () {
+            this.store.forEach(function (bscrollFamily) {
+                if (bscrollFamily.analyzed) {
+                    return;
+                }
+                var ancestors = bscrollFamily.ancestors, descendants = bscrollFamily.descendants, currentScroll = bscrollFamily.selfScroll;
+                var beforeScrollStartHandler = function () {
+                    // always get the latest scroll
+                    var ancestorScrolls = ancestors.map(function (_a) {
+                        var bscrollFamily = _a[0];
+                        return bscrollFamily.selfScroll;
+                    });
+                    var descendantScrolls = descendants.map(function (_a) {
+                        var bscrollFamily = _a[0];
+                        return bscrollFamily.selfScroll;
+                    });
+                    forceScrollStopHandler(__spreadArrays(ancestorScrolls, descendantScrolls));
+                    if (isResettingPosition(currentScroll)) {
+                        resetPositionHandler(currentScroll);
+                    }
+                    syncTouchstartData(ancestorScrolls);
+                    disableScrollHander(ancestorScrolls);
+                };
+                var touchEndHandler = function () {
+                    var ancestorScrolls = ancestors.map(function (_a) {
+                        var bscrollFamily = _a[0];
+                        return bscrollFamily.selfScroll;
+                    });
+                    var descendantScrolls = descendants.map(function (_a) {
+                        var bscrollFamily = _a[0];
+                        return bscrollFamily.selfScroll;
+                    });
+                    enableScrollHander(__spreadArrays(ancestorScrolls, descendantScrolls));
+                };
+                bscrollFamily.registerHooks(currentScroll, currentScroll.eventTypes.beforeScrollStart, beforeScrollStartHandler);
+                bscrollFamily.registerHooks(currentScroll, currentScroll.eventTypes.touchEnd, touchEndHandler);
+                var selfActionsHooks = currentScroll.scroller.actions.hooks;
+                bscrollFamily.registerHooks(selfActionsHooks, selfActionsHooks.eventTypes.detectMovingDirection, function () {
+                    var ancestorScrolls = ancestors.map(function (_a) {
+                        var bscrollFamily = _a[0];
+                        return bscrollFamily.selfScroll;
+                    });
+                    var parentScroll = ancestorScrolls[0];
+                    var otherAncestorScrolls = ancestorScrolls.slice(1);
+                    var contentMoved = currentScroll.scroller.actions.contentMoved;
+                    var isTopScroll = ancestorScrolls.length === 0;
+                    if (contentMoved) {
+                        disableScrollHander(ancestorScrolls);
+                    }
+                    else if (!isTopScroll) {
+                        if (isOutOfBoundary(currentScroll)) {
+                            disableScrollHander([currentScroll]);
+                            if (parentScroll) {
+                                enableScrollHander([parentScroll]);
+                            }
+                            disableScrollHander(otherAncestorScrolls);
+                            return true;
+                        }
+                    }
+                });
+                bscrollFamily.setAnalyzed(true);
+            });
+        };
+        // make sure touchmove|touchend invoke from child to parent
+        NestedScroll.prototype.ensureEventInvokeSequence = function () {
+            var copied = this.store.slice();
+            var sequencedScroll = copied.sort(function (a, b) {
+                return a.descendants.length - b.descendants.length;
+            });
+            sequencedScroll.forEach(function (bscrollFamily) {
+                var scroll = bscrollFamily.selfScroll;
+                scroll.scroller.actionsHandler.rebindDOMEvents();
+            });
+        };
+        NestedScroll.prototype.registerHooks = function (hooks, name, handler) {
+            hooks.on(name, handler, this);
+            this.hooksFn.push([hooks, name, handler]);
+        };
+        NestedScroll.prototype.purgeNestedScroll = function () {
+            var groupId = this.options.groupId;
+            this.store.forEach(function (bscrollFamily) {
+                bscrollFamily.purge();
+            });
+            this.store = [];
+            this.hooksFn.forEach(function (_a) {
+                var hooks = _a[0], eventType = _a[1], handler = _a[2];
+                hooks.off(eventType, handler);
+            });
+            this.hooksFn = [];
+            delete NestedScroll.instancesMap[groupId];
+        };
+        NestedScroll.pluginName = 'nestedScroll';
+        NestedScroll.instancesMap = {};
+        return NestedScroll;
+    }());
+
+    var PRE_NUM = 10;
+    var POST_NUM = 30;
+    var IndexCalculator = /** @class */ (function () {
+        function IndexCalculator(wrapperHeight, tombstoneHeight) {
+            this.wrapperHeight = wrapperHeight;
+            this.tombstoneHeight = tombstoneHeight;
+            this.lastDirection = 1 /* DOWN */;
+            this.lastPos = 0;
+        }
+        IndexCalculator.prototype.calculate = function (pos, list) {
+            var offset = pos - this.lastPos;
+            this.lastPos = pos;
+            var direction = this.getDirection(offset);
+            // important! start index is much more important than end index.
+            var start = this.calculateIndex(0, pos, list);
+            var end = this.calculateIndex(start, pos + this.wrapperHeight, list);
+            if (direction === 1 /* DOWN */) {
+                start -= PRE_NUM;
+                end += POST_NUM;
+            }
+            else {
+                start -= POST_NUM;
+                end += PRE_NUM;
+            }
+            if (start < 0) {
+                start = 0;
+            }
+            return {
+                start: start,
+                end: end,
+            };
+        };
+        IndexCalculator.prototype.getDirection = function (offset) {
+            var direction;
+            if (offset > 0) {
+                direction = 1 /* DOWN */;
+            }
+            else if (offset < 0) {
+                direction = 0 /* UP */;
+            }
+            else {
+                return this.lastDirection;
+            }
+            this.lastDirection = direction;
+            return direction;
+        };
+        IndexCalculator.prototype.calculateIndex = function (start, offset, list) {
+            if (offset <= 0) {
+                return start;
+            }
+            var i = start;
+            var startPos = list[i] && list[i].pos !== -1 ? list[i].pos : 0;
+            var lastPos = startPos;
+            var tombstone = 0;
+            while (i < list.length && list[i].pos < offset) {
+                lastPos = list[i].pos;
+                i++;
+            }
+            if (i === list.length) {
+                tombstone = Math.floor((offset - lastPos) / this.tombstoneHeight);
+            }
+            i += tombstone;
+            return i;
+        };
+        IndexCalculator.prototype.resetState = function () {
+            this.lastDirection = 1 /* DOWN */;
+            this.lastPos = 0;
+        };
+        return IndexCalculator;
+    }());
+
+    var ListItem = /** @class */ (function () {
+        function ListItem() {
+            this.data = null;
+            this.dom = null;
+            this.tombstone = null;
+            this.width = 0;
+            this.height = 0;
+            this.pos = 0;
+        }
+        return ListItem;
+    }());
+    var DataManager = /** @class */ (function () {
+        function DataManager(list, fetchFn, onFetchFinish) {
+            this.fetchFn = fetchFn;
+            this.onFetchFinish = onFetchFinish;
+            this.loadedNum = 0;
+            this.fetching = false;
+            this.hasMore = true;
+            this.list = list || [];
+        }
+        DataManager.prototype.update = function (end) {
+            return __awaiter(this, void 0, void 0, function () {
+                var len;
+                return __generator(this, function (_a) {
+                    if (!this.hasMore) {
+                        end = Math.min(end, this.list.length);
+                    }
+                    // add data placeholder
+                    if (end > this.list.length) {
+                        len = end - this.list.length;
+                        this.addEmptyData(len);
+                    }
+                    // tslint:disable-next-line: no-floating-promises
+                    return [2 /*return*/, this.checkToFetch(end)];
+                });
+            });
+        };
+        DataManager.prototype.add = function (data) {
+            for (var i = 0; i < data.length; i++) {
+                if (!this.list[this.loadedNum]) {
+                    this.list[this.loadedNum] = { data: data[i] };
+                }
+                else {
+                    this.list[this.loadedNum] = __assign(__assign({}, this.list[this.loadedNum]), { data: data[i] });
+                }
+                this.loadedNum++;
+            }
+            return this.list;
+        };
+        DataManager.prototype.addEmptyData = function (len) {
+            for (var i = 0; i < len; i++) {
+                this.list.push(new ListItem());
+            }
+            return this.list;
+        };
+        DataManager.prototype.fetch = function (len) {
+            return __awaiter(this, void 0, void 0, function () {
+                var data;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (this.fetching) {
+                                return [2 /*return*/, []];
+                            }
+                            this.fetching = true;
+                            return [4 /*yield*/, this.fetchFn(len)];
+                        case 1:
+                            data = _a.sent();
+                            this.fetching = false;
+                            return [2 /*return*/, data];
+                    }
+                });
+            });
+        };
+        DataManager.prototype.checkToFetch = function (end) {
+            return __awaiter(this, void 0, void 0, function () {
+                var min, newData, currentEnd;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (!this.hasMore) {
+                                return [2 /*return*/];
+                            }
+                            if (end <= this.loadedNum) {
+                                return [2 /*return*/];
+                            }
+                            min = end - this.loadedNum;
+                            return [4 /*yield*/, this.fetch(min)];
+                        case 1:
+                            newData = _a.sent();
+                            if (newData instanceof Array && newData.length) {
+                                this.add(newData);
+                                currentEnd = this.onFetchFinish(this.list, true);
+                                return [2 /*return*/, this.checkToFetch(currentEnd)];
+                            }
+                            else if (typeof newData === 'boolean' && newData === false) {
+                                this.hasMore = false;
+                                this.list.splice(this.loadedNum);
+                                this.onFetchFinish(this.list, false);
+                            }
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        DataManager.prototype.getList = function () {
+            return this.list;
+        };
+        DataManager.prototype.resetState = function () {
+            this.loadedNum = 0;
+            this.fetching = false;
+            this.hasMore = true;
+            this.list = [];
+        };
+        return DataManager;
+    }());
+
+    var Tombstone = /** @class */ (function () {
+        function Tombstone(create) {
+            this.create = create;
+            this.cached = [];
+            this.width = 0;
+            this.height = 0;
+            this.initialed = false;
+            this.getSize();
+        }
+        Tombstone.isTombstone = function (el) {
+            if (el && el.classList) {
+                return el.classList.contains('tombstone');
+            }
+            return false;
+        };
+        Tombstone.prototype.getSize = function () {
+            if (!this.initialed) {
+                var tombstone = this.create();
+                tombstone.style.position = 'absolute';
+                document.body.appendChild(tombstone);
+                tombstone.style.display = '';
+                this.height = tombstone.offsetHeight;
+                this.width = tombstone.offsetWidth;
+                document.body.removeChild(tombstone);
+                this.cached.push(tombstone);
+            }
+        };
+        Tombstone.prototype.getOne = function () {
+            var tombstone = this.cached.pop();
+            if (tombstone) {
+                var tombstoneStyle = tombstone.style;
+                tombstoneStyle.display = '';
+                tombstoneStyle.opacity = '1';
+                tombstoneStyle[style.transform] = '';
+                tombstoneStyle[style.transition] = '';
+                return tombstone;
+            }
+            return this.create();
+        };
+        Tombstone.prototype.recycle = function (tombstones) {
+            for (var _i = 0, tombstones_1 = tombstones; _i < tombstones_1.length; _i++) {
+                var tombstone = tombstones_1[_i];
+                tombstone.style.display = 'none';
+                this.cached.push(tombstone);
+            }
+            return this.cached;
+        };
+        Tombstone.prototype.recycleOne = function (tombstone) {
+            this.cached.push(tombstone);
+            return this.cached;
+        };
+        return Tombstone;
+    }());
+
+    var ANIMATION_DURATION_MS = 200;
+    var DomManager = /** @class */ (function () {
+        function DomManager(content, renderFn, tombstone) {
+            this.renderFn = renderFn;
+            this.tombstone = tombstone;
+            this.unusedDom = [];
+            this.timers = [];
+            this.setContent(content);
+        }
+        DomManager.prototype.update = function (list, start, end) {
+            if (start >= list.length) {
+                start = list.length - 1;
+            }
+            if (end > list.length) {
+                end = list.length;
+            }
+            this.collectUnusedDom(list, start, end);
+            this.createDom(list, start, end);
+            this.cacheHeight(list, start, end);
+            var _a = this.positionDom(list, start, end), startPos = _a.startPos, startDelta = _a.startDelta, endPos = _a.endPos;
+            return {
+                start: start,
+                startPos: startPos,
+                startDelta: startDelta,
+                end: end,
+                endPos: endPos,
+            };
+        };
+        DomManager.prototype.collectUnusedDom = function (list, start, end) {
+            // TODO optimise
+            for (var i = 0; i < list.length; i++) {
+                if (i === start) {
+                    i = end - 1;
+                    continue;
+                }
+                if (list[i].dom) {
+                    var dom = list[i].dom;
+                    if (Tombstone.isTombstone(dom)) {
+                        this.tombstone.recycleOne(dom);
+                        dom.style.display = 'none';
+                    }
+                    else {
+                        this.unusedDom.push(dom);
+                    }
+                    list[i].dom = null;
+                }
+            }
+            return list;
+        };
+        DomManager.prototype.createDom = function (list, start, end) {
+            for (var i = start; i < end; i++) {
+                var dom = list[i].dom;
+                var data = list[i].data;
+                if (dom) {
+                    if (Tombstone.isTombstone(dom) && data) {
+                        list[i].tombstone = dom;
+                        list[i].dom = null;
+                    }
+                    else {
+                        continue;
+                    }
+                }
+                dom = data
+                    ? this.renderFn(data, this.unusedDom.pop())
+                    : this.tombstone.getOne();
+                dom.style.position = 'absolute';
+                list[i].dom = dom;
+                list[i].pos = -1;
+                this.content.appendChild(dom);
+            }
+        };
+        DomManager.prototype.cacheHeight = function (list, start, end) {
+            for (var i = start; i < end; i++) {
+                if (list[i].data && !list[i].height) {
+                    list[i].height = list[i].dom.offsetHeight;
+                }
+            }
+        };
+        DomManager.prototype.positionDom = function (list, start, end) {
+            var _this = this;
+            var tombstoneEles = [];
+            var _a = this.getStartPos(list, start, end), startPos = _a.start, startDelta = _a.delta;
+            var pos = startPos;
+            for (var i = start; i < end; i++) {
+                var tombstone = list[i].tombstone;
+                if (tombstone) {
+                    var tombstoneStyle = tombstone.style;
+                    tombstoneStyle[style.transition] = cssVendor + "transform " + ANIMATION_DURATION_MS + "ms, opacity " + ANIMATION_DURATION_MS + "ms";
+                    tombstoneStyle[style.transform] = "translateY(" + pos + "px)";
+                    tombstoneStyle.opacity = '0';
+                    list[i].tombstone = null;
+                    tombstoneEles.push(tombstone);
+                }
+                if (list[i].dom && list[i].pos !== pos) {
+                    list[i].dom.style[style.transform] = "translateY(" + pos + "px)";
+                    list[i].pos = pos;
+                }
+                pos += list[i].height || this.tombstone.height;
+            }
+            var timerId = window.setTimeout(function () {
+                _this.tombstone.recycle(tombstoneEles);
+            }, ANIMATION_DURATION_MS);
+            this.timers.push(timerId);
+            return {
+                startPos: startPos,
+                startDelta: startDelta,
+                endPos: pos,
+            };
+        };
+        DomManager.prototype.getStartPos = function (list, start, end) {
+            if (list[start] && list[start].pos !== -1) {
+                return {
+                    start: list[start].pos,
+                    delta: 0,
+                };
+            }
+            // TODO optimise
+            var pos = list[0].pos === -1 ? 0 : list[0].pos;
+            for (var i_1 = 0; i_1 < start; i_1++) {
+                pos += list[i_1].height || this.tombstone.height;
+            }
+            var originPos = pos;
+            var i;
+            for (i = start; i < end; i++) {
+                if (!Tombstone.isTombstone(list[i].dom) && list[i].pos !== -1) {
+                    pos = list[i].pos;
+                    break;
+                }
+            }
+            var x = i;
+            if (x < end) {
+                while (x > start) {
+                    pos -= list[x - 1].height;
+                    x--;
+                }
+            }
+            var delta = originPos - pos;
+            return {
+                start: pos,
+                delta: delta,
+            };
+        };
+        DomManager.prototype.removeTombstone = function () {
+            var tombstones = this.content.querySelectorAll('.tombstone');
+            for (var i = tombstones.length - 1; i >= 0; i--) {
+                this.content.removeChild(tombstones[i]);
+            }
+        };
+        DomManager.prototype.setContent = function (content) {
+            if (content !== this.content) {
+                this.content = content;
+            }
+        };
+        DomManager.prototype.destroy = function () {
+            this.removeTombstone();
+            this.timers.forEach(function (id) {
+                clearTimeout(id);
+            });
+        };
+        DomManager.prototype.resetState = function () {
+            this.destroy();
+            this.timers = [];
+            this.unusedDom = [];
+        };
+        return DomManager;
+    }());
+
+    var EXTRA_SCROLL_Y = -2000;
+    var InfinityScroll = /** @class */ (function () {
+        function InfinityScroll(scroll) {
+            this.scroll = scroll;
+            this.start = 0;
+            this.end = 0;
+            this.init();
+        }
+        InfinityScroll.prototype.init = function () {
+            var _this = this;
+            this.handleOptions();
+            var _a = this.options, fetchFn = _a.fetch, renderFn = _a.render, createTombstoneFn = _a.createTombstone;
+            this.tombstone = new Tombstone(createTombstoneFn);
+            this.indexCalculator = new IndexCalculator(this.scroll.scroller.scrollBehaviorY.wrapperSize, this.tombstone.height);
+            this.domManager = new DomManager(this.scroll.scroller.content, renderFn, this.tombstone);
+            this.dataManager = new DataManager([], fetchFn, this.onFetchFinish.bind(this));
+            this.scroll.on(this.scroll.eventTypes.destroy, this.destroy, this);
+            this.scroll.on(this.scroll.eventTypes.scroll, this.update, this);
+            this.scroll.on(this.scroll.eventTypes.contentChanged, function (content) {
+                _this.domManager.setContent(content);
+                _this.indexCalculator.resetState();
+                _this.domManager.resetState();
+                _this.dataManager.resetState();
+                _this.update({ y: 0 });
+            });
+            var scrollBehaviorY = this.scroll.scroller.scrollBehaviorY;
+            scrollBehaviorY.hooks.on(scrollBehaviorY.hooks.eventTypes.computeBoundary, this.modifyBoundary, this);
+            this.update({ y: 0 });
+        };
+        InfinityScroll.prototype.modifyBoundary = function (boundary) {
+            // manually set position to allow scroll
+            boundary.maxScrollPos = EXTRA_SCROLL_Y;
+        };
+        InfinityScroll.prototype.handleOptions = function () {
+            // narrow down type to an object
+            var infinityOptions = this.scroll.options.infinity;
+            if (infinityOptions) {
+                if (typeof infinityOptions.fetch !== 'function') {
+                    warn('Infinity plugin need fetch Function to new data.');
+                }
+                if (typeof infinityOptions.render !== 'function') {
+                    warn('Infinity plugin need render Function to render each item.');
+                }
+                if (typeof infinityOptions.render !== 'function') {
+                    warn('Infinity plugin need createTombstone Function to create tombstone.');
+                }
+                this.options = infinityOptions;
+            }
+            this.scroll.options.probeType = 3 /* Realtime */;
+        };
+        InfinityScroll.prototype.update = function (pos) {
+            var position = Math.round(-pos.y);
+            // important! calculate start/end index to render
+            var _a = this.indexCalculator.calculate(position, this.dataManager.getList()), start = _a.start, end = _a.end;
+            this.start = start;
+            this.end = end;
+            // tslint:disable-next-line: no-floating-promises
+            this.dataManager.update(end);
+            this.updateDom(this.dataManager.getList());
+        };
+        InfinityScroll.prototype.onFetchFinish = function (list, hasMore) {
+            var end = this.updateDom(list).end;
+            if (!hasMore) {
+                this.domManager.removeTombstone();
+                this.scroll.scroller.animater.stop();
+                this.scroll.resetPosition();
+            }
+            // tslint:disable-next-line: no-floating-promises
+            return end;
+        };
+        InfinityScroll.prototype.updateDom = function (list) {
+            var _a = this.domManager.update(list, this.start, this.end), end = _a.end, startPos = _a.startPos, endPos = _a.endPos, startDelta = _a.startDelta;
+            if (startDelta) {
+                this.scroll.minScrollY = startDelta;
+            }
+            if (endPos > this.scroll.maxScrollY) {
+                this.scroll.maxScrollY = -(endPos - this.scroll.scroller.scrollBehaviorY.wrapperSize);
+            }
+            return {
+                end: end,
+                startPos: startPos,
+                endPos: endPos,
+            };
+        };
+        InfinityScroll.prototype.destroy = function () {
+            var _a = this.scroll.scroller, content = _a.content, scrollBehaviorY = _a.scrollBehaviorY;
+            while (content.firstChild) {
+                content.removeChild(content.firstChild);
+            }
+            this.domManager.destroy();
+            this.scroll.off('scroll', this.update);
+            this.scroll.off('destroy', this.destroy);
+            scrollBehaviorY.hooks.off(scrollBehaviorY.hooks.eventTypes.computeBoundary);
+        };
+        InfinityScroll.pluginName = 'infinity';
+        return InfinityScroll;
+    }());
+
+    var sourcePrefix$6 = 'plugins.movable';
+    var propertiesMap$6 = [
+        {
+            key: 'putAt',
+            name: 'putAt',
+        },
+    ];
+    var propertiesConfig$7 = propertiesMap$6.map(function (item) {
+        return {
+            key: item.key,
+            sourceKey: sourcePrefix$6 + "." + item.name,
+        };
+    });
+
+    var Movable = /** @class */ (function () {
+        function Movable(scroll) {
+            this.scroll = scroll;
+            this.handleBScroll();
+            this.handleHooks();
+        }
+        Movable.prototype.handleBScroll = function () {
+            this.scroll.proxy(propertiesConfig$7);
+        };
+        Movable.prototype.handleHooks = function () {
+            var _this = this;
+            this.hooksFn = [];
+            var _a = this.scroll.scroller, scrollBehaviorX = _a.scrollBehaviorX, scrollBehaviorY = _a.scrollBehaviorY;
+            var computeBoundary = function (boundary, behavior) {
+                if (boundary.maxScrollPos > 0) {
+                    // content is smaller than wrapper
+                    boundary.minScrollPos = behavior.wrapperSize - behavior.contentSize;
+                    boundary.maxScrollPos = 0;
+                }
+            };
+            this.registerHooks(scrollBehaviorX.hooks, scrollBehaviorX.hooks.eventTypes.ignoreHasScroll, function () { return true; });
+            this.registerHooks(scrollBehaviorX.hooks, scrollBehaviorX.hooks.eventTypes.computeBoundary, function (boundary) {
+                computeBoundary(boundary, scrollBehaviorX);
+            });
+            this.registerHooks(scrollBehaviorY.hooks, scrollBehaviorY.hooks.eventTypes.ignoreHasScroll, function () { return true; });
+            this.registerHooks(scrollBehaviorY.hooks, scrollBehaviorY.hooks.eventTypes.computeBoundary, function (boundary) {
+                computeBoundary(boundary, scrollBehaviorY);
+            });
+            this.registerHooks(this.scroll.hooks, this.scroll.hooks.eventTypes.destroy, function () {
+                _this.destroy();
+            });
+        };
+        Movable.prototype.putAt = function (x, y, time, easing) {
+            if (time === void 0) { time = this.scroll.options.bounceTime; }
+            if (easing === void 0) { easing = ease.bounce; }
+            var position = this.resolvePostion(x, y);
+            this.scroll.scrollTo(position.x, position.y, time, easing);
+        };
+        Movable.prototype.resolvePostion = function (x, y) {
+            var _a = this.scroll.scroller, scrollBehaviorX = _a.scrollBehaviorX, scrollBehaviorY = _a.scrollBehaviorY;
+            var resolveFormula = {
+                left: function () {
+                    return 0;
+                },
+                top: function () {
+                    return 0;
+                },
+                right: function () {
+                    return scrollBehaviorX.minScrollPos;
+                },
+                bottom: function () {
+                    return scrollBehaviorY.minScrollPos;
+                },
+                center: function (index) {
+                    var baseSize = index === 0
+                        ? scrollBehaviorX.minScrollPos
+                        : scrollBehaviorY.minScrollPos;
+                    return baseSize / 2;
+                },
+            };
+            return {
+                x: typeof x === 'number' ? x : resolveFormula[x](0),
+                y: typeof y === 'number' ? y : resolveFormula[y](1),
+            };
+        };
+        Movable.prototype.destroy = function () {
+            this.hooksFn.forEach(function (item) {
+                var hooks = item[0];
+                var hooksName = item[1];
+                var handlerFn = item[2];
+                hooks.off(hooksName, handlerFn);
+            });
+            this.hooksFn.length = 0;
+        };
+        Movable.prototype.registerHooks = function (hooks, name, handler) {
+            hooks.on(name, handler, this);
+            this.hooksFn.push([hooks, name, handler]);
+        };
+        Movable.pluginName = 'movable';
+        Movable.applyOrder = "pre" /* Pre */;
+        return Movable;
+    }());
+
+    var isImageTag = function (el) {
+        return el.tagName.toLowerCase() === 'img';
+    };
+    var ObserveImage = /** @class */ (function () {
+        function ObserveImage(scroll) {
+            this.scroll = scroll;
+            this.refreshTimer = 0;
+            this.init();
+        }
+        ObserveImage.prototype.init = function () {
+            this.handleOptions(this.scroll.options.observeImage);
+            this.bindEventsToWrapper();
+        };
+        ObserveImage.prototype.handleOptions = function (userOptions) {
+            if (userOptions === void 0) { userOptions = {}; }
+            userOptions = (userOptions === true ? {} : userOptions);
+            var defaultOptions = {
+                debounceTime: 100,
+            };
+            this.options = extend(defaultOptions, userOptions);
+        };
+        ObserveImage.prototype.bindEventsToWrapper = function () {
+            var wrapper = this.scroll.scroller.wrapper;
+            this.imageLoadEventRegister = new EventRegister(wrapper, [
+                {
+                    name: 'load',
+                    handler: this.load.bind(this),
+                    capture: true,
+                },
+            ]);
+            this.imageErrorEventRegister = new EventRegister(wrapper, [
+                {
+                    name: 'error',
+                    handler: this.load.bind(this),
+                    capture: true,
+                },
+            ]);
+        };
+        ObserveImage.prototype.load = function (e) {
+            var _this = this;
+            var target = e.target;
+            var debounceTime = this.options.debounceTime;
+            if (target && isImageTag(target)) {
+                if (debounceTime === 0) {
+                    this.scroll.refresh();
+                }
+                else {
+                    clearTimeout(this.refreshTimer);
+                    this.refreshTimer = window.setTimeout(function () {
+                        _this.scroll.refresh();
+                    }, this.options.debounceTime);
+                }
+            }
+        };
+        ObserveImage.pluginName = 'observeImage';
+        return ObserveImage;
+    }());
+
+    BScroll.use(MouseWheel)
+        .use(ObserveDOM)
+        .use(PullDown)
+        .use(PullUp)
+        .use(ScrollBar)
+        .use(Slide)
+        .use(Wheel)
+        .use(Zoom)
+        .use(NestedScroll)
+        .use(InfinityScroll)
+        .use(Movable)
+        .use(ObserveImage);
+
     exports.Behavior = Behavior;
     exports.CustomOptions = CustomOptions;
+    exports.InfinityScroll = InfinityScroll;
+    exports.MouseWheel = MouseWheel;
+    exports.Movable = Movable;
+    exports.NestedScroll = NestedScroll;
+    exports.ObserveDom = ObserveDOM;
+    exports.ObserveImage = ObserveImage;
+    exports.PullDownRefresh = PullDown;
+    exports.PullUpLoad = PullUp;
+    exports.ScrollBar = ScrollBar;
+    exports.Slide = Slide;
+    exports.Wheel = Wheel;
+    exports.Zoom = Zoom;
     exports.createBScroll = createBScroll;
     exports.default = BScroll;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
-if(typeof window !== "undefined" && window.BScroll) { 
-  window.BScroll = window.BScroll.default;
-}

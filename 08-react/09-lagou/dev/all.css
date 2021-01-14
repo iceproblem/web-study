@@ -4,26 +4,19 @@
   flex-direction: column;
   height: 100%; }
   .app .header {
-    width: 100%;
-    height: 0.45rem;
-    font-size: 0.18864rem;
     background-color: #00b38a;
-    color: #ffffff;
-    text-align: center;
-    line-height: 0.45rem; }
-  .app .main {
-    flex: 1; }
-  .app .nav {
     height: 0.45rem;
     line-height: 0.45rem;
+    font-size: 0.18864rem;
+    color: #ffffff;
+    text-align: center; }
+  .app .main {
+    flex: 1;
+    overflow: hidden; }
+  .app .nav {
+    height: 0.45rem;
     background-color: #f6f6f6;
-    font-size: 0.16768rem;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    border-top: 1px solid #e8e8e8;
-    left: 0;
-    z-index: 999; }
+    font-size: 0.16768rem; }
     .app .nav ul {
       display: flex;
       list-style: none;
@@ -31,16 +24,14 @@
       align-items: center; }
       .app .nav ul li {
         flex: 1;
-        font-size: 0.16768rem;
         text-align: center;
-        line-height: 0.45rem;
-        display: flex;
-        justify-content: center;
-        align-items: center; }
+        line-height: 0.45rem; }
         .app .nav ul li svg {
-          width: 0.18rem;
-          height: 0.18rem;
-          color: yellow; }
+          width: 0.25rem;
+          height: 0.2rem;
+          position: relative;
+          top: 4px;
+          left: 5px; }
         .app .nav ul li.active {
           color: #00b38a;
           background-color: #e7f3f0; }
@@ -58,8 +49,11 @@
   margin: 0;
   padding: 0; }
 
-html, body {
+html {
   font-size: 100px; }
+
+html, body {
+  height: 100%; }
 
 body {
   font-size: 0.14rem; }
@@ -86,7 +80,7 @@ body {
   display: flex;
   padding: 0.14rem;
   position: relative; }
-  @media (device-pixel-ratio: 1) {
+  @media (-webkit-device-pixel-ratio: 1), (device-pixel-ratio: 1) {
     .position-list .item::before {
       content: "";
       position: absolute;
@@ -144,8 +138,14 @@ body {
 
 .refresh {
   line-height: 0.45rem;
-  text-align: center; }
+  text-align: center;
+  display: none; }
 
 .more {
   line-height: 0.45rem;
   text-align: center; }
+
+.dixian {
+  line-height: 0.45rem;
+  text-align: center;
+  display: none; }

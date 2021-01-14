@@ -1,9 +1,59 @@
 import positionCtrl from "../controller/positionController"
 
+
 class Router{
+    constructor(options){
+        this.mode = options.mode
+         // 配置路由表
+        this.routes = {
+            "position":positionCtrl,
+            // "search":searchCtrl,
+            // "mine":mineCtrl,
+        }
+    }
+    // 加载视图
+    loadView(path){
+        if(this.routes[path]){
+            this.routes[path].render();
+        }else{
+            // 404页面
+            notFount.render();
+        }
+    }
     go(path){
-        positionCtrl.render()
+        // console.log(path);
+        if(this.mode === "hash"){
+            location.hash = path;
+        }else{
+            history.pushState({path},"","?"+path)
+        }
+        this.loadView(path)
     }
 }
 
-export default new Router()
+export default Router
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
