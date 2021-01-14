@@ -1,14 +1,15 @@
-import positionCtrl from "../controller/positionController"
-
-
+import mineCtrl from '../../js/controller/mineController'
+import notFount from '../../js/controller/notFoundController'
+import searchCtrl from '../../js/controller/searchController'
+import positionCtrl from '../../js/controller/positionController'
 class Router{
     constructor(options){
         this.mode = options.mode
          // 配置路由表
         this.routes = {
             "position":positionCtrl,
-            // "search":searchCtrl,
-            // "mine":mineCtrl,
+            "search":searchCtrl,
+            "mine":mineCtrl,
         }
     }
     // 加载视图

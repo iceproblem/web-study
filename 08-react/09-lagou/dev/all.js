@@ -475,6 +475,30 @@ eval("/**\n * Copyright (c) 2014-present, Facebook, Inc.\n *\n * This source cod
 
 /***/ }),
 
+/***/ "./src/js/controller/mineController.js":
+/*!*********************************************!*\
+  !*** ./src/js/controller/mineController.js ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/classCallCheck.js\");\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/createClass.js\");\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _views_mine_mine_html__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../views/mine/mine.html */ \"./src/views/mine/mine.html\");\n/* harmony import */ var _views_mine_mine_html__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_views_mine_mine_html__WEBPACK_IMPORTED_MODULE_2__);\n\n\n\n\nvar mineController = /*#__PURE__*/function () {\n  function mineController() {\n    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, mineController);\n  }\n\n  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(mineController, [{\n    key: \"render\",\n    value: function render() {\n      $(\"#main\").html(_views_mine_mine_html__WEBPACK_IMPORTED_MODULE_2___default.a);\n    }\n  }]);\n\n  return mineController;\n}();\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (new mineController());\n\n//# sourceURL=webpack:///./src/js/controller/mineController.js?");
+
+/***/ }),
+
+/***/ "./src/js/controller/notFoundController.js":
+/*!*************************************************!*\
+  !*** ./src/js/controller/notFoundController.js ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/classCallCheck.js\");\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/createClass.js\");\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _views_notFound_notFound_html__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../views/notFound/notFound.html */ \"./src/views/notFound/notFound.html\");\n/* harmony import */ var _views_notFound_notFound_html__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_views_notFound_notFound_html__WEBPACK_IMPORTED_MODULE_2__);\n\n\n\n\nvar notFoundController = /*#__PURE__*/function () {\n  function notFoundController() {\n    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, notFoundController);\n  }\n\n  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(notFoundController, [{\n    key: \"render\",\n    value: function render() {\n      $(\"#main\").html(_views_notFound_notFound_html__WEBPACK_IMPORTED_MODULE_2___default.a);\n    }\n  }]);\n\n  return notFoundController;\n}();\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (new notFoundController());\n\n//# sourceURL=webpack:///./src/js/controller/notFoundController.js?");
+
+/***/ }),
+
 /***/ "./src/js/controller/positionController.js":
 /*!*************************************************!*\
   !*** ./src/js/controller/positionController.js ***!
@@ -487,6 +511,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _bab
 
 /***/ }),
 
+/***/ "./src/js/controller/searchController.js":
+/*!***********************************************!*\
+  !*** ./src/js/controller/searchController.js ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/classCallCheck.js\");\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/createClass.js\");\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _views_search_search_html__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../views/search/search.html */ \"./src/views/search/search.html\");\n/* harmony import */ var _views_search_search_html__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_views_search_search_html__WEBPACK_IMPORTED_MODULE_2__);\n\n\n\n\nvar searchController = /*#__PURE__*/function () {\n  function searchController() {\n    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, searchController);\n  }\n\n  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(searchController, [{\n    key: \"render\",\n    value: function render() {\n      $(\"#main\").html(_views_search_search_html__WEBPACK_IMPORTED_MODULE_2___default.a);\n    }\n  }]);\n\n  return searchController;\n}();\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (new searchController());\n\n//# sourceURL=webpack:///./src/js/controller/searchController.js?");
+
+/***/ }),
+
 /***/ "./src/js/index.js":
 /*!*************************!*\
   !*** ./src/js/index.js ***!
@@ -495,7 +531,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _bab
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/classCallCheck.js\");\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/createClass.js\");\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _router_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./router/router */ \"./src/js/router/router.js\");\n/* harmony import */ var _controller_positionController__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./controller/positionController */ \"./src/js/controller/positionController.js\");\n/* harmony import */ var _views_position_position_html__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../views/position/position.html */ \"./src/views/position/position.html\");\n/* harmony import */ var _views_position_position_html__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_views_position_position_html__WEBPACK_IMPORTED_MODULE_4__);\n\n\n\n\n\n\nvar App = /*#__PURE__*/function () {\n  function App() {\n    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, App);\n\n    // 上来直接渲染模板\n    _controller_positionController__WEBPACK_IMPORTED_MODULE_3__[\"default\"].render();\n    this.initEvent(_views_position_position_html__WEBPACK_IMPORTED_MODULE_4___default.a);\n  }\n\n  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(App, [{\n    key: \"initEvent\",\n    value: function initEvent() {\n      $(\"#nav li\").on(\"click\", function () {\n        $(this).addClass(\"active\").siblings().removeClass(\"active\");\n        $(this).find(\"svg\").find(\"path\").attr(\"fill\", \"#00b38a\");\n        $(this).siblings().find(\"svg\").find(\"path\").attr(\"fill\", \"#333\");\n        var url = $(this).attr(\"data-url\");\n        _router_router__WEBPACK_IMPORTED_MODULE_2__[\"default\"].go(url);\n      });\n    }\n  }]);\n\n  return App;\n}();\n\nnew App();\n\n//# sourceURL=webpack:///./src/js/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/classCallCheck.js\");\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/createClass.js\");\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _router_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./router/router */ \"./src/js/router/router.js\");\n\n\n\nvar MODE = \"hash\"; // const MODE = \"history\"\n\nvar App = /*#__PURE__*/function () {\n  function App() {\n    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, App);\n\n    this.router = new _router_router__WEBPACK_IMPORTED_MODULE_2__[\"default\"]({\n      mode: MODE\n    });\n    this.initEvent();\n  }\n\n  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(App, [{\n    key: \"initEvent\",\n    value: function initEvent() {\n      var _this = this;\n\n      var that = this;\n      $(\"#nav li\").on(\"click\", function () {\n        $(this).addClass(\"active\").siblings().removeClass(\"active\");\n        $(this).find(\"svg\").find(\"path\").attr(\"fill\", \"#00b38a\");\n        $(this).siblings().find(\"svg\").find(\"path\").attr(\"fill\", \"#333\"); // 点击跳转\n\n        var url = $(this).attr(\"data-url\");\n        that.router.go(url);\n      }); // 首次加载页面\n\n      window.addEventListener(\"load\", function () {\n        var url = \"\";\n\n        if (MODE === \"hash\") {\n          url = location.hash.replace(\"#\", \"\") || \"position\";\n        }\n\n        if (MODE === \"history\") {\n          url = history.state ? history.state.path : \"position\"; //    console.log(url);\n        }\n\n        that.router.go(url);\n\n        _this.setNavActive(url);\n      }); // 实现浏览器的前进和后退按钮\n\n      if (MODE === \"hash\") {\n        addEventListener(\"hashchange\", function () {\n          var hash = location.hash.replace(\"#\", \"\");\n          that.router.go(hash);\n\n          _this.setNavActive(hash);\n        });\n      } else {\n        $(window).on(\"popstate\", function () {\n          var url = history.state.path;\n          that.router.loadView(url);\n\n          _this.setNavActive(url);\n        });\n      }\n    } // 设置nav高亮\n\n  }, {\n    key: \"setNavActive\",\n    value: function setNavActive(url) {\n      $(\"#nav\").find(\"li[data-url='\" + url + \"']\").addClass(\"active\").siblings().removeClass(\"active\");\n      $(\"#nav\").find(\"li[data-url='\" + url + \"']\").find(\"svg\").find(\"path\").attr(\"fill\", \"#00b38a\");\n      $(\"#nav\").find(\"li[data-url='\" + url + \"']\").siblings().find(\"svg\").find(\"path\").attr(\"fill\", \"#333\");\n    }\n  }]);\n\n  return App;\n}();\n\nnew App();\n\n//# sourceURL=webpack:///./src/js/index.js?");
 
 /***/ }),
 
@@ -519,7 +555,29 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/classCallCheck.js\");\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/createClass.js\");\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _controller_positionController__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../controller/positionController */ \"./src/js/controller/positionController.js\");\n\n\n\n\nvar Router = /*#__PURE__*/function () {\n  function Router(options) {\n    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Router);\n\n    this.mode = options.mode; // 配置路由表\n\n    this.routes = {\n      \"position\": _controller_positionController__WEBPACK_IMPORTED_MODULE_2__[\"default\"] // \"search\":searchCtrl,\n      // \"mine\":mineCtrl,\n\n    };\n  } // 加载视图\n\n\n  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(Router, [{\n    key: \"loadView\",\n    value: function loadView(path) {\n      if (this.routes[path]) {\n        this.routes[path].render();\n      } else {\n        // 404页面\n        notFount.render();\n      }\n    }\n  }, {\n    key: \"go\",\n    value: function go(path) {\n      // console.log(path);\n      if (this.mode === \"hash\") {\n        location.hash = path;\n      } else {\n        history.pushState({\n          path: path\n        }, \"\", \"?\" + path);\n      }\n\n      this.loadView(path);\n    }\n  }]);\n\n  return Router;\n}();\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (Router);\n\n//# sourceURL=webpack:///./src/js/router/router.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/classCallCheck.js\");\n/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ \"./node_modules/_@babel_runtime@7.12.5@@babel/runtime/helpers/createClass.js\");\n/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _js_controller_mineController__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../js/controller/mineController */ \"./src/js/controller/mineController.js\");\n/* harmony import */ var _js_controller_notFoundController__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../js/controller/notFoundController */ \"./src/js/controller/notFoundController.js\");\n/* harmony import */ var _js_controller_searchController__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../js/controller/searchController */ \"./src/js/controller/searchController.js\");\n/* harmony import */ var _js_controller_positionController__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../js/controller/positionController */ \"./src/js/controller/positionController.js\");\n\n\n\n\n\n\n\nvar Router = /*#__PURE__*/function () {\n  function Router(options) {\n    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Router);\n\n    this.mode = options.mode; // 配置路由表\n\n    this.routes = {\n      \"position\": _js_controller_positionController__WEBPACK_IMPORTED_MODULE_5__[\"default\"],\n      \"search\": _js_controller_searchController__WEBPACK_IMPORTED_MODULE_4__[\"default\"],\n      \"mine\": _js_controller_mineController__WEBPACK_IMPORTED_MODULE_2__[\"default\"]\n    };\n  } // 加载视图\n\n\n  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(Router, [{\n    key: \"loadView\",\n    value: function loadView(path) {\n      if (this.routes[path]) {\n        this.routes[path].render();\n      } else {\n        // 404页面\n        _js_controller_notFoundController__WEBPACK_IMPORTED_MODULE_3__[\"default\"].render();\n      }\n    }\n  }, {\n    key: \"go\",\n    value: function go(path) {\n      // console.log(path);\n      if (this.mode === \"hash\") {\n        location.hash = path;\n      } else {\n        history.pushState({\n          path: path\n        }, \"\", \"?\" + path);\n      }\n\n      this.loadView(path);\n    }\n  }]);\n\n  return Router;\n}();\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (Router);\n\n//# sourceURL=webpack:///./src/js/router/router.js?");
+
+/***/ }),
+
+/***/ "./src/views/mine/mine.html":
+/*!**********************************!*\
+  !*** ./src/views/mine/mine.html ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("module.exports = \"<div>    <h1>我的</h1></div>\"\n\n//# sourceURL=webpack:///./src/views/mine/mine.html?");
+
+/***/ }),
+
+/***/ "./src/views/notFound/notFound.html":
+/*!******************************************!*\
+  !*** ./src/views/notFound/notFound.html ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("module.exports = \"<div>    <h1>404</h1></div>\"\n\n//# sourceURL=webpack:///./src/views/notFound/notFound.html?");
 
 /***/ }),
 
@@ -542,6 +600,17 @@ eval("module.exports = \"{{ each dataList }}<div class=\\\"item\\\">    <img src
 /***/ (function(module, exports) {
 
 eval("module.exports = \"<div id=\\\"position-wrapper\\\">    <div>        <div class=\\\"refresh\\\">            下拉刷新        </div>        <div class=\\\"custom\\\">            <span>10秒钟定制职位</span>            <button>去登录</button>        </div>        <div class=\\\"position-list\\\">        </div>        <div class=\\\"more\\\">            加载更多        </div>        <div class=\\\"dixian\\\">            ---我是有底线的---        </div>    </div></div>\"\n\n//# sourceURL=webpack:///./src/views/position/position.html?");
+
+/***/ }),
+
+/***/ "./src/views/search/search.html":
+/*!**************************************!*\
+  !*** ./src/views/search/search.html ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("module.exports = \"<div>    <h1>搜索</h1></div>\"\n\n//# sourceURL=webpack:///./src/views/search/search.html?");
 
 /***/ })
 
