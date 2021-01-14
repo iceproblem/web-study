@@ -8,8 +8,8 @@ class App{
         this.router =  new Router({
             mode:MODE
         })
-
         this.initEvent();
+        this.initSwipper();
     }
     initEvent(){
         let that = this;
@@ -19,8 +19,11 @@ class App{
             $(this).siblings().find("svg").find("path").attr("fill","#333")
 
             // 点击跳转
-            let url  = $(this).attr("data-url");
-            that.router.go(url)
+            // let url  = $(this).attr("data-url");
+            // that.router.go(url)
+
+            let index = $(this).index()
+            that.mySwiper.slideTo(index,400,false)
 
         })
         // 首次加载页面
@@ -34,6 +37,7 @@ class App{
             //    console.log(url);
             }
             that.router.go(url)
+            this.slideToSwipper(url)
             this.setNavActive(url)
         })
 
@@ -41,16 +45,24 @@ class App{
         if(MODE === "hash"){
             addEventListener("hashchange",()=>{
                 let hash = location.hash.replace("#","");
-                that.router.go(hash)
+                // that.router.go(hash)
+                this.slideToSwipper(hash)
                 this.setNavActive(hash)
             })
         }else{
             $(window).on("popstate",()=>{
                 let url = history.state.path
+                this.slideToSwipper(url)
                 that.router.loadView(url)
                 this.setNavActive(url)
             })
         }
+    }
+
+    // 根据url，切换到指定的swipper
+    slideToSwipper(url){
+        let index = $("#nav").find("li[data-url='"+url+"']").index()
+        this.mySwiper.slideTo(index,400,false)
     }
 
     // 设置nav高亮
@@ -58,6 +70,23 @@ class App{
         $("#nav").find("li[data-url='"+url+"']").addClass("active").siblings().removeClass("active");
         $("#nav").find("li[data-url='"+url+"']").find("svg").find("path").attr("fill","#00b38a");
         $("#nav").find("li[data-url='"+url+"']").siblings().find("svg").find("path").attr("fill","#333")
+    }
+
+    // 初始化swiper
+    initSwipper(){
+        let that = this;
+        this.mySwiper = new Swiper(".swiper-container",{
+            on:{
+                slideChange: function(){
+                    //that.activeIndex 代表每一屏的索引
+                    let cur = $("#nav").find("li").eq(this.activeIndex)
+                    let url = cur.attr("data-url")
+                    that.router.go(url)
+
+                    that.setNavActive(url)
+                },
+              },
+        })
     }
     
 }

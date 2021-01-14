@@ -2,7 +2,7 @@ import mineTpl from "../../views/mine/mine.html"
 
 class mineController{
     render(){
-        $("#main").html(mineTpl)
+        $("#swiper-mine").html(mineTpl)
     }
 }
 

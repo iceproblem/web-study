@@ -29,7 +29,7 @@ class PositionController{
     }
 
     async render(){
-        $("#main").html(positionTpl)
+        $("#swiper-position").html(positionTpl)
         // await下面的代码相当于是一个.then
         await this.getList();
     
@@ -46,6 +46,7 @@ class PositionController{
         // 如果上面加了await和async，就相当于数据已经渲染页面上了
         this.scroll = BetterScroll.createBScroll(wrapper,{
             scrollY:true,
+            click:true, // 因为，使用了BS，会阻止浏览器的原一的点击事件
             pullDownRefresh: {
                 threshold: 50, // 下拉的阈值
                 stop:0, // 当初始化一个新的BS时，停留在0这个位置
