@@ -1,7 +1,8 @@
-import mineCtrl from '../../js/controller/mineController'
-import notFount from '../../js/controller/notFoundController'
-import searchCtrl from '../../js/controller/searchController'
-import positionCtrl from '../../js/controller/positionController'
+import positionCtrl from "../controller/positionController"
+import searchCtrl from "../controller/searchController"
+import mineCtrl from "../controller/mineController"
+import notFount from "../controller/notFountController"
+
 class Router{
     constructor(options){
         this.mode = options.mode
@@ -26,7 +27,7 @@ class Router{
         if(this.mode === "hash"){
             location.hash = path;
         }else{
-            history.pushState({path},"","?"+path)
+            history.pushState({path},"",path)
         }
         this.loadView(path)
     }
