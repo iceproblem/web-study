@@ -1,0 +1,19 @@
+{{ each dataList }}
+<div class="item">
+    <img src="http://www.lgstatic.com/{{ $value['companyLogo'] }}" alt="">
+    <div class="desc">
+        <h2>{{ $value['companyName'] }}</h2>
+        <p class="pos">
+            <span class="name">
+                {{ $value['positionName'] }}[{{ $value['city'] }}]
+            </span>
+            <span class="salary">
+                {{ $value['salary'] }}
+            </span>
+        </p>
+        <p>
+            {{ $value['createTime'] }}
+        </p>
+    </div>
+</div>
+{{ /each }}

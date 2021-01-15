@@ -1,0 +1,155 @@
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%; }
+  .app .header {
+    background-color: #00b38a;
+    height: 0.45rem;
+    line-height: 0.45rem;
+    font-size: 0.18864rem;
+    color: #ffffff;
+    text-align: center; }
+  .app .main {
+    flex: 1;
+    overflow: hidden; }
+  .app .nav {
+    height: 0.45rem;
+    background-color: #f6f6f6;
+    font-size: 0.16768rem; }
+    .app .nav ul {
+      display: flex;
+      list-style: none;
+      justify-content: center;
+      align-items: center; }
+      .app .nav ul li {
+        flex: 1;
+        text-align: center;
+        line-height: 0.45rem; }
+        .app .nav ul li svg {
+          width: 0.25rem;
+          height: 0.2rem;
+          position: relative;
+          top: 4px;
+          left: 5px; }
+        .app .nav ul li.active {
+          color: #00b38a;
+          background-color: #e7f3f0; }
+
+#loading {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  display: none;
+  text-align: center; }
+  #loading img {
+    margin-top: 50vh; }
+
+.swiper-container {
+  width: 100%;
+  height: 100%; }
+
+* {
+  margin: 0;
+  padding: 0; }
+
+html {
+  font-size: 100px; }
+
+html, body {
+  height: 100%; }
+
+body {
+  font-size: 0.14rem; }
+
+#position-wrapper {
+  height: 100%; }
+
+.custom {
+  display: flex;
+  padding: 0.14rem;
+  align-items: center; }
+  .custom span {
+    flex: 1;
+    color: #555; }
+  .custom button {
+    width: 0.84rem;
+    height: 0.3rem;
+    color: #00b38a;
+    background-color: #f5f5f5;
+    border-radius: 0.15rem;
+    border: none; }
+
+.position-list .item {
+  display: flex;
+  padding: 0.14rem;
+  position: relative; }
+  @media (-webkit-device-pixel-ratio: 1), (device-pixel-ratio: 1) {
+    .position-list .item::before {
+      content: "";
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      background-color: #e8e8e8;
+      width: 100%;
+      height: 1px; } }
+  @media (-webkit-device-pixel-ratio: 1.5), (device-pixel-ratio: 1.5) {
+    .position-list .item::before {
+      content: "";
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      background-color: #e8e8e8;
+      width: 100%;
+      height: 1px;
+      transform: scaleY(0.667); } }
+  @media (-webkit-device-pixel-ratio: 2), (device-pixel-ratio: 2) {
+    .position-list .item::before {
+      content: "";
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      background-color: #e8e8e8;
+      width: 100%;
+      height: 1px;
+      transform: scaleY(0.5); } }
+  @media (-webkit-device-pixel-ratio: 3), (device-pixel-ratio: 3) {
+    .position-list .item::before {
+      content: "";
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      background-color: #e8e8e8;
+      width: 100%;
+      height: 1px;
+      transform: scaleY(0.33333); } }
+  .position-list .item img {
+    width: 0.6rem;
+    height: 0.6rem; }
+  .position-list .item .desc {
+    flex: 1;
+    padding-left: 0.1rem; }
+    .position-list .item .desc h2 {
+      font-size: 0.16rem; }
+    .position-list .item .desc .pos {
+      display: flex;
+      justify-content: space-between; }
+      .position-list .item .desc .pos .salary {
+        color: #00b38a;
+        font-size: 0.167rem;
+        font-weight: 400;
+        width: 0.7rem; }
+
+.refresh {
+  line-height: 0.45rem;
+  text-align: center;
+  display: none; }
+
+.more {
+  line-height: 0.45rem;
+  text-align: center; }
+
+.dixian {
+  line-height: 0.45rem;
+  text-align: center;
+  display: none; }
