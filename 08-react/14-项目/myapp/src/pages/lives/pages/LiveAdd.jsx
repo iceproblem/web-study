@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import { Card,Form,Input,Select,Upload,message,Button,DatePicker} from "antd";
+import { Card,Form,Input,Select,message,Button,DatePicker} from "antd";
 
 // 引入日期中国化
-import locale from 'antd/es/date-picker/locale/zh_CN';
+// import locale from 'antd/es/date-picker/locale/zh_CN';
 // 引入富文本编辑器
-import RichTextEdit from "./../../../components/rich-text-editor"
+// import RichTextEdit from "./../../../components/rich-text-editor"
 // 引入tag选择
 import UploadImg from './../../../components/UploadImg'
 

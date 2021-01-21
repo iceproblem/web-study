@@ -10,7 +10,7 @@ class LiveList extends Component {
         this.state = {
             resourceList: [
                 {
-                    id: 2,
+                    id: 1,
                     live_title: '拜登刚刚拿下密歇根州',
                     live_img: 'https://m1-1253159997.image.myqcloud.com/imageDir/902f5e65f4e733cd94b0dbbae559423eu1.png',
                     live_time: '2020年5月30日',
@@ -26,7 +26,7 @@ class LiveList extends Component {
                     live_price:  1999,
                     is_focus: 0
                 },{
-                    id: 2,
+                    id: 3,
                     live_title: '拜登刚刚拿下密歇根州',
                     live_img: 'https://m1-1253159997.image.myqcloud.com/imageDir/902f5e65f4e733cd94b0dbbae559423eu1.png',
                     live_time: '2020年5月30日',
@@ -34,7 +34,7 @@ class LiveList extends Component {
                     live_price:  1999,
                     is_focus: 0
                 },{
-                    id: 2,
+                    id: 4,
                     live_title: '拜登刚刚拿下密歇根州',
                     live_img: 'https://m1-1253159997.image.myqcloud.com/imageDir/902f5e65f4e733cd94b0dbbae559423eu1.png',
                     live_time: '2020年5月30日',

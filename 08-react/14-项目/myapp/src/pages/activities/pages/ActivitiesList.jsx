@@ -8,7 +8,7 @@ export default class ActivitiesList extends Component {
         this.state = {
             resourceList: [
                 {
-                    id: 2,
+                    id: 1,
                     activities_name: '拜登刚刚拿下密歇根州',
                     activities_time: '2020年5月30日',
                     activities_img: 'https://m1-1253159997.image.myqcloud.com/imageDir/902f5e65f4e733cd94b0dbbae559423eu1.png',
