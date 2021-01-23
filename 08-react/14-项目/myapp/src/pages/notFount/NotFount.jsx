@@ -5,6 +5,7 @@ export default class NotFount extends Component {
         return (
             <div>
                 404
+                {/*<img src="./images/无信号.png" alt=""/>*/}
             </div>
         )
     }

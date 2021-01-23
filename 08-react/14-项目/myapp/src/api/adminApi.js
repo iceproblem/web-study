@@ -24,7 +24,7 @@ export const getUser = ()=>{ return getObj(config.ADMIN_KEY) }
 export const isLogin = ()=>{ let userObj = getObj(config.ADMIN_KEY); return !!userObj; }
 
 // 7）上传管理员头像
-// 地址在Upload组件中直接调用了
+// 地址在Upload组件中直接调用了 /api/auth/admin/upload_admin_icon
 
 // 8）修改管理员信息
 export const changeAmdinMsg = (token, account_name, account_icon)=>ajax("/api/auth/admin/edit",{token, account_name, account_icon},"post")

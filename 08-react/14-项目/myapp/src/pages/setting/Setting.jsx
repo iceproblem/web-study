@@ -9,9 +9,9 @@ export default class Setting extends Component {
         return (
             <div>
                 <Switch>
-                    <Redirect path="/setting" exact to="/setting/account"></Redirect>
-                    <Route path="/setting/account" component={AccountSetting}></Route>
-                    <Route path="/setting/member" component={MemberCount}></Route>
+                    <Redirect path="/setting" exact to="/setting/account" />
+                    <Route path="/setting/account" component={AccountSetting} />
+                    <Route path="/setting/member" component={MemberCount} />
                 </Switch>
             </div>
         )

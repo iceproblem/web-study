@@ -1,51 +1,39 @@
 import React, { Component } from 'react'
-import {Card, Button, Table, Switch, Divider, Modal} from 'antd'
-import {withRouter} from "react-router-dom";
+import {Card, Button, Table, Switch, Divider, Modal, message,notification} from 'antd'
 
-class LiveList extends Component {
+import { getLive,deleteLive,setFocusLive } from "../../../api/liveApi"
+import config from "../../../config/config"
+
+export default class LiveList extends Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            resourceList: [
-                {
-                    id: 1,
-                    live_title: '拜登刚刚拿下密歇根州',
-                    live_img: 'https://m1-1253159997.image.myqcloud.com/imageDir/902f5e65f4e733cd94b0dbbae559423eu1.png',
-                    live_time: '2020年5月30日',
-                    live_author:  '小强',
-                    live_price:  1999,
-                    is_focus: 0
-                },{
-                    id: 2,
-                    live_title: '拜登刚刚拿下密歇根州',
-                    live_img: 'https://m1-1253159997.image.myqcloud.com/imageDir/902f5e65f4e733cd94b0dbbae559423eu1.png',
-                    live_time: '2020年5月30日',
-                    live_author:  '小强',
-                    live_price:  1999,
-                    is_focus: 0
-                },{
-                    id: 3,
-                    live_title: '拜登刚刚拿下密歇根州',
-                    live_img: 'https://m1-1253159997.image.myqcloud.com/imageDir/902f5e65f4e733cd94b0dbbae559423eu1.png',
-                    live_time: '2020年5月30日',
-                    live_author:  '小强',
-                    live_price:  1999,
-                    is_focus: 0
-                },{
-                    id: 4,
-                    live_title: '拜登刚刚拿下密歇根州',
-                    live_img: 'https://m1-1253159997.image.myqcloud.com/imageDir/902f5e65f4e733cd94b0dbbae559423eu1.png',
-                    live_time: '2020年5月30日',
-                    live_author:  '小强',
-                    live_price:  1999,
-                    is_focus: 0
-                }
-            ],
-            totalSize: 100,
-            pageSize: 10
+            isLoading:false, // 在发送ajax请求数据时，loading效果
+            liveList: [],  // 直播课列表数据
+            totalSize: 0, // 总数据
+            pageSize: 4, // 一页显示多少条数据
         }
+    }
+    componentDidMount(){
+        // 加载数据
+        this._loadData();
+    }
+    // ajax获取数据  _loadData(2,4)  _loadData(3,4)  _loadData()
+    _loadData = (page_num=1, page_size=4) => {
+        getLive(page_num,page_size).then(result=>{
+            // console.log(result);
+            if(result && result.status === 1){
+                message.success("获取直播课列表成功！")
+                this.setState({
+                    liveList:result.data.live_list,
+                    totalSize:result.data.live_count
+                })
+            }
+        }).catch(err=>{
+            message.error("获取直播课失败！")
+        })
     }
 
     // 列的配置信息
@@ -56,18 +44,38 @@ class LiveList extends Component {
             title: '直播课封面', dataIndex: 'live_img', key: 'live_img',align: 'center',
             render: (text, record) => {
                 return (
-                    <img src={record.live_img} alt="活动封面" width={100}/>
+                    <img src={config.BASE_URL+record.live_img} alt="活动封面" width={100}/>
                 )
             }
         },
-        {title: '开始时间', dataIndex: 'live_time', key: 'live_time',align: 'center'},
+        {title: '开始时间', dataIndex: 'live_begin_time', key: 'live_begin_time',align: 'center'},
         {title: '直播课老师', dataIndex: 'live_author', key: 'live_author',align: 'center'},
         {title: '直播课价格', dataIndex: 'live_price', key: 'live_price',align: 'center'},
         {
             title: '首页焦点', dataIndex: 'is_focus', key: 'is_focus',align: 'center',
             render: (text, record) => {
                 return (
-                    <Switch checkedChildren="是" unCheckedChildren="否" defaultChecked/>
+                    <Switch
+                        checkedChildren="是"
+                        unCheckedChildren="否"
+                        defaultChecked={ record.is_focus === 1 }
+                        onChange={(checked)=>{
+                            // console.log(checked);
+                            setFocusLive(record.id, checked ? 1 : 0).then(result=>{
+                                // console.log(result);
+                                if(result && result.status === 1){
+                                    // message.success(result.msg)
+                                    notification["success"]({
+                                        message:`课程:${record.live_title}`,
+                                        description:`${checked ? "设置为":"取消"}焦点课程`,
+                                        duration:2
+                                    })
+                                }
+                            }).catch(err=>{
+                                console.log("设置焦点失败");
+                            })
+                        }}
+                    />
                 )
             }
         },
@@ -76,7 +84,16 @@ class LiveList extends Component {
             render: (text, record) => {
                 return (
                     <div>
-                        <Button>编辑</Button>
+                        <Button onClick={()=>{
+                            // this.props.history.push("/live/edit-live")
+
+                            this.props.history.push({
+                                pathname:"/live/edit-live",
+                                state:{
+                                    live:record
+                                }
+                            })
+                        }}>编辑</Button>
                         <Divider type="vertical" />
                         <Button onClick={()=>{
                             Modal.confirm({
@@ -86,6 +103,15 @@ class LiveList extends Component {
                                 cancelText: '取消',
                                 onOk: ()=> {
                                     // todo
+                                    deleteLive(record.id).then(result=>{
+                                        // console.log(result);
+                                        if(result && result.status === 1){
+                                            message.success(result.msg)
+                                            this._loadData(); // 重新加载数据
+                                        }
+                                    }).catch(err=>{
+                                        console.log("删除失败");
+                                    })
                                 }
                             });
                         }}>删除</Button>
@@ -109,13 +135,14 @@ class LiveList extends Component {
             <Card title={"直播课列表"} extra={addBtn}>
                 <Table
                     columns={this.columns}
-                    dataSource={this.state.resourceList}
+                    dataSource={this.state.liveList}
                     rowKey={"id"}
+                    loading={this.state.isLoading}
                     pagination={{
                         total: this.state.totalSize,
                         pageSize: this.state.pageSize,
                         onChange: (pageNum, pageSize)=>{
-                            console.log('需要加载' + pageNum, pageSize);
+                            this._loadData(pageNum, pageSize)
                         }
                     }}
                 />
@@ -123,5 +150,3 @@ class LiveList extends Component {
         )
     }
 }
-
-export default withRouter(LiveList);

@@ -153,8 +153,6 @@ router.post('/reset_pwd', (req, res, next)=>{
     const {token, old_pwd, new_pwd} = req.body;
     // 1. 获取管理员对象
     const userObj = jwt.verify(token, KEY);
-    // console.log(userObj);
-    // console.log(old_pwd);
 
     // 2. 判断
     if(userObj.password !== old_pwd){

@@ -15,7 +15,7 @@
     "customize-cra": "^0.9.1",
     "echarts": "^4.7.0",
     "echarts-for-react": "^2.0.15-beta.1",
-    "http-proxy-middleware": "^1.0.3",
+    "http-proxy-middleware": "^1.0.6",
     "moment": "^2.25.3",
     "prop-types": "^15.7.2",
     "pubsub-js": "^1.8.0",
@@ -53,6 +53,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "proxy": "http://localhost:3000/"
+  }
+
 }

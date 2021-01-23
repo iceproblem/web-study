@@ -33,7 +33,7 @@ class UploadImg extends React.Component {
     };
 
     componentWillReceiveProps(nextProps, nextContext) {
-        console.log(nextProps.upImage);
+        // console.log(nextProps.upImage);
         if(nextProps.upImage){
             this.setState({
                 imageUrl: nextProps.upImage
@@ -43,13 +43,15 @@ class UploadImg extends React.Component {
 
 
     handleChange = info => {
+        console.log(info)
         if (info.file.status === 'uploading') {
             this.setState({ loading: true });
             return;
         }
 
         // 获取服务器返回的数据
-        if(info.file.response && info.file.status === 'done' && info.file.response.status === 1){
+        if(info.file.status === 'done'){
+            console.log("haha")
             const name = info.file.response.data.name;
             // 把结果给调用者返回
             this.props.successCallBack(name);
@@ -61,9 +63,9 @@ class UploadImg extends React.Component {
     };
 
     render() {
-        const {upLoadBtnTitle, upLoadName, upLoadAction} = this.props;
-        const { imageUrl } = this.state;
-        console.log(imageUrl);
+        let {upLoadBtnTitle, upLoadName, upLoadAction} = this.props;
+        let { imageUrl } = this.state;
+        // console.log(imageUrl);
 
         const uploadButton = (
             <div>
@@ -78,7 +80,7 @@ class UploadImg extends React.Component {
                 className="avatar-uploader"
                 showUploadList={false}
                 action={upLoadAction}
-                beforeUpload={beforeUpload}
+                beforeUpload={this.beforeUpload}
                 onChange={this.handleChange}
             >
                 {imageUrl ? <img src={config.BASE_URL + imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
