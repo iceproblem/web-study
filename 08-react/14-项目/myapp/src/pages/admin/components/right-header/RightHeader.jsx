@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
-import PropTypes from "prop-types"
 import { withRouter } from "react-router-dom"
+import PropTypes from "prop-types"
 import logo from "../left-nav/images/logo.png"
 import "./right-header.css"
 
 import {MenuUnfoldOutlined,MenuFoldOutlined} from '@ant-design/icons';
 
+import { checkLogOut,removeUser } from "../../../../api/adminApi"
+
 import { Layout,Button,Modal,message } from 'antd';
-import { removeUser, checkLogOut} from "../../../../api/adminApi";
 const { Header } = Layout;
 const { confirm } = Modal
 
@@ -16,14 +17,14 @@ class RightHeader extends Component {
         collapsed:PropTypes.bool.isRequired,
         toggle:PropTypes.func.isRequired,
     }
-    _logout(e){
+    _logout(){
         confirm({
             title:"你确定要退出吗？",
             cancelText:"取消",
             okText:"确认",
             onOk:()=>{
                 checkLogOut().then(result=>{
-                    // console.log(result);
+                    console.log(result);
                     if(result && result.status === 1){
                         removeUser()
                         message.success(result.msg)
@@ -33,12 +34,13 @@ class RightHeader extends Component {
                     }else{
                         message.error("网络可能出问题了，检查你的网站~")
                     }
+                    
                 })
             }
         })
     }
     render() {
-        return (
+        return ( 
             <Header className="header" style={{padding:0}}>
                 {React.createElement(this.props.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,{
                     className:"trigger",

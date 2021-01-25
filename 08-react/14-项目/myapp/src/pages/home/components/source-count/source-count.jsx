@@ -20,7 +20,7 @@ export default class SourceCount extends React.Component{
 
     _loadData = ()=>{
          getSourceCount().then((result)=>{
-             console.log(result);
+             console.log("loadData",result);
              let tempData = [];
              if(result.status === 1){
                  for (let k in result.data){

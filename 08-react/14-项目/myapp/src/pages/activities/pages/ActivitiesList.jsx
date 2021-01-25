@@ -1,47 +1,78 @@
 import React, { Component } from 'react'
-import {Card, Button, Table, Switch, Divider, Modal} from 'antd'
+import config from "../../../config/config"
+import { Card, Button, Table, Switch, Divider, Modal, message,notification } from 'antd'
+
+import { getActivitiesList,deleteActivities,setFocusActivities } from "../../../api/activitiesApi"
 
 export default class ActivitiesList extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            resourceList: [
-                {
-                    id: 1,
-                    activities_name: '拜登刚刚拿下密歇根州',
-                    activities_time: '2020年5月30日',
-                    activities_img: 'https://m1-1253159997.image.myqcloud.com/imageDir/902f5e65f4e733cd94b0dbbae559423eu1.png',
-                    activities_price:  19990,
-                    activities_days:  '6天',
-                    is_focus: 0
-                }
-            ],
-            totalSize: 100,
-            pageSize: 10
+            activitiesList: [],
+            totalSize: 0,  // 总的数据
+            pageSize: 3  // 每页显示多少个
         }
     }
-
+    componentDidMount() {
+        this._loadData();
+    }
+    // 加载列表数据
+    _loadData = (page_num = 1, page_size = 3) => {
+        getActivitiesList(page_num, page_size).then(result => {
+            // console.log(result);
+            if (result && result.status === 1) {
+                message.success("获取活动列表成功！")
+                this.setState({
+                    activitiesList: result.data.activities_list,
+                    totalSize: result.data.activities_count
+                })
+            }
+        }).catch(err => {
+            message.error("获取活动失败！")
+        })
+    }
     // 列的配置信息
     columns = [
-        {title: 'ID', dataIndex: 'id', key: 'id', width: 50, align: 'center'},
-        {title: '活动名称', dataIndex: 'activities_name', key: 'activities_name',align: 'center'},
-        {title: '开始时间', dataIndex: 'activities_time', key: 'activities_time',align: 'center'},
+        { title: 'ID', dataIndex: 'id', key: 'id', width: 50, align: 'center' },
+        { title: '活动名称', dataIndex: 'activities_name', key: 'activities_name', align: 'center' },
+        { title: '开始时间', dataIndex: 'activities_time', key: 'activities_time', align: 'center' },
         {
-            title: '活动封面', dataIndex: 'activities_img', key: 'activities_img',align: 'center',
+            title: '活动封面', dataIndex: 'activities_img', key: 'activities_img', align: 'center',
             render: (text, record) => {
                 return (
-                    <img src={record.activities_img} alt="活动封面" width={100}/>
+                    <img src={config.BASE_URL + record.activities_img} alt="活动封面" width={100} />
                 )
             }
         },
-        {title: '活动价格', dataIndex: 'activities_price', key: 'activities_price',align: 'center'},
-        {title: '活动天数', dataIndex: 'activities_days', key: 'activities_days',align: 'center'},
+        { title: '活动价格', dataIndex: 'activities_price', key: 'activities_price', align: 'center' },
+        { title: '活动天数', dataIndex: 'activities_bus_day_id', key: 'activities_bus_day_id', align: 'center' },
         {
-            title: '首页焦点', dataIndex: 'is_focus', key: 'is_focus',align: 'center',
+            title: '首页焦点', dataIndex: 'is_focus', key: 'is_focus', align: 'center',
             render: (text, record) => {
                 return (
-                    <Switch checkedChildren="是" unCheckedChildren="否" defaultChecked/>
+                    <Switch 
+                        checkedChildren="是" 
+                        unCheckedChildren="否"
+                        defaultChecked={ record.is_focus === 1 }
+                        disabled={ record.focus_img.length === 0 }
+                        onChange={(checked)=>{
+                            // console.log(checked);
+                            setFocusActivities(record.id, checked ? 1 : 0).then(result=>{
+                                // console.log(result);
+                                if(result && result.status === 1){
+                                    // message.success(result.msg)
+                                    notification["success"]({
+                                        message:`活动:${record.activities_name}`,
+                                        description:`${checked ? "设置为":"取消"}焦点活动`,
+                                        duration:2
+                                    })
+                                }
+                            }).catch(err=>{
+                                console.log("设置焦点失败");
+                            })
+                        }}
+                    />
                 )
             }
         },
@@ -50,16 +81,34 @@ export default class ActivitiesList extends Component {
             render: (text, record) => {
                 return (
                     <div>
-                        <Button>编辑活动</Button>
+                         <Button onClick={()=>{
+                            // this.props.history.push("/live/edit-live")
+
+                            this.props.history.push({
+                                pathname:"/activities/edit-activities",
+                                state:{
+                                    activities:record
+                                }
+                            })
+                        }}>编辑活动</Button>
                         <Divider type="vertical" />
-                        <Button onClick={()=>{
+                        <Button onClick={() => {
                             Modal.confirm({
                                 title: '确认删除吗?',
                                 content: '删除此资源,所有关联的内容都会被删除',
                                 okText: '确认',
                                 cancelText: '取消',
-                                onOk: ()=> {
+                                onOk: () => {
                                     // todo
+                                    deleteActivities(record.id).then(result => {
+                                        // console.log(result);
+                                        if (result && result.status === 1) {
+                                            message.success(result.msg)
+                                            this._loadData(); // 重新加载数据
+                                        }
+                                    }).catch(err => {
+                                        console.log("删除失败");
+                                    })
                                 }
                             });
                         }}>删除活动</Button>
@@ -83,13 +132,13 @@ export default class ActivitiesList extends Component {
             <Card title={"活动列表"} extra={addBtn}>
                 <Table
                     columns={this.columns}
-                    dataSource={this.state.resourceList}
+                    dataSource={this.state.activitiesList}
                     rowKey={"id"}
                     pagination={{
                         total: this.state.totalSize,
                         pageSize: this.state.pageSize,
-                        onChange: (pageNum, pageSize)=>{
-                            console.log('需要加载' + pageNum, pageSize);
+                        onChange: (pageNum, pageSize) => {
+                            this._loadData(pageNum, pageSize)
                         }
                     }}
                 />
